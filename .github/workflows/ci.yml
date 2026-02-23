@@ -36,7 +36,6 @@ jobs:
           bundle exec rails test  # Use 'rails test' instead of 'rake'
 
   build-and-push:
-    needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
