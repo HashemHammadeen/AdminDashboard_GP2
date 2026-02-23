@@ -7,10 +7,8 @@ class CreateUserStampCards < ActiveRecord::Migration[8.1]
       t.boolean :is_completed, default: false
       t.datetime :last_transaction
       t.timestamps
-
     end
 
-    add_index :user_stamp_cards, [:user_id, :stamp_id], unique: true
+    add_index :user_stamp_cards, [ :user_id, :stamp_id ], unique: true
   end
-
 end

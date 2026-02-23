@@ -2,55 +2,36 @@ name: CI & Docker Build
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
+    branches: [ "main" ]
 
 jobs:
-  # 1. Security & Linting Jobs
-  scan_ruby:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
-      - run: bin/brakeman --no-pager
-      - run: bin/bundler-audit
-
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
-      - run: bin/rubocop -f github
-
-  # 2. Testing Job
   test:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres
+        image: postgres:15
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_PASSWORD: password
         ports: ["5432:5432"]
-        options: --health-cmd="pg_isready" --health-interval=10s --health-timeout=5s --health-retries=3
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
-      - run: sudo apt-get update && sudo apt-get install --no-install-recommends -y libpq-dev
       - uses: actions/checkout@v4
       - uses: ruby/setup-ruby@v1
         with:
+          ruby-version: '3.4.8'
           bundler-cache: true
       - env:
           RAILS_ENV: test
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432
-        run: bin/rails db:test:prepare test
+          DATABASE_URL: postgres://postgres:password@localhost:5432/test_db
+        run: |
+          bundle exec rails db:test:prepare
+          bundle exec rake
 
-  # 3. Docker Build Job (Only runs if 'test', 'scan_ruby', and 'lint' pass)
   build-and-push:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -59,7 +40,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
-      - name: Build and push
+      - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .

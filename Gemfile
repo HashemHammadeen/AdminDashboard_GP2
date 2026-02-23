@@ -43,7 +43,7 @@ gem "image_processing", "~> 1.2"
 
 
 # My shit
-gem 'dotenv-rails'
+gem "dotenv-rails"
 
 
 
