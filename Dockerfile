@@ -32,6 +32,13 @@ COPY . .
 
 # Precompile bootsnap and assets
 RUN bundle exec bootsnap precompile -j 1 app/ lib/
+
+# --- FIX START: Provide dummy values for strict ENV.fetch calls ---
+ENV DB_NAME=dummy_db \
+    DB_USERNAME=dummy_user \
+    DB_PASS=dummy_pass
+# --- FIX END ---
+
 RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 
 FROM base
