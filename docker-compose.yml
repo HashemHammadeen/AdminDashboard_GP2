@@ -1,0 +1,24 @@
+services:
+  db:
+    image: postgres:15
+    volumes:
+      - ./tmp/db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: admin_dashboard_production
+
+  web:
+    image: hmsh00/admin_dashboard_gp:latest
+    ports:
+      - "80:80"
+    environment:
+      DB_HOST: db
+      DB_NAME: admin_dashboard_production
+      DB_USERNAME: postgres
+      DB_PASS: password
+      RAILS_ENV: production
+      RAILS_LOG_TO_STDOUT: "true"
+      # Run 'openssl rand -hex 64' in your terminal and paste the result here:
+      SECRET_KEY_BASE: "a356aa4c5af4f9f8f09156f200f0e6d0e10ebd1687e297721c7455394e963327b03273789386ce07c971f48f45ed1e59574e4aacbbf58ebad3657b4edcfbb41b"
+    depends_on:
+      - db
