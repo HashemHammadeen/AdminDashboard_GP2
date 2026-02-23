@@ -33,7 +33,7 @@ jobs:
           DB_PASS: password
         run: |
           bundle exec rails db:prepare
-          bundle exec rake
+          bundle exec rails test  # Use 'rails test' instead of 'rake'
 
   build-and-push:
     needs: test
