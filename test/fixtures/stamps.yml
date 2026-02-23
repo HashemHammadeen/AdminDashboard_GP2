@@ -1,0 +1,25 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  shop: one
+  name: MyString
+  description: MyText
+  image_url: MyString
+  stamp_icon_url: MyString
+  stamps_required: 1
+  reward_type: MyString
+  active: false
+  start_date: 2026-02-23 23:21:39
+  end_date: 2026-02-23 23:21:39
+
+two:
+  shop: two
+  name: MyString
+  description: MyText
+  image_url: MyString
+  stamp_icon_url: MyString
+  stamps_required: 1
+  reward_type: MyString
+  active: false
+  start_date: 2026-02-23 23:21:39
+  end_date: 2026-02-23 23:21:39

@@ -1,0 +1,16 @@
+<p style="color: green"><%= notice %></p>
+
+<% content_for :title, "Offer redemptions" %>
+
+<h1>Offer redemptions</h1>
+
+<div id="offer_redemptions">
+  <% @offer_redemptions.each do |offer_redemption| %>
+    <%= render offer_redemption %>
+    <p>
+      <%= link_to "Show this offer redemption", offer_redemption %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New offer redemption", new_offer_redemption_path %>

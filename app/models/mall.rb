@@ -1,0 +1,2 @@
+class Mall < ApplicationRecord
+end

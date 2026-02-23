@@ -1,0 +1,11 @@
+<% content_for :title, "New earn transaction" %>
+
+<h1>New earn transaction</h1>
+
+<%= render "form", earn_transaction: @earn_transaction %>
+
+<br>
+
+<div>
+  <%= link_to "Back to earn transactions", earn_transactions_path %>
+</div>

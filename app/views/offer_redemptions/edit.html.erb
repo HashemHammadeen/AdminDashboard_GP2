@@ -1,0 +1,12 @@
+<% content_for :title, "Editing offer redemption" %>
+
+<h1>Editing offer redemption</h1>
+
+<%= render "form", offer_redemption: @offer_redemption %>
+
+<br>
+
+<div>
+  <%= link_to "Show this offer redemption", @offer_redemption %> |
+  <%= link_to "Back to offer redemptions", offer_redemptions_path %>
+</div>

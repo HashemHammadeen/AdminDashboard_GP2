@@ -1,0 +1,12 @@
+<% content_for :title, "Editing user points balance" %>
+
+<h1>Editing user points balance</h1>
+
+<%= render "form", user_points_balance: @user_points_balance %>
+
+<br>
+
+<div>
+  <%= link_to "Show this user points balance", @user_points_balance %> |
+  <%= link_to "Back to user points balances", user_points_balances_path %>
+</div>

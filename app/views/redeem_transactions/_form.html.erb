@@ -1,0 +1,52 @@
+<%= form_with(model: redeem_transaction) do |form| %>
+  <% if redeem_transaction.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(redeem_transaction.errors.count, "error") %> prohibited this redeem_transaction from being saved:</h2>
+
+      <ul>
+        <% redeem_transaction.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :user_id, style: "display: block" %>
+    <%= form.text_field :user_id %>
+  </div>
+
+  <div>
+    <%= form.label :shop_id, style: "display: block" %>
+    <%= form.text_field :shop_id %>
+  </div>
+
+  <div>
+    <%= form.label :points_used, style: "display: block" %>
+    <%= form.number_field :points_used %>
+  </div>
+
+  <div>
+    <%= form.label :discount_value, style: "display: block" %>
+    <%= form.text_field :discount_value %>
+  </div>
+
+  <div>
+    <%= form.label :verification_code, style: "display: block" %>
+    <%= form.text_field :verification_code %>
+  </div>
+
+  <div>
+    <%= form.label :status, style: "display: block" %>
+    <%= form.text_field :status %>
+  </div>
+
+  <div>
+    <%= form.label :completed_at, style: "display: block" %>
+    <%= form.datetime_field :completed_at %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  mall: one
+  name: MyString
+  category: one
+  logo_url: MyString
+  cover_image_url: MyString
+  bio: MyText
+  website_url: MyString
+  social_links: 
+  is_active: false
+
+two:
+  mall: two
+  name: MyString
+  category: two
+  logo_url: MyString
+  cover_image_url: MyString
+  bio: MyText
+  website_url: MyString
+  social_links: 
+  is_active: false

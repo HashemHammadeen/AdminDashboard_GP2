@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  stamp: one
+  stamps_counter: 1
+  is_completed: false
+  last_transaction: 2026-02-23 23:21:40
+
+two:
+  user: two
+  stamp: two
+  stamps_counter: 1
+  is_completed: false
+  last_transaction: 2026-02-23 23:21:40

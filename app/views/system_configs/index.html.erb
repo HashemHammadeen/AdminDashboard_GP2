@@ -1,0 +1,16 @@
+<p style="color: green"><%= notice %></p>
+
+<% content_for :title, "System configs" %>
+
+<h1>System configs</h1>
+
+<div id="system_configs">
+  <% @system_configs.each do |system_config| %>
+    <%= render system_config %>
+    <p>
+      <%= link_to "Show this system config", system_config %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New system config", new_system_config_path %>

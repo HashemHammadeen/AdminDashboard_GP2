@@ -1,0 +1,11 @@
+<% content_for :title, "New receipt" %>
+
+<h1>New receipt</h1>
+
+<%= render "form", receipt: @receipt %>
+
+<br>
+
+<div>
+  <%= link_to "Back to receipts", receipts_path %>
+</div>

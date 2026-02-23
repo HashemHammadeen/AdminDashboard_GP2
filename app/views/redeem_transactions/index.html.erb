@@ -1,0 +1,16 @@
+<p style="color: green"><%= notice %></p>
+
+<% content_for :title, "Redeem transactions" %>
+
+<h1>Redeem transactions</h1>
+
+<div id="redeem_transactions">
+  <% @redeem_transactions.each do |redeem_transaction| %>
+    <%= render redeem_transaction %>
+    <p>
+      <%= link_to "Show this redeem transaction", redeem_transaction %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New redeem transaction", new_redeem_transaction_path %>

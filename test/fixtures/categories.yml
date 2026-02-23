@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  category_name: MyString
+  icon_url: MyString
+  display_order: 1
+  description: MyText
+
+two:
+  category_name: MyString
+  icon_url: MyString
+  display_order: 1
+  description: MyText

@@ -1,0 +1,16 @@
+<p style="color: green"><%= notice %></p>
+
+<% content_for :title, "Mall admins" %>
+
+<h1>Mall admins</h1>
+
+<div id="mall_admins">
+  <% @mall_admins.each do |mall_admin| %>
+    <%= render mall_admin %>
+    <p>
+      <%= link_to "Show this mall admin", mall_admin %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New mall admin", new_mall_admin_path %>

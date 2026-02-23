@@ -1,0 +1,32 @@
+<%= form_with(model: user_points_balance) do |form| %>
+  <% if user_points_balance.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(user_points_balance.errors.count, "error") %> prohibited this user_points_balance from being saved:</h2>
+
+      <ul>
+        <% user_points_balance.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :user_id, style: "display: block" %>
+    <%= form.text_field :user_id %>
+  </div>
+
+  <div>
+    <%= form.label :total_points, style: "display: block" %>
+    <%= form.number_field :total_points %>
+  </div>
+
+  <div>
+    <%= form.label :lifetime_points, style: "display: block" %>
+    <%= form.number_field :lifetime_points %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

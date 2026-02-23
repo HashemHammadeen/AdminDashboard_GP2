@@ -1,0 +1,12 @@
+<% content_for :title, "Editing redeem transaction" %>
+
+<h1>Editing redeem transaction</h1>
+
+<%= render "form", redeem_transaction: @redeem_transaction %>
+
+<br>
+
+<div>
+  <%= link_to "Show this redeem transaction", @redeem_transaction %> |
+  <%= link_to "Back to redeem transactions", redeem_transactions_path %>
+</div>

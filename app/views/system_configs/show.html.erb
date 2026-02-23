@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @system_config %>
+
+<div>
+  <%= link_to "Edit this system config", edit_system_config_path(@system_config) %> |
+  <%= link_to "Back to system configs", system_configs_path %>
+
+  <%= button_to "Destroy this system config", @system_config, method: :delete %>
+</div>

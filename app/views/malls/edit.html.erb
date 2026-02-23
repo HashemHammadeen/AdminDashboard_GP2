@@ -1,0 +1,12 @@
+<% content_for :title, "Editing mall" %>
+
+<h1>Editing mall</h1>
+
+<%= render "form", mall: @mall %>
+
+<br>
+
+<div>
+  <%= link_to "Show this mall", @mall %> |
+  <%= link_to "Back to malls", malls_path %>
+</div>

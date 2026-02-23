@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @redeem_transaction %>
+
+<div>
+  <%= link_to "Edit this redeem transaction", edit_redeem_transaction_path(@redeem_transaction) %> |
+  <%= link_to "Back to redeem transactions", redeem_transactions_path %>
+
+  <%= button_to "Destroy this redeem transaction", @redeem_transaction, method: :delete %>
+</div>

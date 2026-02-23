@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  points_to_currency_ratio: 9.99
+  earn_points_per_currency: 9.99
+  min_redemption_threshold: 1
+
+two:
+  points_to_currency_ratio: 9.99
+  earn_points_per_currency: 9.99
+  min_redemption_threshold: 1

@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @offer_redemption %>
+
+<div>
+  <%= link_to "Edit this offer redemption", edit_offer_redemption_path(@offer_redemption) %> |
+  <%= link_to "Back to offer redemptions", offer_redemptions_path %>
+
+  <%= button_to "Destroy this offer redemption", @offer_redemption, method: :delete %>
+</div>

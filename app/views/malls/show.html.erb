@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @mall %>
+
+<div>
+  <%= link_to "Edit this mall", edit_mall_path(@mall) %> |
+  <%= link_to "Back to malls", malls_path %>
+
+  <%= button_to "Destroy this mall", @mall, method: :delete %>
+</div>

@@ -1,0 +1,47 @@
+<%= form_with(model: stamp_transaction) do |form| %>
+  <% if stamp_transaction.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(stamp_transaction.errors.count, "error") %> prohibited this stamp_transaction from being saved:</h2>
+
+      <ul>
+        <% stamp_transaction.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :user_id, style: "display: block" %>
+    <%= form.text_field :user_id %>
+  </div>
+
+  <div>
+    <%= form.label :shop_id, style: "display: block" %>
+    <%= form.text_field :shop_id %>
+  </div>
+
+  <div>
+    <%= form.label :stamp_id, style: "display: block" %>
+    <%= form.text_field :stamp_id %>
+  </div>
+
+  <div>
+    <%= form.label :transaction_type, style: "display: block" %>
+    <%= form.text_field :transaction_type %>
+  </div>
+
+  <div>
+    <%= form.label :stamps_count, style: "display: block" %>
+    <%= form.number_field :stamps_count %>
+  </div>
+
+  <div>
+    <%= form.label :receipt_id, style: "display: block" %>
+    <%= form.text_field :receipt_id %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

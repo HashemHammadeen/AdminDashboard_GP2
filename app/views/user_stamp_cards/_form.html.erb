@@ -1,0 +1,42 @@
+<%= form_with(model: user_stamp_card) do |form| %>
+  <% if user_stamp_card.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(user_stamp_card.errors.count, "error") %> prohibited this user_stamp_card from being saved:</h2>
+
+      <ul>
+        <% user_stamp_card.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :user_id, style: "display: block" %>
+    <%= form.text_field :user_id %>
+  </div>
+
+  <div>
+    <%= form.label :stamp_id, style: "display: block" %>
+    <%= form.text_field :stamp_id %>
+  </div>
+
+  <div>
+    <%= form.label :stamps_counter, style: "display: block" %>
+    <%= form.number_field :stamps_counter %>
+  </div>
+
+  <div>
+    <%= form.label :is_completed, style: "display: block" %>
+    <%= form.checkbox :is_completed %>
+  </div>
+
+  <div>
+    <%= form.label :last_transaction, style: "display: block" %>
+    <%= form.datetime_field :last_transaction %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

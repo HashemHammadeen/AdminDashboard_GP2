@@ -1,0 +1,12 @@
+<% content_for :title, "Editing user stamp card" %>
+
+<h1>Editing user stamp card</h1>
+
+<%= render "form", user_stamp_card: @user_stamp_card %>
+
+<br>
+
+<div>
+  <%= link_to "Show this user stamp card", @user_stamp_card %> |
+  <%= link_to "Back to user stamp cards", user_stamp_cards_path %>
+</div>

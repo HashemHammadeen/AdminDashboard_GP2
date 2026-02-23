@@ -1,0 +1,12 @@
+<% content_for :title, "Editing stamp transaction" %>
+
+<h1>Editing stamp transaction</h1>
+
+<%= render "form", stamp_transaction: @stamp_transaction %>
+
+<br>
+
+<div>
+  <%= link_to "Show this stamp transaction", @stamp_transaction %> |
+  <%= link_to "Back to stamp transactions", stamp_transactions_path %>
+</div>

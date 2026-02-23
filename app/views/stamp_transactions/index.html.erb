@@ -1,0 +1,16 @@
+<p style="color: green"><%= notice %></p>
+
+<% content_for :title, "Stamp transactions" %>
+
+<h1>Stamp transactions</h1>
+
+<div id="stamp_transactions">
+  <% @stamp_transactions.each do |stamp_transaction| %>
+    <%= render stamp_transaction %>
+    <p>
+      <%= link_to "Show this stamp transaction", stamp_transaction %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New stamp transaction", new_stamp_transaction_path %>

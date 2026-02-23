@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  tier_name: MyString
+  points_required: 1
+  benefits: 
+  icon_url: MyString
+  color_hex: MyString
+
+two:
+  tier_name: MyString
+  points_required: 1
+  benefits: 
+  icon_url: MyString
+  color_hex: MyString

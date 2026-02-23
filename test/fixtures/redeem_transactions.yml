@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  shop: one
+  points_used: 1
+  discount_value: 9.99
+  verification_code: MyString
+  status: MyString
+  completed_at: 2026-02-23 23:21:36
+
+two:
+  user: two
+  shop: two
+  points_used: 1
+  discount_value: 9.99
+  verification_code: MyString
+  status: MyString
+  completed_at: 2026-02-23 23:21:36

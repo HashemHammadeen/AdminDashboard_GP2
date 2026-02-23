@@ -1,0 +1,12 @@
+<% content_for :title, "Editing shop admin" %>
+
+<h1>Editing shop admin</h1>
+
+<%= render "form", shop_admin: @shop_admin %>
+
+<br>
+
+<div>
+  <%= link_to "Show this shop admin", @shop_admin %> |
+  <%= link_to "Back to shop admins", shop_admins_path %>
+</div>

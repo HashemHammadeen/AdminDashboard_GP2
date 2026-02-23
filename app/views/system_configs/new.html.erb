@@ -1,0 +1,11 @@
+<% content_for :title, "New system config" %>
+
+<h1>New system config</h1>
+
+<%= render "form", system_config: @system_config %>
+
+<br>
+
+<div>
+  <%= link_to "Back to system configs", system_configs_path %>
+</div>
