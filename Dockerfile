@@ -33,7 +33,6 @@ COPY . .
 RUN bundle exec bootsnap precompile -j 1 app/ lib/
 RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 
-# --- FINAL STAGE ---
 FROM base
 
 RUN groupadd --system --gid 1000 rails && \
