@@ -1,0 +1,2 @@
+module ShopDashboardsHelper
+end

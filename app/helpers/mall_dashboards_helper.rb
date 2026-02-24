@@ -1,0 +1,2 @@
+module MallDashboardsHelper
+end

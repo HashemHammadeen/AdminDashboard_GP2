@@ -1,4 +1,5 @@
 class MallAdmin < ApplicationRecord
-  has_secure_password
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :validatable
   belongs_to :mall
 end

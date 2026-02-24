@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
+  get "shop_dashboards/show"
+  get "mall_dashboards/show"
+  get "home/index"
+  devise_for :mall_admins
+  devise_for :shop_admins
   resources :stamp_transactions
   resources :offer_redemptions
   resources :qrs
@@ -17,6 +22,21 @@ Rails.application.routes.draw do
   resources :categories
   resources :malls
   resources :tiers
+
+
+
+  # Dashboard Routing Logic
+  authenticated :mall_admin do
+    root to: "mall_dashboards#show", as: :mall_admin_root
+  end
+
+  authenticated :shop_admin do
+    root to: "shop_dashboards#show", as: :shop_admin_root
+  end
+
+  root to: "home#index"
+
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

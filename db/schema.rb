@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_23_204232) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_25_000001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -54,15 +54,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_23_204232) do
 
   create_table "mall_admins", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.string "email", null: false
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
     t.uuid "mall_id", null: false
     t.string "name", null: false
-    t.text "password_hash", null: false
     t.string "phone", null: false
+    t.datetime "remember_created_at"
+    t.datetime "reset_password_sent_at"
+    t.string "reset_password_token"
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_mall_admins_on_email", unique: true
     t.index ["mall_id"], name: "index_mall_admins_on_mall_id"
     t.index ["phone"], name: "index_mall_admins_on_phone", unique: true
+    t.index ["reset_password_token"], name: "index_mall_admins_on_reset_password_token", unique: true
   end
 
   create_table "malls", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -143,15 +147,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_23_204232) do
 
   create_table "shop_admins", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.string "email", null: false
-    t.boolean "is_active", default: true
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
     t.string "name", null: false
-    t.text "password_hash", null: false
     t.string "phone", null: false
+    t.datetime "remember_created_at"
+    t.datetime "reset_password_sent_at"
+    t.string "reset_password_token"
     t.uuid "shop_id", null: false
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_shop_admins_on_email", unique: true
     t.index ["phone"], name: "index_shop_admins_on_phone", unique: true
+    t.index ["reset_password_token"], name: "index_shop_admins_on_reset_password_token", unique: true
     t.index ["shop_id"], name: "index_shop_admins_on_shop_id"
   end
 

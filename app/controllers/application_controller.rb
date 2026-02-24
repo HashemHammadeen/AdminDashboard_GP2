@@ -4,4 +4,11 @@ class ApplicationController < ActionController::Base
 
   # Changes to the importmap will invalidate the etag for HTML responses
   stale_when_importmap_changes
+
+  def current_ability_user
+    current_mall_admin || current_shop_admin
+  end
+
+  # Helper to check role in views
+  helper_method :mall_admin_signed_in?, :shop_admin_signed_in?
 end
