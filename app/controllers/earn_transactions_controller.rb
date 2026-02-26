@@ -1,27 +1,24 @@
 class EarnTransactionsController < ApplicationController
-  before_action :set_earn_transaction, only: %i[ show edit update destroy ]
+  before_action :authenticate_shop_admin!
+  before_action :set_earn_transaction, only: %i[show edit update destroy]
+  layout "dashboard"
 
-  # GET /earn_transactions or /earn_transactions.json
   def index
-    @earn_transactions = EarnTransaction.all
+    @earn_transactions = current_shop_admin.shop.earn_transactions.order(created_at: :desc)
   end
 
-  # GET /earn_transactions/1 or /earn_transactions/1.json
   def show
   end
 
-  # GET /earn_transactions/new
   def new
-    @earn_transaction = EarnTransaction.new
+    @earn_transaction = current_shop_admin.shop.earn_transactions.new
   end
 
-  # GET /earn_transactions/1/edit
   def edit
   end
 
-  # POST /earn_transactions or /earn_transactions.json
   def create
-    @earn_transaction = EarnTransaction.new(earn_transaction_params)
+    @earn_transaction = current_shop_admin.shop.earn_transactions.new(earn_transaction_params)
 
     respond_to do |format|
       if @earn_transaction.save
@@ -34,7 +31,6 @@ class EarnTransactionsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /earn_transactions/1 or /earn_transactions/1.json
   def update
     respond_to do |format|
       if @earn_transaction.update(earn_transaction_params)
@@ -47,10 +43,8 @@ class EarnTransactionsController < ApplicationController
     end
   end
 
-  # DELETE /earn_transactions/1 or /earn_transactions/1.json
   def destroy
     @earn_transaction.destroy!
-
     respond_to do |format|
       format.html { redirect_to earn_transactions_path, notice: "Earn transaction was successfully destroyed.", status: :see_other }
       format.json { head :no_content }
@@ -58,13 +52,12 @@ class EarnTransactionsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_earn_transaction
-      @earn_transaction = EarnTransaction.find(params.expect(:id))
-    end
 
-    # Only allow a list of trusted parameters through.
-    def earn_transaction_params
-      params.expect(earn_transaction: [ :user_id, :shop_id, :purchase_amount, :points_earned, :transaction_ref ])
-    end
+  def set_earn_transaction
+    @earn_transaction = current_shop_admin.shop.earn_transactions.find(params.expect(:id))
+  end
+
+  def earn_transaction_params
+    params.expect(earn_transaction: [:user_id, :purchase_amount, :points_earned, :transaction_ref])
+  end
 end

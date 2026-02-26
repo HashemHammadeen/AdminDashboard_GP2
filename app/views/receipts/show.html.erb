@@ -1,10 +1,45 @@
-<p style="color: green"><%= notice %></p>
+<% content_for(:page_title) { "Receipt Details" } %>
+<div class="mb-6">
+  <%= link_to receipts_path, class: "inline-flex items-center gap-1 text-sm text-secondary hover:text-primary transition-colors" do %>
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+    Back to Receipts
+  <% end %>
+</div>
 
-<%= render @receipt %>
-
-<div>
-  <%= link_to "Edit this receipt", edit_receipt_path(@receipt) %> |
-  <%= link_to "Back to receipts", receipts_path %>
-
-  <%= button_to "Destroy this receipt", @receipt, method: :delete %>
+<div class="bg-white rounded-xl border border-gray-100 overflow-hidden">
+  <div class="flex items-center justify-between px-6 py-5 border-b border-gray-100">
+    <div class="flex items-center gap-3">
+      <h2 class="text-xl font-bold text-primary">Receipt #<%= @receipt.id.first(8) %></h2>
+      <% case @receipt.status %>
+      <% when "approved" %>
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success/10 text-success">Approved</span>
+      <% when "pending" %>
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-warning/10 text-warning">Pending</span>
+      <% when "rejected" %>
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-error/10 text-error">Rejected</span>
+      <% end %>
+    </div>
+    <%= link_to edit_receipt_path(@receipt), class: "inline-flex items-center gap-2 px-3 py-2 bg-warning/10 text-warning hover:bg-warning/20 text-sm font-medium rounded-lg transition-colors" do %>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+      Update Status
+    <% end %>
+  </div>
+  <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div>
+      <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Amount</p>
+      <p class="text-2xl font-bold text-primary"><%= number_to_currency(@receipt.amount) %></p>
+    </div>
+    <div>
+      <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Status</p>
+      <p class="text-sm text-gray-700"><%= @receipt.status&.capitalize %></p>
+    </div>
+    <div>
+      <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Receipt Path</p>
+      <p class="text-sm text-gray-700 truncate"><%= @receipt.receipt_path || "—" %></p>
+    </div>
+    <div>
+      <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Created At</p>
+      <p class="text-sm text-gray-700"><%= @receipt.created_at.strftime("%B %d, %Y at %H:%M") %></p>
+    </div>
+  </div>
 </div>

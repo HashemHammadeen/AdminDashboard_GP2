@@ -1,25 +1,22 @@
 class MallsController < ApplicationController
-  before_action :set_mall, only: %i[ show edit update destroy ]
+  before_action :authenticate_mall_admin!
+  before_action :set_mall, only: %i[show edit update destroy]
+  layout "dashboard"
 
-  # GET /malls or /malls.json
   def index
     @malls = Mall.all
   end
 
-  # GET /malls/1 or /malls/1.json
   def show
   end
 
-  # GET /malls/new
   def new
     @mall = Mall.new
   end
 
-  # GET /malls/1/edit
   def edit
   end
 
-  # POST /malls or /malls.json
   def create
     @mall = Mall.new(mall_params)
 
@@ -34,7 +31,6 @@ class MallsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /malls/1 or /malls/1.json
   def update
     respond_to do |format|
       if @mall.update(mall_params)
@@ -47,10 +43,8 @@ class MallsController < ApplicationController
     end
   end
 
-  # DELETE /malls/1 or /malls/1.json
   def destroy
     @mall.destroy!
-
     respond_to do |format|
       format.html { redirect_to malls_path, notice: "Mall was successfully destroyed.", status: :see_other }
       format.json { head :no_content }
@@ -58,13 +52,12 @@ class MallsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_mall
-      @mall = Mall.find(params.expect(:id))
-    end
 
-    # Only allow a list of trusted parameters through.
-    def mall_params
-      params.expect(mall: [ :mall_name, :location, :logo_url, :cover_image_url ])
-    end
+  def set_mall
+    @mall = Mall.find(params.expect(:id))
+  end
+
+  def mall_params
+    params.expect(mall: [:mall_name, :location, :logo_url, :cover_image_url])
+  end
 end

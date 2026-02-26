@@ -1,27 +1,24 @@
 class RedeemTransactionsController < ApplicationController
-  before_action :set_redeem_transaction, only: %i[ show edit update destroy ]
+  before_action :authenticate_shop_admin!
+  before_action :set_redeem_transaction, only: %i[show edit update destroy]
+  layout "dashboard"
 
-  # GET /redeem_transactions or /redeem_transactions.json
   def index
-    @redeem_transactions = RedeemTransaction.all
+    @redeem_transactions = current_shop_admin.shop.redeem_transactions.order(created_at: :desc)
   end
 
-  # GET /redeem_transactions/1 or /redeem_transactions/1.json
   def show
   end
 
-  # GET /redeem_transactions/new
   def new
-    @redeem_transaction = RedeemTransaction.new
+    @redeem_transaction = current_shop_admin.shop.redeem_transactions.new
   end
 
-  # GET /redeem_transactions/1/edit
   def edit
   end
 
-  # POST /redeem_transactions or /redeem_transactions.json
   def create
-    @redeem_transaction = RedeemTransaction.new(redeem_transaction_params)
+    @redeem_transaction = current_shop_admin.shop.redeem_transactions.new(redeem_transaction_params)
 
     respond_to do |format|
       if @redeem_transaction.save
@@ -34,7 +31,6 @@ class RedeemTransactionsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /redeem_transactions/1 or /redeem_transactions/1.json
   def update
     respond_to do |format|
       if @redeem_transaction.update(redeem_transaction_params)
@@ -47,10 +43,8 @@ class RedeemTransactionsController < ApplicationController
     end
   end
 
-  # DELETE /redeem_transactions/1 or /redeem_transactions/1.json
   def destroy
     @redeem_transaction.destroy!
-
     respond_to do |format|
       format.html { redirect_to redeem_transactions_path, notice: "Redeem transaction was successfully destroyed.", status: :see_other }
       format.json { head :no_content }
@@ -58,13 +52,12 @@ class RedeemTransactionsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_redeem_transaction
-      @redeem_transaction = RedeemTransaction.find(params.expect(:id))
-    end
 
-    # Only allow a list of trusted parameters through.
-    def redeem_transaction_params
-      params.expect(redeem_transaction: [ :user_id, :shop_id, :points_used, :discount_value, :verification_code, :status, :completed_at ])
-    end
+  def set_redeem_transaction
+    @redeem_transaction = current_shop_admin.shop.redeem_transactions.find(params.expect(:id))
+  end
+
+  def redeem_transaction_params
+    params.expect(redeem_transaction: [:user_id, :points_used, :discount_value, :verification_code, :status])
+  end
 end

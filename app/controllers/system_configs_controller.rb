@@ -1,40 +1,18 @@
 class SystemConfigsController < ApplicationController
-  before_action :set_system_config, only: %i[ show edit update destroy ]
+  before_action :authenticate_mall_admin!
+  before_action :set_system_config, only: %i[show edit update]
+  layout "dashboard"
 
-  # GET /system_configs or /system_configs.json
   def index
     @system_configs = SystemConfig.all
   end
 
-  # GET /system_configs/1 or /system_configs/1.json
   def show
   end
 
-  # GET /system_configs/new
-  def new
-    @system_config = SystemConfig.new
-  end
-
-  # GET /system_configs/1/edit
   def edit
   end
 
-  # POST /system_configs or /system_configs.json
-  def create
-    @system_config = SystemConfig.new(system_config_params)
-
-    respond_to do |format|
-      if @system_config.save
-        format.html { redirect_to @system_config, notice: "System config was successfully created." }
-        format.json { render :show, status: :created, location: @system_config }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @system_config.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # PATCH/PUT /system_configs/1 or /system_configs/1.json
   def update
     respond_to do |format|
       if @system_config.update(system_config_params)
@@ -47,24 +25,13 @@ class SystemConfigsController < ApplicationController
     end
   end
 
-  # DELETE /system_configs/1 or /system_configs/1.json
-  def destroy
-    @system_config.destroy!
+  private
 
-    respond_to do |format|
-      format.html { redirect_to system_configs_path, notice: "System config was successfully destroyed.", status: :see_other }
-      format.json { head :no_content }
-    end
+  def set_system_config
+    @system_config = SystemConfig.find(params.expect(:id))
   end
 
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_system_config
-      @system_config = SystemConfig.find(params.expect(:id))
-    end
-
-    # Only allow a list of trusted parameters through.
-    def system_config_params
-      params.expect(system_config: [ :points_to_currency_ratio, :earn_points_per_currency, :min_redemption_threshold ])
-    end
+  def system_config_params
+    params.expect(system_config: [:earn_points_per_currency, :min_redemption_threshold, :points_to_currency_ratio])
+  end
 end

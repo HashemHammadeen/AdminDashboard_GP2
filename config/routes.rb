@@ -1,52 +1,47 @@
 Rails.application.routes.draw do
-  get "shop_dashboards/show"
-  get "mall_dashboards/show"
-  get "home/index"
   devise_for :mall_admins
   devise_for :shop_admins
-  resources :stamp_transactions
-  resources :offer_redemptions
-  resources :qrs
-  resources :user_stamp_cards
-  resources :stamps
-  resources :offers
-  resources :redeem_transactions
-  resources :earn_transactions
-  resources :receipts
-  resources :user_points_balances
-  resources :system_configs
-  resources :shop_admins
-  resources :mall_admins
+
+  # Dashboard routes
+  resources :mall_dashboards, only: [:index]
+  resource :mall_dashboard, only: [:show]
+  resources :shop_dashboards, only: [:index]
+  resource :shop_dashboard, only: [:show]
+
+  # Mall Admin resources
+  resources :malls
   resources :shops
   resources :users
   resources :categories
-  resources :malls
   resources :tiers
+  resources :system_configs
+  resources :mall_admins
+  resources :user_points_balances
+  resources :audit_logs, only: [:index, :show]
 
-
+  # Shop Admin resources
+  resources :earn_transactions
+  resources :redeem_transactions
+  resources :receipts
+  resources :offers
+  resources :stamps
+  resources :stamp_transactions
+  resources :offer_redemptions
+  resources :user_stamp_cards
+  resources :qrs
+  resources :shop_admins
 
   # Dashboard Routing Logic
   authenticated :mall_admin do
-    root to: "mall_dashboards#show", as: :mall_admin_root
+    root to: "mall_dashboards#index", as: :mall_admin_root
   end
 
   authenticated :shop_admin do
-    root to: "shop_dashboards#show", as: :shop_admin_root
+    root to: "shop_dashboards#index", as: :shop_admin_root
   end
 
   root to: "home#index"
 
-
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
+  # Health check
   get "up" => "rails/health#show", as: :rails_health_check
-
-  # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
-  # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-  # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
-
-  # Defines the root path route ("/")
-  # root "posts#index"
 end

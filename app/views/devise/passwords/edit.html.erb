@@ -1,0 +1,38 @@
+<% content_for(:title) { "Change Password" } %>
+
+<div class="min-h-screen bg-gradient-to-br from-primary via-[#2a4460] to-secondary flex items-center justify-center p-4">
+  <div class="w-full max-w-md">
+    <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl overflow-hidden">
+      <div class="px-8 pt-8 pb-6 text-center">
+        <h1 class="text-2xl font-bold text-white mb-1">Change Password</h1>
+        <p class="text-ternary text-sm">Enter your new password below</p>
+      </div>
+
+      <div class="px-8 pb-8">
+        <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put, class: "space-y-5" }) do |f| %>
+          <%= f.hidden_field :reset_password_token %>
+
+          <% if resource.errors.any? %>
+            <div class="bg-error/20 border border-error/30 text-white rounded-xl px-4 py-3 text-sm">
+              <ul class="list-disc list-inside space-y-1"><% resource.errors.full_messages.each do |msg| %><li><%= msg %></li><% end %></ul>
+            </div>
+          <% end %>
+
+          <div>
+            <%= f.label :password, "New password", class: "block text-sm font-medium text-ternary mb-1.5" %>
+            <%= f.password_field :password, autofocus: true, autocomplete: "new-password", class: "w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white text-sm placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-quaternary/50 focus:border-quaternary/50 transition-all" %>
+          </div>
+
+          <div>
+            <%= f.label :password_confirmation, "Confirm password", class: "block text-sm font-medium text-ternary mb-1.5" %>
+            <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white text-sm placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-quaternary/50 focus:border-quaternary/50 transition-all" %>
+          </div>
+
+          <div>
+            <%= f.submit "Change Password", class: "w-full px-4 py-3.5 bg-quaternary hover:bg-quaternary/90 text-primary text-sm font-semibold rounded-xl transition-all cursor-pointer shadow-lg" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

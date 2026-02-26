@@ -1,5 +1,6 @@
 class User < ApplicationRecord
-  has_secure_password # Assumes you are using bcrypt
+  alias_attribute :password_digest, :password_hash
+  has_secure_password # Uses password_hash column via alias
   belongs_to :tier
   has_one :user_points_balance, dependent: :destroy
   has_many :receipts

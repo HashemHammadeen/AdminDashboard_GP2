@@ -1,0 +1,146 @@
+<% content_for(:page_title) { "Mall Dashboard" } %>
+<% content_for(:page_subtitle) { "Global overview for #{current_mall_admin.mall&.mall_name}" } %>
+
+<!-- Stat Cards -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+  <%= render "shared/stat_card", title: "Total Malls", value: @total_malls, icon: "building", color: "primary" %>
+  <%= render "shared/stat_card", title: "Total Shops", value: @total_shops, icon: "shop", color: "secondary" %>
+  <%= render "shared/stat_card", title: "Total Users", value: @total_users, icon: "users", color: "info" %>
+  <%= render "shared/stat_card", title: "Points Earned", value: number_with_delimiter(@total_points_earned || 0), icon: "currency", color: "success" %>
+</div>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+  <%= render "shared/stat_card", title: "Earn Transactions", value: number_with_delimiter(@total_earn_transactions), icon: "chart", color: "info" %>
+  <%= render "shared/stat_card", title: "Total Receipts", value: @total_receipts, icon: "receipt", color: "secondary" %>
+  <%= render "shared/stat_card", title: "Pending Receipts", value: @pending_receipts, icon: "receipt", color: "warning" %>
+  <%= render "shared/stat_card", title: "Active Offers", value: @active_offers, icon: "gift", color: "success" %>
+</div>
+
+<!-- System Config Card -->
+<% if @system_config %>
+<div class="bg-white rounded-xl border border-gray-100 p-6 mb-8">
+  <div class="flex items-center justify-between mb-4">
+    <h3 class="text-lg font-semibold text-primary">System Configuration</h3>
+    <%= link_to edit_system_config_path(@system_config), class: "text-sm text-secondary hover:text-primary font-medium transition-colors" do %>
+      Edit Config →
+    <% end %>
+  </div>
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div class="bg-gray-50 rounded-lg p-4">
+      <p class="text-xs font-medium text-gray-500 uppercase tracking-wider">Points per Currency</p>
+      <p class="text-xl font-bold text-primary mt-1"><%= @system_config.earn_points_per_currency %></p>
+    </div>
+    <div class="bg-gray-50 rounded-lg p-4">
+      <p class="text-xs font-medium text-gray-500 uppercase tracking-wider">Min Redemption Threshold</p>
+      <p class="text-xl font-bold text-primary mt-1"><%= @system_config.min_redemption_threshold %> pts</p>
+    </div>
+    <div class="bg-gray-50 rounded-lg p-4">
+      <p class="text-xs font-medium text-gray-500 uppercase tracking-wider">Points to Currency Ratio</p>
+      <p class="text-xl font-bold text-primary mt-1"><%= @system_config.points_to_currency_ratio %></p>
+    </div>
+  </div>
+</div>
+<% end %>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+  <!-- Malls Table -->
+  <div class="bg-white rounded-xl border border-gray-100 overflow-hidden">
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+      <h3 class="text-lg font-semibold text-primary">Malls</h3>
+      <%= link_to "View All →", malls_path, class: "text-sm text-secondary hover:text-primary font-medium transition-colors" %>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full">
+        <thead>
+          <tr class="bg-gray-50">
+            <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Name</th>
+            <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Location</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          <% @malls.each_with_index do |mall, idx| %>
+            <tr class="<%= idx.even? ? 'bg-white' : 'bg-quaternary/30' %> hover:bg-ternary/10 transition-colors">
+              <td class="px-6 py-3 text-sm font-medium text-primary">
+                <%= link_to mall.mall_name, mall_path(mall), class: "hover:text-secondary transition-colors" %>
+              </td>
+              <td class="px-6 py-3 text-sm text-gray-600"><%= mall.location || "—" %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Shops Table -->
+  <div class="bg-white rounded-xl border border-gray-100 overflow-hidden">
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+      <h3 class="text-lg font-semibold text-primary">Shops</h3>
+      <%= link_to "View All →", shops_path, class: "text-sm text-secondary hover:text-primary font-medium transition-colors" %>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full">
+        <thead>
+          <tr class="bg-gray-50">
+            <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Name</th>
+            <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Mall</th>
+            <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Status</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          <% @shops.each_with_index do |shop, idx| %>
+            <tr class="<%= idx.even? ? 'bg-white' : 'bg-quaternary/30' %> hover:bg-ternary/10 transition-colors">
+              <td class="px-6 py-3 text-sm font-medium text-primary">
+                <%= link_to shop.name, shop_path(shop), class: "hover:text-secondary transition-colors" %>
+              </td>
+              <td class="px-6 py-3 text-sm text-gray-600"><%= shop.mall&.mall_name %></td>
+              <td class="px-6 py-3">
+                <% if shop.is_active %>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success/10 text-success">Active</span>
+                <% else %>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-error/10 text-error">Inactive</span>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Audit Log -->
+<div class="bg-white rounded-xl border border-gray-100 overflow-hidden">
+  <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+    <h3 class="text-lg font-semibold text-primary">Recent Audit Log</h3>
+    <%= link_to "View All →", audit_logs_path, class: "text-sm text-secondary hover:text-primary font-medium transition-colors" %>
+  </div>
+  <div class="overflow-x-auto">
+    <table class="w-full">
+      <thead>
+        <tr class="bg-gray-50">
+          <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Action</th>
+          <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Admin</th>
+          <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Points</th>
+          <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Date</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        <% @audit_logs.each_with_index do |log, idx| %>
+          <tr class="<%= idx.even? ? 'bg-white' : 'bg-quaternary/30' %> hover:bg-ternary/10 transition-colors">
+            <td class="px-6 py-3">
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary/10 text-secondary">
+                <%= log.action_type %>
+              </span>
+            </td>
+            <td class="px-6 py-3 text-sm text-gray-600"><%= log.admin_type %></td>
+            <td class="px-6 py-3 text-sm font-medium text-primary"><%= log.points || "—" %></td>
+            <td class="px-6 py-3 text-sm text-gray-500"><%= log.created_at.strftime("%b %d, %Y %H:%M") %></td>
+          </tr>
+        <% end %>
+        <% if @audit_logs.empty? %>
+          <tr><td colspan="4" class="px-6 py-8 text-center text-gray-400 text-sm">No audit logs yet</td></tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,16 +1,55 @@
-<p style="color: green"><%= notice %></p>
-
-<% content_for :title, "Tiers" %>
-
-<h1>Tiers</h1>
-
-<div id="tiers">
-  <% @tiers.each do |tier| %>
-    <%= render tier %>
-    <p>
-      <%= link_to "Show this tier", tier %>
-    </p>
+<% content_for(:page_title) { "Tiers" } %>
+<div class="flex items-center justify-between mb-6">
+  <div>
+    <h1 class="text-2xl font-bold text-primary">Tiers</h1>
+    <p class="text-sm text-gray-500 mt-1">Loyalty tiers and levels</p>
+  </div>
+  <%= link_to new_tier_path, class: "inline-flex items-center gap-2 px-4 py-2.5 bg-primary hover:bg-primary-light text-white text-sm font-medium rounded-lg transition-colors" do %>
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+    Add Tier
   <% end %>
 </div>
 
-<%= link_to "New tier", new_tier_path %>
+<div class="bg-white rounded-xl border border-gray-100 overflow-hidden">
+  <div class="overflow-x-auto">
+    <table class="w-full">
+      <thead>
+        <tr class="bg-gray-50 border-b border-gray-100">
+          <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Tier</th>
+          <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Points Required</th>
+          <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Color</th>
+          <th class="text-right text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        <% @tiers.each_with_index do |tier, idx| %>
+          <tr class="<%= idx.even? ? 'bg-white' : 'bg-quaternary/30' %> hover:bg-ternary/10 transition-colors">
+            <td class="px-6 py-4">
+              <div class="flex items-center gap-3">
+                <% if tier.color_hex.present? %>
+                  <div class="w-3 h-3 rounded-full" style="background-color: <%= tier.color_hex %>"></div>
+                <% end %>
+                <span class="font-medium text-sm text-primary"><%= tier.tier_name %></span>
+              </div>
+            </td>
+            <td class="px-6 py-4 text-sm text-gray-600"><%= number_with_delimiter(tier.points_required) %> pts</td>
+            <td class="px-6 py-4 text-sm font-mono text-gray-500"><%= tier.color_hex || "—" %></td>
+            <td class="px-6 py-4 text-right">
+              <div class="flex items-center justify-end gap-2">
+                <%= link_to tier_path(tier), class: "p-1.5 rounded-lg text-gray-400 hover:text-secondary hover:bg-secondary/10 transition-colors" do %>
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                <% end %>
+                <%= link_to edit_tier_path(tier), class: "p-1.5 rounded-lg text-gray-400 hover:text-warning hover:bg-warning/10 transition-colors" do %>
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+        <% if @tiers.empty? %>
+          <tr><td colspan="4" class="px-6 py-12 text-center text-gray-400 text-sm">No tiers found</td></tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

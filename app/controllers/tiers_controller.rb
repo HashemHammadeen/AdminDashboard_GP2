@@ -1,25 +1,22 @@
 class TiersController < ApplicationController
-  before_action :set_tier, only: %i[ show edit update destroy ]
+  before_action :authenticate_mall_admin!
+  before_action :set_tier, only: %i[show edit update destroy]
+  layout "dashboard"
 
-  # GET /tiers or /tiers.json
   def index
-    @tiers = Tier.all
+    @tiers = Tier.order(:points_required).all
   end
 
-  # GET /tiers/1 or /tiers/1.json
   def show
   end
 
-  # GET /tiers/new
   def new
     @tier = Tier.new
   end
 
-  # GET /tiers/1/edit
   def edit
   end
 
-  # POST /tiers or /tiers.json
   def create
     @tier = Tier.new(tier_params)
 
@@ -34,7 +31,6 @@ class TiersController < ApplicationController
     end
   end
 
-  # PATCH/PUT /tiers/1 or /tiers/1.json
   def update
     respond_to do |format|
       if @tier.update(tier_params)
@@ -47,10 +43,8 @@ class TiersController < ApplicationController
     end
   end
 
-  # DELETE /tiers/1 or /tiers/1.json
   def destroy
     @tier.destroy!
-
     respond_to do |format|
       format.html { redirect_to tiers_path, notice: "Tier was successfully destroyed.", status: :see_other }
       format.json { head :no_content }
@@ -58,13 +52,12 @@ class TiersController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_tier
-      @tier = Tier.find(params.expect(:id))
-    end
 
-    # Only allow a list of trusted parameters through.
-    def tier_params
-      params.expect(tier: [ :tier_name, :points_required, :benefits, :icon_url, :color_hex ])
-    end
+  def set_tier
+    @tier = Tier.find(params.expect(:id))
+  end
+
+  def tier_params
+    params.expect(tier: [:tier_name, :points_required, :color_hex, :icon_url, :benefits])
+  end
 end

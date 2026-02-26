@@ -11,4 +11,21 @@ class ApplicationController < ActionController::Base
 
   # Helper to check role in views
   helper_method :mall_admin_signed_in?, :shop_admin_signed_in?
+
+  private
+
+  def after_sign_in_path_for(resource)
+    case resource
+    when MallAdmin
+      mall_admin_root_path
+    when ShopAdmin
+      shop_admin_root_path
+    else
+      root_path
+    end
+  end
+
+  def after_sign_out_path_for(_resource_or_scope)
+    root_path
+  end
 end

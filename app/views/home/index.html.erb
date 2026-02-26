@@ -1,2 +1,56 @@
-<h1>Home#index</h1>
-<p>Find me in app/views/home/index.html.erb</p>
+<% content_for(:title) { "Mall Management System | Sign In" } %>
+
+<div class="min-h-screen bg-gradient-to-br from-primary via-primary-light to-secondary flex items-center justify-center p-4">
+  <div class="w-full max-w-4xl">
+    <!-- Header -->
+    <div class="text-center mb-10">
+      <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-sm mb-4">
+        <svg class="w-8 h-8 text-quaternary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+        </svg>
+      </div>
+      <h1 class="text-3xl font-bold text-white mb-2">Mall Management System</h1>
+      <p class="text-ternary text-lg">Select your admin portal to sign in</p>
+    </div>
+
+    <!-- Login Cards -->
+    <div class="grid md:grid-cols-2 gap-6">
+      <!-- Mall Admin Card -->
+      <%= link_to new_mall_admin_session_path, class: "group block" do %>
+        <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8 text-center hover:bg-white/20 hover:border-white/30 hover:scale-[1.02] transition-all duration-300 cursor-pointer">
+          <div class="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-quaternary/20 mb-5 group-hover:bg-quaternary/30 transition-colors">
+            <svg class="w-7 h-7 text-quaternary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+            </svg>
+          </div>
+          <h2 class="text-xl font-bold text-white mb-2">Mall Admin</h2>
+          <p class="text-ternary text-sm mb-6">Manage malls, shops, users, categories, tiers, and system configuration</p>
+          <div class="inline-flex items-center gap-2 text-quaternary font-medium text-sm group-hover:gap-3 transition-all">
+            Sign In
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+          </div>
+        </div>
+      <% end %>
+
+      <!-- Shop Admin Card -->
+      <%= link_to new_shop_admin_session_path, class: "group block" do %>
+        <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8 text-center hover:bg-white/20 hover:border-white/30 hover:scale-[1.02] transition-all duration-300 cursor-pointer">
+          <div class="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-info/20 mb-5 group-hover:bg-info/30 transition-colors">
+            <svg class="w-7 h-7 text-info" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+            </svg>
+          </div>
+          <h2 class="text-xl font-bold text-white mb-2">Shop Admin</h2>
+          <p class="text-ternary text-sm mb-6">Manage your shop, transactions, offers, stamps, and customer loyalty</p>
+          <div class="inline-flex items-center gap-2 text-info font-medium text-sm group-hover:gap-3 transition-all">
+            Sign In
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Footer -->
+    <p class="text-center text-ternary/60 text-xs mt-8">&copy; <%= Date.current.year %> Mall Management System. All rights reserved.</p>
+  </div>
+</div>

@@ -1,0 +1,35 @@
+<% content_for(:title) { "Reset Password" } %>
+
+<div class="min-h-screen bg-gradient-to-br from-primary via-[#2a4460] to-secondary flex items-center justify-center p-4">
+  <div class="w-full max-w-md">
+    <div class="mb-6">
+      <%= link_to new_session_path(resource_name), class: "inline-flex items-center gap-1 text-ternary/80 hover:text-white text-sm transition-colors" do %>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        Back to sign in
+      <% end %>
+    </div>
+
+    <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl overflow-hidden">
+      <div class="px-8 pt-8 pb-6 text-center">
+        <div class="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-warning/20 mb-4">
+          <svg class="w-7 h-7 text-warning" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+        </div>
+        <h1 class="text-2xl font-bold text-white mb-1">Reset Password</h1>
+        <p class="text-ternary text-sm">Enter your email to receive reset instructions</p>
+      </div>
+
+      <div class="px-8 pb-8">
+        <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post, class: "space-y-5" }) do |f| %>
+          <div>
+            <%= f.label :email, class: "block text-sm font-medium text-ternary mb-1.5" %>
+            <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "admin@example.com", class: "w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white text-sm placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-quaternary/50 focus:border-quaternary/50 transition-all" %>
+          </div>
+
+          <div>
+            <%= f.submit "Send Reset Instructions", class: "w-full px-4 py-3.5 bg-warning hover:bg-warning/90 text-white text-sm font-semibold rounded-xl transition-all cursor-pointer shadow-lg" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

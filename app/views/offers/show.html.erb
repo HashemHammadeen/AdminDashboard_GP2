@@ -1,10 +1,21 @@
-<p style="color: green"><%= notice %></p>
-
-<%= render @offer %>
-
-<div>
-  <%= link_to "Edit this offer", edit_offer_path(@offer) %> |
-  <%= link_to "Back to offers", offers_path %>
-
-  <%= button_to "Destroy this offer", @offer, method: :delete %>
+<% content_for(:page_title) { @offer.name } %>
+<div class="mb-6"><%= link_to offers_path, class: "inline-flex items-center gap-1 text-sm text-secondary hover:text-primary transition-colors" do %><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>Back to Offers<% end %></div>
+<div class="bg-white rounded-xl border border-gray-100 overflow-hidden">
+  <div class="flex items-center justify-between px-6 py-5 border-b border-gray-100">
+    <div class="flex items-center gap-3">
+      <h2 class="text-xl font-bold text-primary"><%= @offer.name %></h2>
+      <% if @offer.active %>
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success/10 text-success">Active</span>
+      <% else %>
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-500">Inactive</span>
+      <% end %>
+    </div>
+    <%= link_to edit_offer_path(@offer), class: "inline-flex items-center gap-2 px-3 py-2 bg-warning/10 text-warning hover:bg-warning/20 text-sm font-medium rounded-lg transition-colors" do %>Edit<% end %>
+  </div>
+  <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div><p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Description</p><p class="text-sm text-gray-700"><%= @offer.description || "—" %></p></div>
+    <div><p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Reward Type</p><p class="text-sm text-gray-700"><%= @offer.reward_type %></p></div>
+    <div><p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Start Date</p><p class="text-sm text-gray-700"><%= @offer.start_date&.strftime("%B %d, %Y") || "—" %></p></div>
+    <div><p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">End Date</p><p class="text-sm text-gray-700"><%= @offer.end_date&.strftime("%B %d, %Y") || "—" %></p></div>
+  </div>
 </div>

@@ -1,27 +1,24 @@
 class OffersController < ApplicationController
-  before_action :set_offer, only: %i[ show edit update destroy ]
+  before_action :authenticate_shop_admin!
+  before_action :set_offer, only: %i[show edit update destroy]
+  layout "dashboard"
 
-  # GET /offers or /offers.json
   def index
-    @offers = Offer.all
+    @offers = current_shop_admin.shop.offers.order(created_at: :desc)
   end
 
-  # GET /offers/1 or /offers/1.json
   def show
   end
 
-  # GET /offers/new
   def new
-    @offer = Offer.new
+    @offer = current_shop_admin.shop.offers.new
   end
 
-  # GET /offers/1/edit
   def edit
   end
 
-  # POST /offers or /offers.json
   def create
-    @offer = Offer.new(offer_params)
+    @offer = current_shop_admin.shop.offers.new(offer_params)
 
     respond_to do |format|
       if @offer.save
@@ -34,7 +31,6 @@ class OffersController < ApplicationController
     end
   end
 
-  # PATCH/PUT /offers/1 or /offers/1.json
   def update
     respond_to do |format|
       if @offer.update(offer_params)
@@ -47,10 +43,8 @@ class OffersController < ApplicationController
     end
   end
 
-  # DELETE /offers/1 or /offers/1.json
   def destroy
     @offer.destroy!
-
     respond_to do |format|
       format.html { redirect_to offers_path, notice: "Offer was successfully destroyed.", status: :see_other }
       format.json { head :no_content }
@@ -58,13 +52,12 @@ class OffersController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_offer
-      @offer = Offer.find(params.expect(:id))
-    end
 
-    # Only allow a list of trusted parameters through.
-    def offer_params
-      params.expect(offer: [ :shop_id, :name, :description, :image_url, :reward_type, :reward_value, :active, :start_date, :end_date ])
-    end
+  def set_offer
+    @offer = current_shop_admin.shop.offers.find(params.expect(:id))
+  end
+
+  def offer_params
+    params.expect(offer: [:name, :description, :image_url, :reward_type, :reward_value, :start_date, :end_date, :active])
+  end
 end

@@ -1,31 +1,29 @@
 class QrsController < ApplicationController
-  before_action :set_qr, only: %i[ show edit update destroy ]
+  before_action :authenticate_shop_admin!
+  before_action :set_qr, only: %i[show edit update destroy]
+  layout "dashboard"
 
-  # GET /qrs or /qrs.json
   def index
-    @qrs = Qr.all
+    @qrs = Qr.where(shop_id: current_shop_admin.shop.id).order(created_at: :desc)
   end
 
-  # GET /qrs/1 or /qrs/1.json
   def show
   end
 
-  # GET /qrs/new
   def new
-    @qr = Qr.new
+    @qr = Qr.new(shop_id: current_shop_admin.shop.id)
   end
 
-  # GET /qrs/1/edit
   def edit
   end
 
-  # POST /qrs or /qrs.json
   def create
     @qr = Qr.new(qr_params)
+    @qr.shop = current_shop_admin.shop
 
     respond_to do |format|
       if @qr.save
-        format.html { redirect_to @qr, notice: "Qr was successfully created." }
+        format.html { redirect_to @qr, notice: "QR was successfully created." }
         format.json { render :show, status: :created, location: @qr }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -34,11 +32,10 @@ class QrsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /qrs/1 or /qrs/1.json
   def update
     respond_to do |format|
       if @qr.update(qr_params)
-        format.html { redirect_to @qr, notice: "Qr was successfully updated.", status: :see_other }
+        format.html { redirect_to @qr, notice: "QR was successfully updated.", status: :see_other }
         format.json { render :show, status: :ok, location: @qr }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -47,24 +44,21 @@ class QrsController < ApplicationController
     end
   end
 
-  # DELETE /qrs/1 or /qrs/1.json
   def destroy
     @qr.destroy!
-
     respond_to do |format|
-      format.html { redirect_to qrs_path, notice: "Qr was successfully destroyed.", status: :see_other }
+      format.html { redirect_to qrs_path, notice: "QR was successfully destroyed.", status: :see_other }
       format.json { head :no_content }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_qr
-      @qr = Qr.find(params.expect(:id))
-    end
 
-    # Only allow a list of trusted parameters through.
-    def qr_params
-      params.expect(qr: [ :user_id, :shop_id, :qr_code_data, :expires_at ])
-    end
+  def set_qr
+    @qr = Qr.where(shop_id: current_shop_admin.shop.id).find(params.expect(:id))
+  end
+
+  def qr_params
+    params.expect(qr: [:user_id, :qr_code_data, :expires_at])
+  end
 end

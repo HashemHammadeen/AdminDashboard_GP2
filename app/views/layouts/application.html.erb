@@ -1,29 +1,50 @@
 <!DOCTYPE html>
-<html>
+<html class="h-full">
   <head>
-    <title><%= content_for(:title) || "Admin Dashboard Gp" %></title>
+    <title><%= content_for(:title) || "Mall Management System" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="Admin Dashboard Gp">
+    <meta name="application-name" content="Mall Management System">
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
     <%= yield :head %>
 
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
+  <body class="h-full bg-gray-50 font-sans antialiased">
+    <% if notice.present? || alert.present? %>
+      <div class="fixed top-4 right-4 z-50 max-w-sm">
+        <% if notice.present? %>
+          <div class="bg-success/10 border border-success/20 text-success rounded-lg px-4 py-3 text-sm font-medium shadow-lg" data-controller="alert" data-alert-target="container">
+            <div class="flex items-center justify-between gap-3">
+              <span><%= notice %></span>
+              <button data-action="click->alert#dismiss" class="text-success/60 hover:text-success">&times;</button>
+            </div>
+          </div>
+        <% end %>
+        <% if alert.present? %>
+          <div class="bg-error/10 border border-error/20 text-error rounded-lg px-4 py-3 text-sm font-medium shadow-lg" data-controller="alert" data-alert-target="container">
+            <div class="flex items-center justify-between gap-3">
+              <span><%= alert %></span>
+              <button data-action="click->alert#dismiss" class="text-error/60 hover:text-error">&times;</button>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
     <%= yield %>
   </body>
 </html>

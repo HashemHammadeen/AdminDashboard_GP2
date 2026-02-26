@@ -1,16 +1,44 @@
-<p style="color: green"><%= notice %></p>
+<% content_for(:page_title) { "Earn Transactions" } %>
 
-<% content_for :title, "Earn transactions" %>
-
-<h1>Earn transactions</h1>
-
-<div id="earn_transactions">
-  <% @earn_transactions.each do |earn_transaction| %>
-    <%= render earn_transaction %>
-    <p>
-      <%= link_to "Show this earn transaction", earn_transaction %>
-    </p>
-  <% end %>
+<div class="flex items-center justify-between mb-6">
+  <div>
+    <h1 class="text-2xl font-bold text-primary">Earn Transactions</h1>
+    <p class="text-sm text-gray-500 mt-1">Points earned from purchases</p>
+  </div>
 </div>
 
-<%= link_to "New earn transaction", new_earn_transaction_path %>
+<div class="bg-white rounded-xl border border-gray-100 overflow-hidden">
+  <div class="overflow-x-auto">
+    <table class="w-full">
+      <thead>
+        <tr class="bg-gray-50 border-b border-gray-100">
+          <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Ref</th>
+          <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Purchase Amount</th>
+          <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Points Earned</th>
+          <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Date</th>
+          <th class="text-right text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        <% @earn_transactions.each_with_index do |txn, idx| %>
+          <tr class="<%= idx.even? ? 'bg-white' : 'bg-quaternary/30' %> hover:bg-ternary/10 transition-colors">
+            <td class="px-6 py-4 text-sm font-medium text-primary"><%= txn.transaction_ref || txn.id.first(8) %></td>
+            <td class="px-6 py-4 text-sm text-gray-600"><%= number_to_currency(txn.purchase_amount) %></td>
+            <td class="px-6 py-4">
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-success/10 text-success">+<%= txn.points_earned %></span>
+            </td>
+            <td class="px-6 py-4 text-sm text-gray-500"><%= txn.created_at.strftime("%b %d, %Y %H:%M") %></td>
+            <td class="px-6 py-4 text-right">
+              <%= link_to earn_transaction_path(txn), class: "p-1.5 rounded-lg text-gray-400 hover:text-secondary hover:bg-secondary/10 transition-colors" do %>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+        <% if @earn_transactions.empty? %>
+          <tr><td colspan="5" class="px-6 py-12 text-center text-gray-400 text-sm">No earn transactions found</td></tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

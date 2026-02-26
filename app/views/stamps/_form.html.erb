@@ -1,67 +1,43 @@
-<%= form_with(model: stamp) do |form| %>
+<%= form_with(model: stamp, class: "space-y-5") do |form| %>
   <% if stamp.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(stamp.errors.count, "error") %> prohibited this stamp from being saved:</h2>
-
-      <ul>
-        <% stamp.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
+    <div class="bg-error/10 border border-error/20 rounded-lg p-4">
+      <ul class="list-disc list-inside text-sm text-error/80 space-y-1"><% stamp.errors.each do |error| %><li><%= error.full_message %></li><% end %></ul>
     </div>
   <% end %>
-
-  <div>
-    <%= form.label :shop_id, style: "display: block" %>
-    <%= form.text_field :shop_id %>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+    <div>
+      <%= form.label :name, class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= form.text_field :name, class: "w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm text-primary focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-colors" %>
+    </div>
+    <div>
+      <%= form.label :stamps_required, class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= form.number_field :stamps_required, class: "w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm text-primary focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-colors" %>
+    </div>
+    <div>
+      <%= form.label :reward_type, class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= form.text_field :reward_type, class: "w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm text-primary focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-colors" %>
+    </div>
+    <div>
+      <%= form.label :start_date, class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= form.datetime_local_field :start_date, class: "w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm text-primary focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-colors" %>
+    </div>
+    <div>
+      <%= form.label :end_date, class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= form.datetime_local_field :end_date, class: "w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm text-primary focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-colors" %>
+    </div>
   </div>
-
   <div>
-    <%= form.label :name, style: "display: block" %>
-    <%= form.text_field :name %>
+    <%= form.label :description, class: "block text-sm font-medium text-gray-700 mb-1" %>
+    <%= form.text_area :description, rows: 3, class: "w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm text-primary focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-colors resize-none" %>
   </div>
-
-  <div>
-    <%= form.label :description, style: "display: block" %>
-    <%= form.textarea :description %>
+  <div class="flex items-center gap-3">
+    <%= form.label :active, class: "flex items-center gap-2 cursor-pointer" do %>
+      <%= form.check_box :active, class: "w-4 h-4 rounded border-gray-300 text-secondary focus:ring-secondary" %>
+      <span class="text-sm font-medium text-gray-700">Active</span>
+    <% end %>
   </div>
-
-  <div>
-    <%= form.label :image_url, style: "display: block" %>
-    <%= form.text_field :image_url %>
-  </div>
-
-  <div>
-    <%= form.label :stamp_icon_url, style: "display: block" %>
-    <%= form.text_field :stamp_icon_url %>
-  </div>
-
-  <div>
-    <%= form.label :stamps_required, style: "display: block" %>
-    <%= form.number_field :stamps_required %>
-  </div>
-
-  <div>
-    <%= form.label :reward_type, style: "display: block" %>
-    <%= form.text_field :reward_type %>
-  </div>
-
-  <div>
-    <%= form.label :active, style: "display: block" %>
-    <%= form.checkbox :active %>
-  </div>
-
-  <div>
-    <%= form.label :start_date, style: "display: block" %>
-    <%= form.datetime_field :start_date %>
-  </div>
-
-  <div>
-    <%= form.label :end_date, style: "display: block" %>
-    <%= form.datetime_field :end_date %>
-  </div>
-
-  <div>
-    <%= form.submit %>
+  <div class="flex items-center gap-3 pt-2">
+    <%= form.submit class: "px-5 py-2.5 bg-primary hover:bg-primary-light text-white text-sm font-medium rounded-lg transition-colors cursor-pointer" %>
+    <%= link_to "Cancel", stamps_path, class: "px-5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium rounded-lg transition-colors" %>
   </div>
 <% end %>

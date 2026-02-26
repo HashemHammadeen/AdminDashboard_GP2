@@ -1,11 +1,17 @@
-<% content_for :title, "New shop" %>
+<% content_for(:page_title) { "New Shop" } %>
 
-<h1>New shop</h1>
+<div class="mb-6">
+  <%= link_to shops_path, class: "inline-flex items-center gap-1 text-sm text-secondary hover:text-primary transition-colors" do %>
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+    Back to Shops
+  <% end %>
+</div>
 
-<%= render "form", shop: @shop %>
-
-<br>
-
-<div>
-  <%= link_to "Back to shops", shops_path %>
+<div class="bg-white rounded-xl border border-gray-100 overflow-hidden max-w-2xl">
+  <div class="px-6 py-5 border-b border-gray-100">
+    <h2 class="text-xl font-bold text-primary">New Shop</h2>
+  </div>
+  <div class="p-6">
+    <%= render "form", shop: @shop %>
+  </div>
 </div>

@@ -1,10 +1,47 @@
-<p style="color: green"><%= notice %></p>
+<% content_for(:page_title) { @shop.name } %>
 
-<%= render @shop %>
+<div class="mb-6">
+  <%= link_to shops_path, class: "inline-flex items-center gap-1 text-sm text-secondary hover:text-primary transition-colors" do %>
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+    Back to Shops
+  <% end %>
+</div>
 
-<div>
-  <%= link_to "Edit this shop", edit_shop_path(@shop) %> |
-  <%= link_to "Back to shops", shops_path %>
-
-  <%= button_to "Destroy this shop", @shop, method: :delete %>
+<div class="bg-white rounded-xl border border-gray-100 overflow-hidden">
+  <div class="flex items-center justify-between px-6 py-5 border-b border-gray-100">
+    <div class="flex items-center gap-3">
+      <h2 class="text-xl font-bold text-primary"><%= @shop.name %></h2>
+      <% if @shop.is_active %>
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success/10 text-success">Active</span>
+      <% else %>
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-error/10 text-error">Inactive</span>
+      <% end %>
+    </div>
+    <%= link_to edit_shop_path(@shop), class: "inline-flex items-center gap-2 px-3 py-2 bg-warning/10 text-warning hover:bg-warning/20 text-sm font-medium rounded-lg transition-colors" do %>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+      Edit
+    <% end %>
+  </div>
+  <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div>
+      <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Mall</p>
+      <p class="text-sm text-primary font-medium"><%= @shop.mall&.mall_name %></p>
+    </div>
+    <div>
+      <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Category</p>
+      <p class="text-sm text-gray-700"><%= @shop.category&.category_name %></p>
+    </div>
+    <div>
+      <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Website</p>
+      <p class="text-sm text-gray-700 truncate"><%= @shop.website_url || "—" %></p>
+    </div>
+    <div class="md:col-span-2 lg:col-span-3">
+      <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Bio</p>
+      <p class="text-sm text-gray-700"><%= @shop.bio || "—" %></p>
+    </div>
+    <div>
+      <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Created At</p>
+      <p class="text-sm text-gray-700"><%= @shop.created_at.strftime("%B %d, %Y at %H:%M") %></p>
+    </div>
+  </div>
 </div>

@@ -1,16 +1,54 @@
-<p style="color: green"><%= notice %></p>
-
-<% content_for :title, "Redeem transactions" %>
-
-<h1>Redeem transactions</h1>
-
-<div id="redeem_transactions">
-  <% @redeem_transactions.each do |redeem_transaction| %>
-    <%= render redeem_transaction %>
-    <p>
-      <%= link_to "Show this redeem transaction", redeem_transaction %>
-    </p>
-  <% end %>
+<% content_for(:page_title) { "Redeem Transactions" } %>
+<div class="flex items-center justify-between mb-6">
+  <div>
+    <h1 class="text-2xl font-bold text-primary">Redeem Transactions</h1>
+    <p class="text-sm text-gray-500 mt-1">Points redeemed for discounts</p>
+  </div>
 </div>
 
-<%= link_to "New redeem transaction", new_redeem_transaction_path %>
+<div class="bg-white rounded-xl border border-gray-100 overflow-hidden">
+  <div class="overflow-x-auto">
+    <table class="w-full">
+      <thead>
+        <tr class="bg-gray-50 border-b border-gray-100">
+          <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Code</th>
+          <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Points Used</th>
+          <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Discount</th>
+          <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Status</th>
+          <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Date</th>
+          <th class="text-right text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        <% @redeem_transactions.each_with_index do |txn, idx| %>
+          <tr class="<%= idx.even? ? 'bg-white' : 'bg-quaternary/30' %> hover:bg-ternary/10 transition-colors">
+            <td class="px-6 py-4 text-sm font-mono font-medium text-primary"><%= txn.verification_code %></td>
+            <td class="px-6 py-4">
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-error/10 text-error">-<%= txn.points_used %></span>
+            </td>
+            <td class="px-6 py-4 text-sm text-gray-600"><%= number_to_currency(txn.discount_value) %></td>
+            <td class="px-6 py-4">
+              <% case txn.status %>
+              <% when "completed" %>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success/10 text-success">Completed</span>
+              <% when "pending" %>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-warning/10 text-warning">Pending</span>
+              <% else %>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600"><%= txn.status %></span>
+              <% end %>
+            </td>
+            <td class="px-6 py-4 text-sm text-gray-500"><%= txn.created_at.strftime("%b %d, %Y %H:%M") %></td>
+            <td class="px-6 py-4 text-right">
+              <%= link_to redeem_transaction_path(txn), class: "p-1.5 rounded-lg text-gray-400 hover:text-secondary hover:bg-secondary/10 transition-colors" do %>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+        <% if @redeem_transactions.empty? %>
+          <tr><td colspan="6" class="px-6 py-12 text-center text-gray-400 text-sm">No redeem transactions found</td></tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,20 @@
+<%# Shared flash messages partial %>
+<% if notice.present? %>
+  <div class="flex items-center gap-3 px-4 py-3 rounded-lg bg-success/10 border border-success/20 text-success mb-4" data-controller="alert" data-alert-target="container">
+    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    <p class="text-sm font-medium flex-1"><%= notice %></p>
+    <button class="text-success/70 hover:text-success" data-action="click->alert#dismiss">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+  </div>
+<% end %>
+
+<% if alert.present? %>
+  <div class="flex items-center gap-3 px-4 py-3 rounded-lg bg-error/10 border border-error/20 text-error mb-4" data-controller="alert" data-alert-target="container">
+    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    <p class="text-sm font-medium flex-1"><%= alert %></p>
+    <button class="text-error/70 hover:text-error" data-action="click->alert#dismiss">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+  </div>
+<% end %>

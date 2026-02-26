@@ -1,12 +1,52 @@
-<% content_for :title, "Editing user" %>
+<% content_for(:page_title) { "Edit User" } %>
+<div class="mb-6">
+  <%= link_to user_path(@user), class: "inline-flex items-center gap-1 text-sm text-secondary hover:text-primary transition-colors" do %>
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+    Back to User
+  <% end %>
+</div>
 
-<h1>Editing user</h1>
+<div class="bg-white rounded-xl border border-gray-100 overflow-hidden max-w-2xl">
+  <div class="px-6 py-5 border-b border-gray-100">
+    <h2 class="text-xl font-bold text-primary">Edit User</h2>
+  </div>
+  <div class="p-6">
+    <%= form_with(model: @user, class: "space-y-5") do |form| %>
+      <% if @user.errors.any? %>
+        <div class="bg-error/10 border border-error/20 rounded-lg p-4">
+          <ul class="list-disc list-inside text-sm text-error/80 space-y-1">
+            <% @user.errors.each do |error| %><li><%= error.full_message %></li><% end %>
+          </ul>
+        </div>
+      <% end %>
 
-<%= render "form", user: @user %>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div>
+          <%= form.label :firstname, "First Name", class: "block text-sm font-medium text-gray-700 mb-1" %>
+          <%= form.text_field :firstname, class: "w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm text-primary focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-colors" %>
+        </div>
+        <div>
+          <%= form.label :lastname, "Last Name", class: "block text-sm font-medium text-gray-700 mb-1" %>
+          <%= form.text_field :lastname, class: "w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm text-primary focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-colors" %>
+        </div>
+        <div>
+          <%= form.label :email, class: "block text-sm font-medium text-gray-700 mb-1" %>
+          <%= form.email_field :email, class: "w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm text-primary focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-colors" %>
+        </div>
+        <div>
+          <%= form.label :phone, class: "block text-sm font-medium text-gray-700 mb-1" %>
+          <%= form.text_field :phone, class: "w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm text-primary focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-colors" %>
+        </div>
+        <div>
+          <%= form.label :tier_id, "Tier", class: "block text-sm font-medium text-gray-700 mb-1" %>
+          <%= form.collection_select :tier_id, Tier.all, :id, :tier_name, {}, class: "w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm text-primary focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-colors" %>
+        </div>
+      </div>
 
-<br>
-
-<div>
-  <%= link_to "Show this user", @user %> |
-  <%= link_to "Back to users", users_path %>
+      <div class="flex items-center gap-3 pt-2">
+        <%= form.submit class: "px-5 py-2.5 bg-primary hover:bg-primary-light text-white text-sm font-medium rounded-lg transition-colors cursor-pointer" %>
+        <%= link_to "Cancel", user_path(@user), class: "px-5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium rounded-lg transition-colors" %>
+      </div>
+    <% end %>
+  </div>
 </div>

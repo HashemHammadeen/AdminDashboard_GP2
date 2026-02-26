@@ -1,10 +1,22 @@
-<p style="color: green"><%= notice %></p>
-
-<%= render @system_config %>
-
-<div>
-  <%= link_to "Edit this system config", edit_system_config_path(@system_config) %> |
-  <%= link_to "Back to system configs", system_configs_path %>
-
-  <%= button_to "Destroy this system config", @system_config, method: :delete %>
+<% content_for(:page_title) { "System Config" } %>
+<div class="mb-6"><%= link_to system_configs_path, class: "inline-flex items-center gap-1 text-sm text-secondary hover:text-primary transition-colors" do %><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>Back<% end %></div>
+<div class="bg-white rounded-xl border border-gray-100 overflow-hidden">
+  <div class="flex items-center justify-between px-6 py-5 border-b border-gray-100">
+    <h2 class="text-xl font-bold text-primary">System Configuration</h2>
+    <%= link_to edit_system_config_path(@system_config), class: "inline-flex items-center gap-2 px-3 py-2 bg-warning/10 text-warning hover:bg-warning/20 text-sm font-medium rounded-lg transition-colors" do %>Edit<% end %>
+  </div>
+  <div class="p-6 grid grid-cols-1 sm:grid-cols-3 gap-6">
+    <div class="bg-gray-50 rounded-lg p-4">
+      <p class="text-xs font-medium text-gray-500 uppercase tracking-wider">Earn Points per Currency</p>
+      <p class="text-2xl font-bold text-primary mt-2"><%= @system_config.earn_points_per_currency %></p>
+    </div>
+    <div class="bg-gray-50 rounded-lg p-4">
+      <p class="text-xs font-medium text-gray-500 uppercase tracking-wider">Min Redemption Threshold</p>
+      <p class="text-2xl font-bold text-primary mt-2"><%= @system_config.min_redemption_threshold %> pts</p>
+    </div>
+    <div class="bg-gray-50 rounded-lg p-4">
+      <p class="text-xs font-medium text-gray-500 uppercase tracking-wider">Points to Currency Ratio</p>
+      <p class="text-2xl font-bold text-primary mt-2"><%= @system_config.points_to_currency_ratio %></p>
+    </div>
+  </div>
 </div>

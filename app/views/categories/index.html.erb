@@ -1,16 +1,48 @@
-<p style="color: green"><%= notice %></p>
-
-<% content_for :title, "Categories" %>
-
-<h1>Categories</h1>
-
-<div id="categories">
-  <% @categories.each do |category| %>
-    <%= render category %>
-    <p>
-      <%= link_to "Show this category", category %>
-    </p>
+<% content_for(:page_title) { "Categories" } %>
+<div class="flex items-center justify-between mb-6">
+  <div>
+    <h1 class="text-2xl font-bold text-primary">Categories</h1>
+    <p class="text-sm text-gray-500 mt-1">Shop categories</p>
+  </div>
+  <%= link_to new_category_path, class: "inline-flex items-center gap-2 px-4 py-2.5 bg-primary hover:bg-primary-light text-white text-sm font-medium rounded-lg transition-colors" do %>
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+    Add Category
   <% end %>
 </div>
 
-<%= link_to "New category", new_category_path %>
+<div class="bg-white rounded-xl border border-gray-100 overflow-hidden">
+  <div class="overflow-x-auto">
+    <table class="w-full">
+      <thead>
+        <tr class="bg-gray-50 border-b border-gray-100">
+          <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Name</th>
+          <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Description</th>
+          <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Order</th>
+          <th class="text-right text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        <% @categories.each_with_index do |cat, idx| %>
+          <tr class="<%= idx.even? ? 'bg-white' : 'bg-quaternary/30' %> hover:bg-ternary/10 transition-colors">
+            <td class="px-6 py-4 text-sm font-medium text-primary"><%= cat.category_name %></td>
+            <td class="px-6 py-4 text-sm text-gray-600 max-w-xs truncate"><%= cat.description || "—" %></td>
+            <td class="px-6 py-4 text-sm text-gray-500"><%= cat.display_order %></td>
+            <td class="px-6 py-4 text-right">
+              <div class="flex items-center justify-end gap-2">
+                <%= link_to category_path(cat), class: "p-1.5 rounded-lg text-gray-400 hover:text-secondary hover:bg-secondary/10 transition-colors" do %>
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                <% end %>
+                <%= link_to edit_category_path(cat), class: "p-1.5 rounded-lg text-gray-400 hover:text-warning hover:bg-warning/10 transition-colors" do %>
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+        <% if @categories.empty? %>
+          <tr><td colspan="4" class="px-6 py-12 text-center text-gray-400 text-sm">No categories found</td></tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
