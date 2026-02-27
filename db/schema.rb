@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_25_000001) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_26_221031) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -75,8 +75,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_25_000001) do
     t.string "location"
     t.string "logo_url"
     t.string "mall_name", null: false
+    t.string "subdomain"
     t.datetime "updated_at", null: false
     t.index ["mall_name"], name: "index_malls_on_mall_name", unique: true
+    t.index ["subdomain"], name: "index_malls_on_subdomain", unique: true
   end
 
   create_table "offer_redemptions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -149,6 +151,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_25_000001) do
     t.datetime "created_at", null: false
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
+    t.boolean "is_active", default: true
     t.string "name", null: false
     t.string "phone", null: false
     t.datetime "remember_created_at"

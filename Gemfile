@@ -78,4 +78,8 @@ group :test do
 end
 
 gem "devise", "~> 5.0"
+gem "cancancan"
 gem "tailwindcss-rails", "~> 4.4"
+
+gem "chartkick", "~> 5.2"
+gem "groupdate", "~> 6.7"

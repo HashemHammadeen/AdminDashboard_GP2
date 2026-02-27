@@ -38,8 +38,12 @@
             </svg>
           </div>
           <div>
-            <h1 class="text-white font-bold text-sm tracking-wide">Mall Manager</h1>
-            <p class="text-ternary text-xs">Admin Dashboard</p>
+            <h1 class="text-white font-bold text-sm tracking-wide">
+              <%= mall_admin_signed_in? ? "Mall Manager" : "Shop Manager" %>
+            </h1>
+            <p class="text-ternary text-xs">
+              <%= mall_admin_signed_in? ? "Admin Dashboard" : "Shop Dashboard" %>
+            </p>
           </div>
         </div>
 

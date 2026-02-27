@@ -11,8 +11,34 @@
     <div><p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Points</p><p class="text-sm text-gray-700"><%= @audit_log.points || "—" %></p></div>
     <div><p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Date</p><p class="text-sm text-gray-700"><%= @audit_log.created_at.strftime("%B %d, %Y at %H:%M") %></p></div>
     <% if @audit_log.metadata.present? %>
-      <div class="md:col-span-2"><p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Metadata</p>
-        <pre class="text-xs bg-gray-50 rounded-lg p-4 overflow-x-auto"><%= JSON.pretty_generate(@audit_log.metadata) rescue @audit_log.metadata %></pre>
+      <div class="md:col-span-2"><p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Detailed Changes</p>
+        <div class="bg-gray-50 rounded-lg border border-gray-100 p-4">
+          <ul class="text-sm space-y-3">
+            <li><span class="font-medium text-gray-600">Model:</span> <span class="font-mono text-secondary ml-1"><%= @audit_log.metadata['model_name'] %></span></li>
+            <li><span class="font-medium text-gray-600">Record ID:</span> <span class="font-mono text-gray-500 ml-1"><%= @audit_log.metadata['record_id'] %></span></li>
+            <% if @audit_log.metadata['changes'].present? %>
+              <li class="pt-2 border-t border-gray-200">
+                <span class="font-medium text-gray-600 block mb-2">Attribute Changes:</span>
+                <div class="space-y-2">
+                  <% @audit_log.metadata['changes'].each do |field, values| %>
+                    <% if values.is_a?(Array) && values.size == 2 %>
+                      <div class="grid grid-cols-1 md:grid-cols-3 gap-2 text-xs">
+                        <div class="font-medium text-gray-600 truncate"><%= field.titleize %></div>
+                        <div class="bg-red-50 text-red-600 px-2 py-1 rounded truncate line-through"><%= values[0].inspect %></div>
+                        <div class="bg-green-50 text-green-600 px-2 py-1 rounded truncate"><%= values[1].inspect %></div>
+                      </div>
+                    <% else %>
+                      <div class="grid grid-cols-1 md:grid-cols-3 gap-2 text-xs">
+                        <div class="font-medium text-gray-600 truncate"><%= field.titleize %></div>
+                        <div class="md:col-span-2 bg-gray-100 text-gray-700 px-2 py-1 rounded truncate"><%= values.inspect %></div>
+                      </div>
+                    <% end %>
+                  <% end %>
+                </div>
+              </li>
+            <% end %>
+          </ul>
+        </div>
       </div>
     <% end %>
   </div>

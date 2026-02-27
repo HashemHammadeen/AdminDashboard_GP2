@@ -1,162 +1,229 @@
-# Seeds for Mall Management Dashboard
+# Massive Seeds for Subdomain Multi-Tenancy
 # Run: rails db:seed
 
-puts "🌱 Seeding database..."
+puts "🌱 Clearing existing data..."
+AuditLog.delete_all
+Receipt.delete_all
+Offer.delete_all
+OfferRedemption.delete_all
+StampTransaction.delete_all
+UserStampCard.delete_all
+Stamp.delete_all
+Qr.delete_all
+RedeemTransaction.delete_all
+EarnTransaction.delete_all
+UserPointsBalance.delete_all
+User.delete_all
+ShopAdmin.delete_all
+MallAdmin.delete_all
+Shop.delete_all
+Mall.delete_all
+Category.delete_all
+Tier.delete_all
+SystemConfig.delete_all
+
+puts "🌱 Seeding database with massive data block..."
 
 # --- Tiers ---
-bronze = Tier.find_or_create_by!(tier_name: "Bronze") do |t|
-  t.points_required = 0
-  t.color_hex = "#CD7F32"
-end
-silver = Tier.find_or_create_by!(tier_name: "Silver") do |t|
-  t.points_required = 500
-  t.color_hex = "#C0C0C0"
-end
-gold = Tier.find_or_create_by!(tier_name: "Gold") do |t|
-  t.points_required = 2000
-  t.color_hex = "#FFD700"
-end
-puts "  ✓ #{Tier.count} tiers"
+bronze = Tier.create!(tier_name: "Bronze", points_required: 0, color_hex: "#CD7F32")
+silver = Tier.create!(tier_name: "Silver", points_required: 500, color_hex: "#C0C0C0")
+gold = Tier.create!(tier_name: "Gold", points_required: 2000, color_hex: "#FFD700")
+platinum = Tier.create!(tier_name: "Platinum", points_required: 5000, color_hex: "#E5E4E2")
 
 # --- Categories ---
-food    = Category.find_or_create_by!(category_name: "Food & Beverage") { |c| c.display_order = 1; c.description = "Restaurants, cafés, and food courts" }
-fashion = Category.find_or_create_by!(category_name: "Fashion") { |c| c.display_order = 2; c.description = "Clothing, shoes, and accessories" }
-electronics = Category.find_or_create_by!(category_name: "Electronics") { |c| c.display_order = 3; c.description = "Gadgets and tech stores" }
-puts "  ✓ #{Category.count} categories"
-
-# --- Malls ---
-mall1 = Mall.find_or_create_by!(mall_name: "City Mall") { |m| m.location = "Downtown, Amman" }
-mall2 = Mall.find_or_create_by!(mall_name: "Sunset Mall") { |m| m.location = "West Amman" }
-puts "  ✓ #{Mall.count} malls"
-
-# --- Mall Admins ---
-ma1 = MallAdmin.find_by(email: "mall@admin.com") || MallAdmin.find_by(phone: "0791234567")
-unless ma1
-  ma1 = MallAdmin.create!(
-    email: "mall@admin.com",
-    password: "password123",
-    password_confirmation: "password123",
-    name: "Admin User",
-    phone: "0791234567",
-    mall: mall1
-  )
-end
-puts "  ✓ MallAdmin: mall@admin.com / password123"
-
-# --- Shops ---
-shop1 = Shop.find_or_create_by!(name: "Burger House") do |s|
-  s.mall = mall1
-  s.category = food
-  s.bio = "Best burgers in town"
-  s.is_active = true
-end
-shop2 = Shop.find_or_create_by!(name: "Tech Zone") do |s|
-  s.mall = mall1
-  s.category = electronics
-  s.bio = "Latest gadgets and accessories"
-  s.is_active = true
-end
-shop3 = Shop.find_or_create_by!(name: "Fashion Hub") do |s|
-  s.mall = mall2
-  s.category = fashion
-  s.bio = "Trendy clothing for all ages"
-  s.is_active = true
-end
-puts "  ✓ #{Shop.count} shops"
-
-# --- Shop Admins ---
-sa1 = ShopAdmin.find_by(email: "shop@admin.com") || ShopAdmin.find_by(phone: "0797654321")
-unless sa1
-  sa1 = ShopAdmin.create!(
-    email: "shop@admin.com",
-    password: "password123",
-    password_confirmation: "password123",
-    name: "Shop Manager",
-    phone: "0797654321",
-    shop: shop1
-  )
-end
-puts "  ✓ ShopAdmin: shop@admin.com / password123"
+food    = Category.create!(category_name: "Food & Beverage", display_order: 1, description: "Restaurants, cafés, and food courts")
+fashion = Category.create!(category_name: "Fashion", display_order: 2, description: "Clothing, shoes, and accessories")
+electronics = Category.create!(category_name: "Electronics", display_order: 3, description: "Gadgets and tech stores")
+entertainment = Category.create!(category_name: "Entertainment", display_order: 4, description: "Cinemas, arcades, and family fun")
+home = Category.create!(category_name: "Home & Furniture", display_order: 5, description: "Home appliances and furniture")
 
 # --- System Config ---
-SystemConfig.find_or_create_by!(id: 1) do |sc|
-  sc.earn_points_per_currency = 1.0
-  sc.min_redemption_threshold = 100
-  sc.points_to_currency_ratio = 0.01
-end
-puts "  ✓ SystemConfig"
+SystemConfig.create!(id: 1, earn_points_per_currency: 1.0, min_redemption_threshold: 100, points_to_currency_ratio: 0.01)
 
-# --- Users ---
-user1 = User.find_or_create_by!(email: "john@example.com") do |u|
-  u.firstname = "John"
-  u.lastname = "Doe"
-  u.phone = "0771111111"
-  u.gender = "male"
-  u.password = "password"
-  u.tier = bronze
-end
-user2 = User.find_or_create_by!(email: "jane@example.com") do |u|
-  u.firstname = "Jane"
-  u.lastname = "Smith"
-  u.phone = "0772222222"
-  u.gender = "female"
-  u.password = "password"
-  u.tier = silver
-end
-puts "  ✓ #{User.count} users"
+# Helper method to seed a Mall heavily
+def seed_mall_data(mall_name, location, subdomain_prefix)
+  puts "\n=============================================="
+  puts "Seeding Mall: #{mall_name} (#{subdomain_prefix}.localhost:3000)"
+  
+  mall = Mall.create!(
+    mall_name: mall_name, 
+    location: location, 
+    subdomain: subdomain_prefix
+  )
 
-# --- Earn Transactions ---
-3.times do |i|
-  EarnTransaction.find_or_create_by!(transaction_ref: "EARN-00#{i+1}") do |et|
-    et.user = user1
-    et.shop = shop1
-    et.purchase_amount = (10 + rand(90)).round(2)
-    et.points_earned = (et.purchase_amount * 1).to_i
+  # 2 Mall Admins per mall
+  2.times do |i|
+    MallAdmin.create!(
+      email: "admin#{i+1}@#{subdomain_prefix}.com",
+      password: "password123",
+      password_confirmation: "password123",
+      name: "#{mall_name} Admin #{i+1}",
+      phone: "079#{rand(1000000..9999999)}",
+      mall: mall
+    )
   end
-end
-puts "  ✓ #{EarnTransaction.count} earn transactions"
 
-# --- Receipts ---
-receipt1 = Receipt.find_or_create_by!(user: user1, shop: shop1, amount: 45.50) do |r|
-  r.status = "approved"
-  r.receipt_details = { items: ["Burger", "Fries", "Soda"] }
-end
-receipt2 = Receipt.find_or_create_by!(user: user2, shop: shop1, amount: 22.00) do |r|
-  r.status = "pending"
-  r.receipt_details = { items: ["Wrap", "Juice"] }
-end
-puts "  ✓ #{Receipt.count} receipts"
+  # Pool of 50 users per mall so we can have many transactions
+  users = []
+  last_names = %w[Smith Johnson Williams Brown Jones Garcia Miller Davis Rodriguez Martinez Hernandez Lopez Gonzalez]
+  first_names = %w[James John Robert Michael William David Richard Charles Joseph Thomas Christopher Daniel Paul Mark Donald]
+  
+  50.times do |i|
+    users << User.create!(
+      email: "user#{i}_#{subdomain_prefix}@example.com",
+      firstname: first_names.sample,
+      lastname: last_names.sample,
+      phone: "077#{rand(1000000..9999999)}",
+      gender: ["male", "female"].sample,
+      password: "password123",
+      tier: [Tier.find_by(tier_name: "Bronze"), Tier.find_by(tier_name: "Silver"), Tier.find_by(tier_name: "Gold")].sample
+    )
+    # Give them points
+    UserPointsBalance.create!(
+      user: users.last,
+      total_points: rand(50..1200),
+      lifetime_points: rand(100..5000)
+    )
+  end
 
-# --- Offers ---
-offer1 = Offer.find_or_create_by!(name: "Buy 1 Get 1", shop: shop1) do |o|
-  o.description = "Buy one burger, get one free!"
-  o.reward_type = "bogo"
-  o.active = true
-  o.start_date = 1.week.ago
-  o.end_date = 1.month.from_now
-end
-puts "  ✓ #{Offer.count} offers"
+  # 3 Shops per mall
+  categories = Category.all.to_a
+  shops = []
+  3.times do |i|
+    category = categories.sample
+    shop_name = "#{mall_name.split(' ').first} #{category.category_name.split(' ').first} #{%w[Hub Zone Spot Express Center Boutique Max Pro].sample} #{i+1}"
+    
+    shop = Shop.create!(
+      name: shop_name, 
+      mall: mall, 
+      category: category, 
+      bio: "The best #{category.category_name.downcase} experience in #{mall_name}.", 
+      is_active: true
+    )
+    shops << shop
 
-# --- Stamps ---
-stamp1 = Stamp.find_or_create_by!(name: "Coffee Lover", shop: shop1) do |s|
-  s.description = "Collect 10 stamps for a free meal"
-  s.stamps_required = 10
-  s.reward_type = "free_item"
-  s.active = true
-  s.start_date = Time.current
-  s.end_date = 3.months.from_now
-end
-puts "  ✓ #{Stamp.count} stamps"
+    # 3 Shop Admins per shop
+    3.times do |sa_idx|
+      ShopAdmin.create!(
+        email: "shop#{i+1}_admin#{sa_idx+1}@#{subdomain_prefix}.com",
+        password: "password123",
+        password_confirmation: "password123",
+        name: "#{shop_name} Mgr #{sa_idx+1}",
+        phone: "078#{rand(1000000..9999999)}",
+        shop: shop
+      )
+    end
 
-# --- User Points Balances ---
-UserPointsBalance.find_or_create_by!(user_id: user1.id) do |upb|
-  upb.total_points = 150
-  upb.lifetime_points = 350
-end
-puts "  ✓ #{UserPointsBalance.count} user points balances"
+    # QRs for the shop
+    3.times do |qr_i|
+      Qr.create!(
+        user: users.sample,
+        shop: shop,
+        qr_code_data: "QR-#{shop_name.delete(' ')}-#{qr_i}-#{SecureRandom.hex(4)}",
+        expires_at: 1.year.from_now
+      )
+    end
 
-puts "\n🎉 Seeding complete!\n"
+    # Offers for shop
+    offer_types = ["discount", "bogo", "free_item"]
+    3.times do |off_i|
+      Offer.create!(
+        name: "Offer #{off_i+1}: #{%w[Summer Winter Spring Holiday Back-to-School].sample} Special",
+        shop: shop,
+        description: "Great deals exclusively at #{shop_name}",
+        reward_type: offer_types.sample,
+        active: true,
+        start_date: 1.month.ago,
+        end_date: 3.months.from_now
+      )
+    end
+
+    # Stamp Program for shop
+    stamp = Stamp.create!(
+      name: "#{shop_name} Loyalty Program",
+      shop: shop,
+      description: "Buy 10 get 1 free",
+      stamps_required: 10,
+      reward_type: "free_item",
+      active: true,
+      start_date: Time.current,
+      end_date: 1.year.from_now
+    )
+
+    # Fake realistic data: 15 Earn transactions, 5 Redeem transactions, 5 Receipts, 5 Stamp Cards
+    20.times do |tx_i|
+      txn_user = users.sample
+      amount = (rand(10..250) + rand).round(2)
+      
+      # Earn
+      EarnTransaction.create!(
+        transaction_ref: "EARN-#{subdomain_prefix.upcase}-#{shop.id}-#{tx_i}-#{SecureRandom.hex(3).upcase}",
+        user: txn_user,
+        shop: shop,
+        purchase_amount: amount,
+        points_earned: (amount * 1.0).to_i,
+        created_at: rand(1..60).days.ago
+      )
+    end
+
+    5.times do |rx_i|
+      txn_user = users.sample
+      pts_redeemed = rand(100..500)
+      RedeemTransaction.create!(
+        verification_code: SecureRandom.hex(3).upcase,
+        user: txn_user,
+        shop: shop,
+        points_used: pts_redeemed,
+        discount_value: pts_redeemed * 0.01,
+        status: %w[pending verified cancelled].sample,
+        created_at: rand(1..30).days.ago
+      )
+    end
+
+    5.times do |rcpt_i|
+      Receipt.create!(
+        user: users.sample,
+        shop: shop,
+        amount: (rand(5..150) + rand).round(2),
+        status: %w[approved pending rejected].sample,
+        receipt_details: { items: ["Item 1", "Item 2", "Item 3"].sample(rand(1..3)) },
+        created_at: rand(1..10).days.ago
+      )
+    end
+
+    users.sample(10).each do |u|
+      UserStampCard.find_or_create_by!(user: u, stamp: stamp) do |card|
+        card.stamps_counter = rand(1..9)
+        card.is_completed = false
+        card.created_at = rand(1..60).days.ago
+      end
+    end
+  end
+  puts "  -> Seeded 2 Mall Admins, #{shops.count} Shops, #{shops.count * 3} Shop Admins, and thousands of data points."
+end
+
+# Generate 4 Malls Total
+seed_mall_data("City Mall", "Downtown Amman", "mall1")
+seed_mall_data("Sunset Mall", "West Amman", "mall2")
+seed_mall_data("Taj Lifestyle Center", "Abdoun", "mall3")
+seed_mall_data("Mecca Mall", "Mecca Street", "mall4")
+
+
+puts "\n🎉 MASSIVE SEEDING COMPLETE! 🎉\n"
 puts "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-puts "  Mall Admin Login: mall@admin.com / password123"
-puts "  Shop Admin Login: shop@admin.com / password123"
+puts "  Global Portal:  http://localhost:3000"
+puts "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+puts "  MALL 1 (City Mall - mall1.localhost:3000):"
+puts "    Mall Admins: admin1@mall1.com, admin2@mall1.com / password123"
+puts "    Shop Admins: shop1_admin1@mall1.com ... shop3_admin3@mall1.com / password123"
+puts "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+puts "  MALL 2 (Sunset Mall - mall2.localhost:3000):"
+puts "    Mall Admins: admin1@mall2.com, admin2@mall2.com / password123"
+puts "    Shop Admins: shop1_admin1@mall2.com ... shop3_admin3@mall2.com / password123"
+puts "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+puts "  MALL 3 (Taj Lifestyle Center - mall3.localhost:3000):"
+puts "    Mall Admins: admin1@mall3.com, admin2@mall3.com / password123"
+puts "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+puts "  MALL 4 (Mecca Mall - mall4.localhost:3000):"
+puts "    Mall Admins: admin1@mall4.com, admin2@mall4.com / password123"
 puts "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"

@@ -1,16 +1,60 @@
-<p style="color: green"><%= notice %></p>
+<% content_for(:page_title) { "Offer Redemptions" } %>
+<% content_for(:page_subtitle) { "View offers redeemed by customers" } %>
 
-<% content_for :title, "Offer redemptions" %>
-
-<h1>Offer redemptions</h1>
-
-<div id="offer_redemptions">
-  <% @offer_redemptions.each do |offer_redemption| %>
-    <%= render offer_redemption %>
-    <p>
-      <%= link_to "Show this offer redemption", offer_redemption %>
-    </p>
-  <% end %>
+<div class="mb-6 flex items-center justify-between">
+  <div>
+    <h3 class="text-lg font-medium text-primary">Redemptions History</h3>
+  </div>
 </div>
 
-<%= link_to "New offer redemption", new_offer_redemption_path %>
+<div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+  <div class="overflow-x-auto">
+    <table class="w-full text-left text-sm text-gray-600">
+      <thead class="bg-gray-50 border-b border-gray-100 text-xs uppercase text-gray-500 font-semibold tracking-wider">
+        <tr>
+          <th class="px-6 py-4">Transaction ID</th>
+          <th class="px-6 py-4">User</th>
+          <th class="px-6 py-4">Offer Redeemed</th>
+          <th class="px-6 py-4">Status</th>
+          <th class="px-6 py-4 text-right">Date</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        <% if @offer_redemptions.any? %>
+          <% @offer_redemptions.each do |redemption| %>
+            <tr class="hover:bg-gray-50/50 transition-colors group">
+              <td class="px-6 py-4 font-mono text-xs text-secondary"><%= redemption.id.first(12) %></td>
+              <td class="px-6 py-4 font-medium text-primary">
+                <%= redemption.user ? [redemption.user.firstname, redemption.user.lastname].join(" ") : "Unknown User" %>
+                <div class="text-xs text-gray-400 font-normal"><%= redemption.user&.email %></div>
+              </td>
+              <td class="px-6 py-4"><%= redemption.offer&.title || "—" %></td>
+              <td class="px-6 py-4">
+                <% case redemption.status %>
+                <% when "pending" %>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-warning/10 text-warning">Pending</span>
+                <% when "completed" %>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success/10 text-success">Completed</span>
+                <% when "cancelled" %>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-error/10 text-error">Cancelled</span>
+                <% else %>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600"><%= redemption.status %></span>
+                <% end %>
+              </td>
+              <td class="px-6 py-4 text-right text-gray-400">
+                <%= redemption.created_at.strftime("%b %d, %Y %H:%M") %>
+              </td>
+            </tr>
+          <% end %>
+        <% else %>
+          <tr>
+            <td colspan="5" class="px-6 py-12 text-center text-gray-500">
+              <svg class="w-12 h-12 text-gray-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <p class="text-base font-medium text-gray-900 mb-1">No redemptions found</p>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

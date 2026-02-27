@@ -1,0 +1,106 @@
+<% content_for(:page_title) { "Data Analysis" } %>
+
+<div class="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+  <div>
+    <h1 class="text-2xl font-bold text-primary">Data Analysis</h1>
+    <p class="text-sm text-gray-500 mt-1">
+      <% if current_mall_admin %>
+        Mall Intelligence Dashboard — <%= current_mall.mall_name %>
+      <% else %>
+        Shop Performance Metrics — <%= current_shop.name %>
+      <% end %>
+    </p>
+  </div>
+</div>
+
+<%# MAIN CHARTS GRID %>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+  
+  <%# Points Velocity %>
+  <div class="bg-white rounded-xl border border-gray-100 p-6 shadow-sm lg:col-span-2">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-lg font-bold text-primary">Points Velocity <span class="text-xs font-normal text-gray-400 ml-2">Past 30 Days</span></h3>
+    </div>
+    <div class="w-full h-80">
+      <%= line_chart @points_velocity_data, 
+          colors: ["#547792", "#94B4C1"], 
+          suffix: " pts", 
+          curve: true,
+          library: { scales: { y: { beginAtZero: true } } } %>
+    </div>
+  </div>
+
+  <%# Active vs Inactive %>
+  <div class="bg-white rounded-xl border border-gray-100 p-6 shadow-sm flex flex-col">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-lg font-bold text-primary">User Engagement <span class="text-xs font-normal text-gray-400 ml-2">Past 7 Days</span></h3>
+    </div>
+    <div class="flex-1 min-h-[250px] flex items-center justify-center">
+      <%= pie_chart @user_activity_data, donut: true, colors: ["#213448", "#f3f4f6"], legend: "bottom" %>
+    </div>
+  </div>
+
+  <%# Daily Redemptions %>
+  <div class="bg-white rounded-xl border border-gray-100 p-6 shadow-sm lg:col-span-2">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-lg font-bold text-primary">Redemption Activity <span class="text-xs font-normal text-gray-400 ml-2">By Day of Week</span></h3>
+    </div>
+    <div class="w-full h-72">
+      <%= column_chart @redemptions_by_day_of_week, 
+          colors: ["#213448"], 
+          library: { borderRadius: 4 } %>
+    </div>
+  </div>
+
+  <%# Tier Distribution %>
+  <div class="bg-white rounded-xl border border-gray-100 p-6 shadow-sm flex flex-col">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-lg font-bold text-primary">Tier Distribution</h3>
+    </div>
+    <div class="flex-1 min-h-[250px] flex items-center justify-center">
+      <%= pie_chart @tier_distribution, colors: ["#547792", "#94B4C1", "#ECEFCA", "#213448"], legend: "bottom" %>
+    </div>
+  </div>
+</div>
+
+<%# TOP CUSTOMERS TABLE %>
+<div class="bg-white rounded-xl border border-gray-100 overflow-hidden shadow-sm">
+  <div class="px-6 py-5 border-b border-gray-100 bg-gray-50/50">
+    <h3 class="text-lg font-bold text-primary">Top Customers <span class="text-xs font-normal text-gray-400 ml-2">By <%= @top_customer_metric_name %></span></h3>
+  </div>
+  <div class="overflow-x-auto">
+    <table class="w-full">
+      <thead>
+        <tr class="bg-white border-b border-gray-100">
+          <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-4">Customer</th>
+          <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-4">Email</th>
+          <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-4">Current Tier</th>
+          <th class="text-right text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-4"><%= @top_customer_metric_name %></th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        <% if @top_customers.any? %>
+          <% @top_customers.each_with_index do |user, idx| %>
+            <tr class="bg-white hover:bg-ternary/5 transition-colors">
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center text-secondary font-bold text-xs"><%= user.firstname[0] %><%= user.lastname[0] %></div>
+                  <span class="text-sm font-medium text-primary"><%= user.firstname %> <%= user.lastname %></span>
+                </div>
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-500"><%= user.email %></td>
+              <td class="px-6 py-4">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" style="background-color: <%= user.tier.color_hex %>20; color: <%= user.tier.color_hex %>;">
+                  <%= user.tier.tier_name %>
+                </span>
+              </td>
+              <td class="px-6 py-4 text-sm font-bold text-secondary text-right"><%= number_with_delimiter(@top_customer_metric_method.call(user)) %> pts</td>
+            </tr>
+          <% end %>
+        <% else %>
+          <tr><td colspan="4" class="px-6 py-12 text-center text-gray-400 text-sm">No customer data available yet.</td></tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

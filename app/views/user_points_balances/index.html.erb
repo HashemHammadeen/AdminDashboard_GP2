@@ -1,16 +1,52 @@
-<p style="color: green"><%= notice %></p>
+<% content_for(:page_title) { "User Points Balances" } %>
+<% content_for(:page_subtitle) { "View and manage user point totals" } %>
 
-<% content_for :title, "User points balances" %>
-
-<h1>User points balances</h1>
-
-<div id="user_points_balances">
-  <% @user_points_balances.each do |user_points_balance| %>
-    <%= render user_points_balance %>
-    <p>
-      <%= link_to "Show this user points balance", user_points_balance %>
-    </p>
-  <% end %>
+<div class="mb-6 flex items-center justify-between">
+  <div>
+    <h3 class="text-lg font-medium text-primary">All Point Balances</h3>
+    <p class="text-sm text-gray-500">Overview of active loyalty points across the system.</p>
+  </div>
 </div>
 
-<%= link_to "New user points balance", new_user_points_balance_path %>
+<div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+  <div class="overflow-x-auto">
+    <table class="w-full text-left text-sm text-gray-600">
+      <thead class="bg-gray-50 border-b border-gray-100 text-xs uppercase text-gray-500 font-semibold tracking-wider">
+        <tr>
+          <th class="px-6 py-4">User</th>
+          <th class="px-6 py-4">Current Points</th>
+          <th class="px-6 py-4">Lifetime Points</th>
+          <th class="px-6 py-4 text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        <% if @user_points_balances.any? %>
+          <% @user_points_balances.each do |balance| %>
+            <tr class="hover:bg-gray-50/50 transition-colors group">
+              <td class="px-6 py-4 font-medium text-primary">
+                <%= balance.user ? [balance.user.firstname, balance.user.lastname].join(" ") : "Unknown User" %>
+                <div class="text-xs text-gray-400 font-normal"><%= balance.user&.email %></div>
+              </td>
+              <td class="px-6 py-4 font-semibold text-secondary"><%= number_with_delimiter(balance.total_points) %></td>
+              <td class="px-6 py-4"><%= number_with_delimiter(balance.lifetime_points) %></td>
+              <td class="px-6 py-4 text-right">
+                <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <%= link_to edit_user_points_balance_path(balance), class: "p-1.5 text-secondary hover:text-primary hover:bg-gray-100 rounded-lg transition-colors", title: "Adjust Points" do %>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                  <% end %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        <% else %>
+          <tr>
+            <td colspan="4" class="px-6 py-12 text-center text-gray-500">
+              <svg class="w-12 h-12 text-gray-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <p class="text-base font-medium text-gray-900 mb-1">No point balances found</p>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

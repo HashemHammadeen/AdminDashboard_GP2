@@ -1,9 +1,8 @@
-<%= form_with(model: user_points_balance) do |form| %>
+<%= form_with(model: user_points_balance, class: "space-y-6") do |form| %>
   <% if user_points_balance.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(user_points_balance.errors.count, "error") %> prohibited this user_points_balance from being saved:</h2>
-
-      <ul>
+    <div class="bg-red-50 text-red-600 p-4 rounded-xl border border-red-100 mb-6">
+      <h2 class="font-medium text-red-800"><%= pluralize(user_points_balance.errors.count, "error") %> prohibited this balance from being saved:</h2>
+      <ul class="list-disc pl-5 mt-2 text-sm">
         <% user_points_balance.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
@@ -12,21 +11,17 @@
   <% end %>
 
   <div>
-    <%= form.label :user_id, style: "display: block" %>
-    <%= form.text_field :user_id %>
+    <%= form.label :total_points, "Current Total Points", class: "block text-sm font-medium text-gray-700 mb-1" %>
+    <%= form.number_field :total_points, class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" %>
   </div>
 
   <div>
-    <%= form.label :total_points, style: "display: block" %>
-    <%= form.number_field :total_points %>
+    <%= form.label :lifetime_points, "Lifetime Earned Points", class: "block text-sm font-medium text-gray-700 mb-1" %>
+    <%= form.number_field :lifetime_points, class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" %>
   </div>
 
-  <div>
-    <%= form.label :lifetime_points, style: "display: block" %>
-    <%= form.number_field :lifetime_points %>
-  </div>
-
-  <div>
-    <%= form.submit %>
+  <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
+    <%= link_to "Cancel", user_points_balances_path, class: "px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors" %>
+    <%= form.submit "Update Balance", class: "px-4 py-2 text-sm font-medium text-white bg-primary border border-transparent rounded-lg hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary shadow-sm transition-colors cursor-pointer" %>
   </div>
 <% end %>

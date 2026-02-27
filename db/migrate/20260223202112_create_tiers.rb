@@ -5,7 +5,6 @@ class CreateTiers < ActiveRecord::Migration[8.1]
       t.integer :points_required, default: 0
       t.jsonb :benefits
       t.string :icon_url
-      t.string :color_hex
       t.timestamps
     end
   end

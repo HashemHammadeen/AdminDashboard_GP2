@@ -1,9 +1,8 @@
-<%= form_with(model: qr) do |form| %>
+<%= form_with(model: qr, class: "space-y-6") do |form| %>
   <% if qr.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(qr.errors.count, "error") %> prohibited this qr from being saved:</h2>
-
-      <ul>
+    <div class="bg-red-50 text-red-600 p-4 rounded-xl border border-red-100 mb-6">
+      <h2 class="font-medium text-red-800"><%= pluralize(qr.errors.count, "error") %> prohibited this QR code from being saved:</h2>
+      <ul class="list-disc pl-5 mt-2 text-sm">
         <% qr.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
@@ -11,27 +10,17 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :user_id, style: "display: block" %>
-    <%= form.text_field :user_id %>
-  </div>
+  <% if current_mall_admin %>
+    <div>
+      <%= form.label :shop_id, class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= form.collection_select :shop_id, current_mall.shops, :id, :name, { prompt: "Select a shop" }, class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" %>
+    </div>
+  <% else %>
+    <%= form.hidden_field :shop_id, value: current_shop.id %>
+  <% end %>
 
-  <div>
-    <%= form.label :shop_id, style: "display: block" %>
-    <%= form.text_field :shop_id %>
-  </div>
-
-  <div>
-    <%= form.label :qr_code_data, style: "display: block" %>
-    <%= form.textarea :qr_code_data %>
-  </div>
-
-  <div>
-    <%= form.label :expires_at, style: "display: block" %>
-    <%= form.datetime_field :expires_at %>
-  </div>
-
-  <div>
-    <%= form.submit %>
+  <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
+    <%= link_to "Cancel", qrs_path, class: "px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors" %>
+    <%= form.submit "Generate QR Code", class: "px-4 py-2 text-sm font-medium text-white bg-primary border border-transparent rounded-lg hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary shadow-sm transition-colors cursor-pointer" %>
   </div>
 <% end %>

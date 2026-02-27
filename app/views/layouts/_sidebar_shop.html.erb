@@ -1,52 +1,94 @@
-<%# Shop Admin Sidebar Navigation %>
+<%# Shop Admin Sidebar — links filtered by CanCanCan permissions %>
 
-<p class="px-3 text-xs font-semibold text-ternary uppercase tracking-wider mb-2">Main</p>
-
-<%= link_to shop_dashboards_path, class: "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors #{current_page?(shop_dashboards_path) ? 'bg-white/15 text-white' : 'text-ternary hover:bg-white/10 hover:text-white'}" do %>
-  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+<%# ── Dashboard ── %>
+<%= link_to shop_dashboards_path, class: "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors #{request.path.start_with?('/shop_dashboards') ? 'bg-white/15 text-white' : 'text-ternary hover:bg-white/10 hover:text-white'}" do %>
+  <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1"/></svg>
   Dashboard
 <% end %>
 
-<%= link_to shop_path(current_shop_admin.shop), class: "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors #{current_page?(shop_path(current_shop_admin.shop)) ? 'bg-white/15 text-white' : 'text-ternary hover:bg-white/10 hover:text-white'}" do %>
-  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
-  My Shop
+<%= link_to data_analysis_path, class: "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors #{request.path.start_with?('/data_analysis') ? 'bg-white/15 text-white' : 'text-ternary hover:bg-white/10 hover:text-white'}" do %>
+  <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/></svg>
+  Data Analysis
 <% end %>
 
-<p class="px-3 text-xs font-semibold text-ternary uppercase tracking-wider mt-6 mb-2">Transactions</p>
+<%# ── Stamp Programs & Management ── %>
+<% if can? :read, Stamp %>
+  <p class="mt-5 mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-ternary/60">Stamp Programs</p>
 
-<%= link_to earn_transactions_path, class: "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors #{current_page?(earn_transactions_path) ? 'bg-white/15 text-white' : 'text-ternary hover:bg-white/10 hover:text-white'}" do %>
-  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-  Earn Transactions
+  <%= link_to stamps_path, class: "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors #{request.path.start_with?('/stamps') ? 'bg-white/15 text-white' : 'text-ternary hover:bg-white/10 hover:text-white'}" do %>
+    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+    Stamp Programs
+  <% end %>
+
+  <%= link_to stamp_transactions_path, class: "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors #{request.path.start_with?('/stamp_transactions') ? 'bg-white/15 text-white' : 'text-ternary hover:bg-white/10 hover:text-white'}" do %>
+    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+    Stamp Transactions
+  <% end %>
+
+  <%= link_to user_stamp_cards_path, class: "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors #{request.path.start_with?('/user_stamp_cards') ? 'bg-white/15 text-white' : 'text-ternary hover:bg-white/10 hover:text-white'}" do %>
+    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+    User Stamp Cards
+  <% end %>
 <% end %>
 
-<%= link_to redeem_transactions_path, class: "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors #{current_page?(redeem_transactions_path) ? 'bg-white/15 text-white' : 'text-ternary hover:bg-white/10 hover:text-white'}" do %>
-  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/></svg>
-  Redeem Transactions
+<%# ── Offer Management ── %>
+<% if can? :read, Offer %>
+  <p class="mt-5 mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-ternary/60">Offer Management</p>
+
+  <%= link_to offers_path, class: "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors #{request.path.start_with?('/offers') ? 'bg-white/15 text-white' : 'text-ternary hover:bg-white/10 hover:text-white'}" do %>
+    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/></svg>
+    Offers
+  <% end %>
+
+  <%= link_to offer_redemptions_path, class: "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors #{request.path.start_with?('/offer_redemptions') ? 'bg-white/15 text-white' : 'text-ternary hover:bg-white/10 hover:text-white'}" do %>
+    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    Redemptions
+  <% end %>
 <% end %>
 
-<%= link_to receipts_path, class: "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors #{current_page?(receipts_path) ? 'bg-white/15 text-white' : 'text-ternary hover:bg-white/10 hover:text-white'}" do %>
-  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-  Receipts
+<%# ── Transaction History ── %>
+<% if can? :read, EarnTransaction %>
+  <p class="mt-5 mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-ternary/60">Transactions</p>
+
+  <%= link_to earn_transactions_path, class: "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors #{request.path.start_with?('/earn_transactions') ? 'bg-white/15 text-white' : 'text-ternary hover:bg-white/10 hover:text-white'}" do %>
+    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+    Earn Transactions
+  <% end %>
+
+  <%= link_to redeem_transactions_path, class: "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors #{request.path.start_with?('/redeem_transactions') ? 'bg-white/15 text-white' : 'text-ternary hover:bg-white/10 hover:text-white'}" do %>
+    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    Redeem Transactions
+  <% end %>
+
+  <%= link_to receipts_path, class: "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors #{request.path.start_with?('/receipts') ? 'bg-white/15 text-white' : 'text-ternary hover:bg-white/10 hover:text-white'}" do %>
+    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/></svg>
+    Receipts
+  <% end %>
 <% end %>
 
-<p class="px-3 text-xs font-semibold text-ternary uppercase tracking-wider mt-6 mb-2">Loyalty</p>
+<%# ── QR Codes ── %>
+<% if can? :read, Qr %>
+  <p class="mt-5 mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-ternary/60">QR Codes</p>
 
-<%= link_to offers_path, class: "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors #{current_page?(offers_path) ? 'bg-white/15 text-white' : 'text-ternary hover:bg-white/10 hover:text-white'}" do %>
-  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/></svg>
-  Offers
+  <%= link_to qrs_path, class: "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors #{request.path.start_with?('/qrs') ? 'bg-white/15 text-white' : 'text-ternary hover:bg-white/10 hover:text-white'}" do %>
+    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
+    QR Codes
+  <% end %>
 <% end %>
 
-<%= link_to offer_redemptions_path, class: "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors #{current_page?(offer_redemptions_path) ? 'bg-white/15 text-white' : 'text-ternary hover:bg-white/10 hover:text-white'}" do %>
-  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
-  Offer Redemptions
-<% end %>
+<%# ── Profile ── %>
+<% if can? :read, ShopAdmin %>
+  <p class="mt-5 mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-ternary/60">Account & Staff</p>
 
-<%= link_to stamps_path, class: "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors #{current_page?(stamps_path) ? 'bg-white/15 text-white' : 'text-ternary hover:bg-white/10 hover:text-white'}" do %>
-  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
-  Stamp Cards
-<% end %>
+  <%= link_to shop_admins_path, class: "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors #{request.path == shop_admins_path ? 'bg-white/15 text-white' : 'text-ternary hover:bg-white/10 hover:text-white'}" do %>
+    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+    Staff Directory
+  <% end %>
 
-<%= link_to user_stamp_cards_path, class: "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors #{current_page?(user_stamp_cards_path) ? 'bg-white/15 text-white' : 'text-ternary hover:bg-white/10 hover:text-white'}" do %>
-  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"/></svg>
-  User Stamp Cards
+  <% if current_shop_admin %>
+    <%= link_to edit_shop_admin_path(current_shop_admin), class: "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors #{request.path.include?('edit') ? 'bg-white/15 text-white' : 'text-ternary hover:bg-white/10 hover:text-white'}" do %>
+      <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+      Edit My Profile
+    <% end %>
+  <% end %>
 <% end %>

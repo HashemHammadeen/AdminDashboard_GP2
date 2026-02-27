@@ -1,16 +1,61 @@
-<p style="color: green"><%= notice %></p>
+<% content_for(:page_title) { "Mall Admins" } %>
+<% content_for(:page_subtitle) { "Manage administrative access for #{current_mall&.mall_name}" } %>
 
-<% content_for :title, "Mall admins" %>
-
-<h1>Mall admins</h1>
-
-<div id="mall_admins">
-  <% @mall_admins.each do |mall_admin| %>
-    <%= render mall_admin %>
-    <p>
-      <%= link_to "Show this mall admin", mall_admin %>
-    </p>
+<div class="mb-6 flex items-center justify-between">
+  <div>
+    <h3 class="text-lg font-medium text-primary">Admin Directory</h3>
+    <p class="text-sm text-gray-500">Users who have access to this mall's dashboard.</p>
+  </div>
+  <%= link_to new_mall_admin_path, class: "inline-flex items-center gap-2 bg-primary hover:bg-primary-light text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors" do %>
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+    Add Mall Admin
   <% end %>
 </div>
 
-<%= link_to "New mall admin", new_mall_admin_path %>
+<div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+  <div class="overflow-x-auto">
+    <table class="w-full text-left text-sm text-gray-600">
+      <thead class="bg-gray-50 border-b border-gray-100 text-xs uppercase text-gray-500 font-semibold tracking-wider">
+        <tr>
+          <th class="px-6 py-4">Admin Name</th>
+          <th class="px-6 py-4">Email</th>
+          <th class="px-6 py-4">Phone</th>
+          <th class="px-6 py-4 text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        <% if @mall_admins.any? %>
+          <% @mall_admins.each do |admin| %>
+            <tr class="hover:bg-gray-50/50 transition-colors group">
+              <td class="px-6 py-4 font-medium text-primary">
+                <div class="flex items-center gap-3">
+                  <div class="h-8 w-8 rounded-full bg-secondary/10 flex items-center justify-center text-secondary font-bold text-xs"><%= admin.name.first.upcase %></div>
+                  <span><%= admin.name %></span>
+                </div>
+              </td>
+              <td class="px-6 py-4"><%= admin.email %></td>
+              <td class="px-6 py-4"><%= admin.phone %></td>
+              <td class="px-6 py-4 text-right">
+                <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <%= link_to edit_mall_admin_path(admin), class: "p-1.5 text-secondary hover:text-primary hover:bg-gray-100 rounded-lg transition-colors", title: "Edit" do %>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                  <% end %>
+                  <%= button_to admin, method: :delete, data: { turbo_confirm: "Are you sure you want to revoke this admin's access?" }, class: "p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors", title: "Delete" do %>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                  <% end %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        <% else %>
+          <tr>
+            <td colspan="4" class="px-6 py-12 text-center text-gray-500">
+              <svg class="w-12 h-12 text-gray-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+              <p class="text-base font-medium text-gray-900 mb-1">No admins found</p>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

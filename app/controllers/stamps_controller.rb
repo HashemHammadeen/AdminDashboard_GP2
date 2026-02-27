@@ -1,32 +1,24 @@
 class StampsController < ApplicationController
-  before_action :authenticate_shop_admin!
-  before_action :set_stamp, only: %i[show edit update destroy]
+  before_action :authenticate_any_admin!
+  load_and_authorize_resource
   layout "dashboard"
 
   def index
-    @stamps = current_shop_admin.shop.stamps.order(created_at: :desc)
+    @stamps = @stamps.where(shop_id: current_shop.id).order(created_at: :desc) if current_shop
+    @stamps = @stamps.includes(:shop).order(created_at: :desc) if current_mall
   end
 
-  def show
-  end
-
-  def new
-    @stamp = current_shop_admin.shop.stamps.new
-  end
-
-  def edit
-  end
+  def show; end
+  def new; end
+  def edit; end
 
   def create
-    @stamp = current_shop_admin.shop.stamps.new(stamp_params)
-
+    @stamp.shop_id = current_shop.id if current_shop
     respond_to do |format|
       if @stamp.save
-        format.html { redirect_to @stamp, notice: "Stamp card was successfully created." }
-        format.json { render :show, status: :created, location: @stamp }
+        format.html { redirect_to @stamp, notice: "Stamp program was successfully created." }
       else
         format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @stamp.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -34,30 +26,21 @@ class StampsController < ApplicationController
   def update
     respond_to do |format|
       if @stamp.update(stamp_params)
-        format.html { redirect_to @stamp, notice: "Stamp card was successfully updated.", status: :see_other }
-        format.json { render :show, status: :ok, location: @stamp }
+        format.html { redirect_to @stamp, notice: "Stamp program was successfully updated.", status: :see_other }
       else
         format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @stamp.errors, status: :unprocessable_entity }
       end
     end
   end
 
   def destroy
     @stamp.destroy!
-    respond_to do |format|
-      format.html { redirect_to stamps_path, notice: "Stamp card was successfully destroyed.", status: :see_other }
-      format.json { head :no_content }
-    end
+    redirect_to stamps_path, notice: "Stamp program was successfully destroyed.", status: :see_other
   end
 
   private
 
-  def set_stamp
-    @stamp = current_shop_admin.shop.stamps.find(params.expect(:id))
-  end
-
   def stamp_params
-    params.expect(stamp: [:name, :description, :image_url, :stamp_icon_url, :stamps_required, :reward_type, :start_date, :end_date, :active])
+    params.expect(stamp: [:name, :description, :stamps_required, :reward, :image_url, :is_active, :start_date, :end_date])
   end
 end

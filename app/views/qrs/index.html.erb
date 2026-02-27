@@ -1,16 +1,62 @@
-<p style="color: green"><%= notice %></p>
+<% content_for(:page_title) { "QR Codes" } %>
+<% content_for(:page_subtitle) { "Manage and generate QR codes for your shop" } %>
 
-<% content_for :title, "Qrs" %>
-
-<h1>Qrs</h1>
-
-<div id="qrs">
-  <% @qrs.each do |qr| %>
-    <%= render qr %>
-    <p>
-      <%= link_to "Show this qr", qr %>
-    </p>
+<div class="mb-6 flex items-center justify-between">
+  <div>
+    <h3 class="text-lg font-medium text-primary">All QR Codes</h3>
+    <p class="text-sm text-gray-500">Scan these codes to link users with transactions.</p>
+  </div>
+  <%= link_to new_qr_path, class: "inline-flex items-center gap-2 bg-primary hover:bg-primary-light text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors" do %>
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+    Generate New QR
   <% end %>
 </div>
 
-<%= link_to "New qr", new_qr_path %>
+<div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+  <div class="overflow-x-auto">
+    <table class="w-full text-left text-sm text-gray-600">
+      <thead class="bg-gray-50 border-b border-gray-100 text-xs uppercase text-gray-500 font-semibold tracking-wider">
+        <tr>
+          <th class="px-6 py-4">Reference</th>
+          <th class="px-6 py-4">Status</th>
+          <th class="px-6 py-4">Usage Count</th>
+          <th class="px-6 py-4">Created</th>
+          <th class="px-6 py-4 text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        <% if @qrs.any? %>
+          <% @qrs.each do |qr| %>
+            <tr class="hover:bg-gray-50/50 transition-colors group">
+              <td class="px-6 py-4 font-medium text-primary">
+                QR-<%= qr.id.to_s.split('-').first.upcase %>
+              </td>
+              <td class="px-6 py-4">
+                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-success/10 text-success">
+                  Active
+                </span>
+              </td>
+              <td class="px-6 py-4">0</td>
+              <td class="px-6 py-4 whitespace-nowrap"><%= qr.created_at.strftime("%b %d, %Y") %></td>
+              <td class="px-6 py-4 text-right">
+                <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <%= link_to qr_path(qr), class: "p-1.5 text-secondary hover:text-primary hover:bg-gray-100 rounded-lg transition-colors", title: "View" do %>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                  <% end %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        <% else %>
+          <tr>
+            <td colspan="5" class="px-6 py-12 text-center text-gray-500">
+              <svg class="w-12 h-12 text-gray-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm14 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
+              <p class="text-base font-medium text-gray-900 mb-1">No QR codes found</p>
+              <p class="text-sm">Get started by generating a new QR code.</p>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

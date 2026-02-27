@@ -1,11 +1,6 @@
-<% content_for :title, "New qr" %>
+<% content_for(:page_title) { "Generate QR Code" } %>
+<% content_for(:page_subtitle) { "Create a new QR code for your shop" } %>
 
-<h1>New qr</h1>
-
-<%= render "form", qr: @qr %>
-
-<br>
-
-<div>
-  <%= link_to "Back to qrs", qrs_path %>
+<div class="max-w-2xl bg-white border border-gray-200 rounded-xl shadow-sm p-6">
+  <%= render "form", qr: @qr %>
 </div>

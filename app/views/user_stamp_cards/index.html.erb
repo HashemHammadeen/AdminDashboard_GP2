@@ -1,16 +1,63 @@
-<p style="color: green"><%= notice %></p>
+<% content_for(:page_title) { "User Stamp Cards" } %>
+<% content_for(:page_subtitle) { "View active and completed stamp cards" } %>
 
-<% content_for :title, "User stamp cards" %>
-
-<h1>User stamp cards</h1>
-
-<div id="user_stamp_cards">
-  <% @user_stamp_cards.each do |user_stamp_card| %>
-    <%= render user_stamp_card %>
-    <p>
-      <%= link_to "Show this user stamp card", user_stamp_card %>
-    </p>
-  <% end %>
+<div class="mb-6 flex items-center justify-between">
+  <div>
+    <h3 class="text-lg font-medium text-primary">Stamp Cards Directory</h3>
+    <p class="text-sm text-gray-500">Track user progress on loyalty programs.</p>
+  </div>
 </div>
 
-<%= link_to "New user stamp card", new_user_stamp_card_path %>
+<div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+  <div class="overflow-x-auto">
+    <table class="w-full text-left text-sm text-gray-600">
+      <thead class="bg-gray-50 border-b border-gray-100 text-xs uppercase text-gray-500 font-semibold tracking-wider">
+        <tr>
+          <th class="px-6 py-4">User</th>
+          <th class="px-6 py-4">Stamp Program</th>
+          <th class="px-6 py-4">Progress</th>
+          <th class="px-6 py-4">Status</th>
+          <th class="px-6 py-4 text-right">Last Updated</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        <% if @user_stamp_cards.any? %>
+          <% @user_stamp_cards.each do |card| %>
+            <tr class="hover:bg-gray-50/50 transition-colors group">
+              <td class="px-6 py-4 font-medium text-primary">
+                <%= card.user ? [card.user.firstname, card.user.lastname].join(" ") : "Unknown User" %>
+                <div class="text-xs text-gray-400 font-normal"><%= card.id.first(8) %></div>
+              </td>
+              <td class="px-6 py-4"><%= card.stamp&.name || "—" %></td>
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-3">
+                  <span class="font-medium text-primary"><%= card.stamps_counter || 0 %> / <%= card.stamp&.stamps_required || 0 %></span>
+                  <div class="w-24 h-2 bg-gray-100 rounded-full overflow-hidden">
+                    <div class="h-full bg-secondary" style="width: <%= [(card.stamps_counter.to_f / [card.stamp&.stamps_required.to_f, 1].max) * 100, 100].min %>%"></div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4">
+                <% if card.is_completed %>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success/10 text-success">Completed</span>
+                <% else %>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-700">In Progress</span>
+                <% end %>
+              </td>
+              <td class="px-6 py-4 text-right text-gray-400">
+                <%= card.updated_at.strftime("%b %d, %Y") %>
+              </td>
+            </tr>
+          <% end %>
+        <% else %>
+          <tr>
+            <td colspan="5" class="px-6 py-12 text-center text-gray-500">
+              <svg class="w-12 h-12 text-gray-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+              <p class="text-base font-medium text-gray-900 mb-1">No stamp cards found</p>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

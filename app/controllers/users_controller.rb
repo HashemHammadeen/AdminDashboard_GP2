@@ -1,45 +1,33 @@
 class UsersController < ApplicationController
-  before_action :authenticate_mall_admin!
-  before_action :set_user, only: %i[show edit update destroy]
+  before_action :authenticate_any_admin!
+  load_and_authorize_resource
   layout "dashboard"
 
   def index
-    @users = User.includes(:tier).all
+    @users = @users.includes(:tier).order(created_at: :desc)
   end
 
-  def show
-  end
-
-  def edit
-  end
+  def show; end
+  def edit; end
 
   def update
     respond_to do |format|
       if @user.update(user_params)
         format.html { redirect_to @user, notice: "User was successfully updated.", status: :see_other }
-        format.json { render :show, status: :ok, location: @user }
       else
         format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end
   end
 
   def destroy
     @user.destroy!
-    respond_to do |format|
-      format.html { redirect_to users_path, notice: "User was successfully destroyed.", status: :see_other }
-      format.json { head :no_content }
-    end
+    redirect_to users_path, notice: "User was successfully deleted.", status: :see_other
   end
 
   private
 
-  def set_user
-    @user = User.find(params.expect(:id))
-  end
-
   def user_params
-    params.expect(user: [:firstname, :lastname, :email, :phone, :gender, :profile_image_url, :tier_id])
+    params.expect(user: [:firstname, :lastname, :email, :phone, :gender, :tier_id, :profile_image_url])
   end
 end

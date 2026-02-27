@@ -1,32 +1,23 @@
 class MallAdminsController < ApplicationController
-  before_action :authenticate_mall_admin!
-  before_action :set_mall_admin, only: %i[show edit update destroy]
+  before_action :authenticate_any_admin!
+  load_and_authorize_resource
   layout "dashboard"
 
   def index
-    @mall_admins = MallAdmin.includes(:mall).all
+    @mall_admins = @mall_admins.where(mall_id: current_mall.id) if current_mall
   end
 
-  def show
-  end
-
-  def new
-    @mall_admin = MallAdmin.new
-  end
-
-  def edit
-  end
+  def show; end
+  def new; end
+  def edit; end
 
   def create
-    @mall_admin = MallAdmin.new(mall_admin_params)
-
+    @mall_admin.mall_id = current_mall.id if current_mall
     respond_to do |format|
       if @mall_admin.save
         format.html { redirect_to @mall_admin, notice: "Mall admin was successfully created." }
-        format.json { render :show, status: :created, location: @mall_admin }
       else
         format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @mall_admin.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -35,29 +26,20 @@ class MallAdminsController < ApplicationController
     respond_to do |format|
       if @mall_admin.update(mall_admin_params)
         format.html { redirect_to @mall_admin, notice: "Mall admin was successfully updated.", status: :see_other }
-        format.json { render :show, status: :ok, location: @mall_admin }
       else
         format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @mall_admin.errors, status: :unprocessable_entity }
       end
     end
   end
 
   def destroy
     @mall_admin.destroy!
-    respond_to do |format|
-      format.html { redirect_to mall_admins_path, notice: "Mall admin was successfully destroyed.", status: :see_other }
-      format.json { head :no_content }
-    end
+    redirect_to mall_admins_path, notice: "Mall admin was successfully removed.", status: :see_other
   end
 
   private
 
-  def set_mall_admin
-    @mall_admin = MallAdmin.find(params.expect(:id))
-  end
-
   def mall_admin_params
-    params.expect(mall_admin: [:name, :email, :phone, :mall_id, :password, :password_confirmation])
+    params.expect(mall_admin: [:name, :email, :phone, :password, :password_confirmation, :mall_id])
   end
 end

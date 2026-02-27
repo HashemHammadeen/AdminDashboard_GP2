@@ -1,0 +1,41 @@
+<% content_for(:title) { "Global Portal | Mall Management System" } %>
+
+<div class="min-h-screen bg-gradient-to-br from-primary via-primary-light to-secondary flex items-center justify-center p-4">
+  <div class="w-full max-w-4xl">
+    <!-- Header -->
+    <div class="text-center mb-10">
+      <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-sm mb-4">
+        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+        </svg>
+      </div>
+      <h1 class="text-3xl font-bold text-white mb-2">Global Mall Portal</h1>
+      <p class="text-ternary text-lg">Select a mall to access its management dashboard</p>
+    </div>
+
+    <!-- Malls List -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <% @malls.each do |mall| %>
+        <%= link_to root_url(subdomain: mall.subdomain), class: "group block" do %>
+          <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 text-center hover:bg-white/20 hover:border-white/30 hover:scale-[1.02] transition-all duration-300 cursor-pointer h-full flex flex-col items-center justify-center">
+            <h2 class="text-xl font-bold text-white mb-2"><%= mall.mall_name %></h2>
+            <p class="text-ternary text-sm mb-4"><%= mall.location %></p>
+            <div class="inline-flex items-center gap-2 text-white font-medium text-sm group-hover:gap-3 transition-all mt-auto">
+              Visit Portal
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+      
+      <% if @malls.empty? %>
+        <div class="col-span-full bg-white/5 border border-white/10 rounded-2xl p-12 text-center">
+          <svg class="w-12 h-12 text-white/40 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+          </svg>
+          <p class="text-white/60">No malls configured yet in the system.</p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

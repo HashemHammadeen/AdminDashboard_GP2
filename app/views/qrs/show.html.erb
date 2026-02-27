@@ -1,10 +1,29 @@
-<p style="color: green"><%= notice %></p>
+<% content_for(:page_title) { "QR Code Details" } %>
 
-<%= render @qr %>
+<div class="max-w-3xl bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+  <div class="px-6 py-5 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
+    <div>
+      <h3 class="text-lg font-medium leading-6 text-primary">QR Code Information</h3>
+      <p class="mt-1 text-sm text-gray-500">ID: QR-<%= @qr.id.to_s.split('-').first.upcase %></p>
+    </div>
+    <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-success/10 text-success border border-success/20">
+      Active
+    </span>
+  </div>
 
-<div>
-  <%= link_to "Edit this qr", edit_qr_path(@qr) %> |
-  <%= link_to "Back to qrs", qrs_path %>
-
-  <%= button_to "Destroy this qr", @qr, method: :delete %>
+  <div class="px-6 py-5 border-t border-gray-100 flex flex-col items-center justify-center p-10 bg-gray-50">
+    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+      <!-- In a real app, this would use a QR code generator gem like rqrcode -->
+      <!-- For now, we simulate a scan area -->
+      <div class="w-64 h-64 border-4 border-dashed border-gray-300 rounded-lg flex items-center justify-center text-gray-400 font-mono text-sm break-all text-center p-4">
+        <%= @qr.qr_code_data || "No QR data found." %>
+      </div>
+    </div>
+    <p class="mt-4 text-sm font-medium text-gray-700">Scan to process transaction</p>
+  </div>
+  
+  <div class="bg-gray-50 px-6 py-4 border-t border-gray-100 flex items-center justify-between">
+    <%= button_to "Delete QR Code", @qr, method: :delete, data: { turbo_confirm: "Are you sure you want to delete this QR code?" }, class: "text-sm text-red-600 hover:text-red-800 font-medium transition-colors" %>
+    <%= link_to "Back to QR Codes", qrs_path, class: "text-sm font-medium text-secondary hover:text-primary transition-colors" %>
+  </div>
 </div>

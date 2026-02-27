@@ -1,12 +1,6 @@
-<% content_for :title, "Editing user points balance" %>
+<% content_for(:page_title) { "Adjust User Points" } %>
+<% content_for(:page_subtitle) { "Modify the points balance for #{@user_points_balance.user&.firstname} #{@user_points_balance.user&.lastname}" } %>
 
-<h1>Editing user points balance</h1>
-
-<%= render "form", user_points_balance: @user_points_balance %>
-
-<br>
-
-<div>
-  <%= link_to "Show this user points balance", @user_points_balance %> |
-  <%= link_to "Back to user points balances", user_points_balances_path %>
+<div class="max-w-xl bg-white border border-gray-200 rounded-xl shadow-sm p-6">
+  <%= render "form", user_points_balance: @user_points_balance %>
 </div>

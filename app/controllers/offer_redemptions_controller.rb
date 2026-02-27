@@ -1,45 +1,34 @@
 class OfferRedemptionsController < ApplicationController
-  before_action :authenticate_shop_admin!
-  before_action :set_offer_redemption, only: %i[show edit update destroy]
+  before_action :authenticate_any_admin!
+  load_and_authorize_resource
   layout "dashboard"
 
   def index
-    @offer_redemptions = OfferRedemption.where(shop_id: current_shop_admin.shop.id).order(created_at: :desc)
+    @offer_redemptions = @offer_redemptions.where(shop_id: current_shop.id).includes(:user, :offer).order(created_at: :desc) if current_shop
+    @offer_redemptions = @offer_redemptions.includes(:user, :offer, :shop).order(created_at: :desc) if current_mall
   end
 
-  def show
-  end
-
-  def edit
-  end
+  def show; end
+  def edit; end
 
   def update
     respond_to do |format|
       if @offer_redemption.update(offer_redemption_params)
-        format.html { redirect_to @offer_redemption, notice: "Offer redemption was successfully updated.", status: :see_other }
-        format.json { render :show, status: :ok, location: @offer_redemption }
+        format.html { redirect_to @offer_redemption, notice: "Offer redemption updated.", status: :see_other }
       else
         format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @offer_redemption.errors, status: :unprocessable_entity }
       end
     end
   end
 
   def destroy
     @offer_redemption.destroy!
-    respond_to do |format|
-      format.html { redirect_to offer_redemptions_path, notice: "Offer redemption was successfully destroyed.", status: :see_other }
-      format.json { head :no_content }
-    end
+    redirect_to offer_redemptions_path, notice: "Offer redemption deleted.", status: :see_other
   end
 
   private
 
-  def set_offer_redemption
-    @offer_redemption = OfferRedemption.where(shop_id: current_shop_admin.shop.id).find(params.expect(:id))
-  end
-
   def offer_redemption_params
-    params.expect(offer_redemption: [:offer_id, :user_id, :receipt_id])
+    params.expect(offer_redemption: [:status])
   end
 end

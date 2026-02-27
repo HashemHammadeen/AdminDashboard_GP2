@@ -1,9 +1,8 @@
-<%= form_with(model: mall_admin) do |form| %>
+<%= form_with(model: mall_admin, class: "space-y-6") do |form| %>
   <% if mall_admin.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(mall_admin.errors.count, "error") %> prohibited this mall_admin from being saved:</h2>
-
-      <ul>
+    <div class="bg-red-50 text-red-600 p-4 rounded-xl border border-red-100 mb-6">
+      <h2 class="font-medium text-red-800"><%= pluralize(mall_admin.errors.count, "error") %> prohibited this admin from being saved:</h2>
+      <ul class="list-disc pl-5 mt-2 text-sm">
         <% mall_admin.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
@@ -11,32 +10,37 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :mall_id, style: "display: block" %>
-    <%= form.text_field :mall_id %>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div>
+      <%= form.label :name, "Admin Name", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= form.text_field :name, class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm", placeholder: "e.g., Jane Doe" %>
+    </div>
+
+    <div>
+      <%= form.label :phone, "Phone Number", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= form.text_field :phone, class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm", placeholder: "e.g., 0791234567" %>
+    </div>
   </div>
 
   <div>
-    <%= form.label :name, style: "display: block" %>
-    <%= form.text_field :name %>
+    <%= form.label :email, "Email Address", class: "block text-sm font-medium text-gray-700 mb-1" %>
+    <%= form.email_field :email, class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm", placeholder: "e.g., jane@mall.com" %>
   </div>
 
-  <div>
-    <%= form.label :email, style: "display: block" %>
-    <%= form.text_field :email %>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-gray-100">
+    <div>
+      <%= form.label :password, class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= form.password_field :password, class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm", placeholder: mall_admin.persisted? ? "Leave blank to keep same" : "Must be at least 6 characters" %>
+    </div>
+
+    <div>
+      <%= form.label :password_confirmation, "Confirm Password", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= form.password_field :password_confirmation, class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" %>
+    </div>
   </div>
 
-  <div>
-    <%= form.label :phone, style: "display: block" %>
-    <%= form.text_field :phone %>
-  </div>
-
-  <div>
-    <%= form.label :password_hash, style: "display: block" %>
-    <%= form.textarea :password_hash %>
-  </div>
-
-  <div>
-    <%= form.submit %>
+  <div class="flex items-center justify-end gap-3 pt-6 border-t border-gray-100">
+    <%= link_to "Cancel", mall_admins_path, class: "px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors" %>
+    <%= form.submit mall_admin.persisted? ? "Update Admin" : "Create Admin", class: "px-4 py-2 text-sm font-medium text-white bg-primary border border-transparent rounded-lg hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary shadow-sm transition-colors cursor-pointer" %>
   </div>
 <% end %>

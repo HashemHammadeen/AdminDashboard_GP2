@@ -1,16 +1,69 @@
-<p style="color: green"><%= notice %></p>
+<% content_for(:page_title) { "Stamp Transactions" } %>
+<% content_for(:page_subtitle) { "View recent stamp activity across your shop" } %>
 
-<% content_for :title, "Stamp transactions" %>
-
-<h1>Stamp transactions</h1>
-
-<div id="stamp_transactions">
-  <% @stamp_transactions.each do |stamp_transaction| %>
-    <%= render stamp_transaction %>
-    <p>
-      <%= link_to "Show this stamp transaction", stamp_transaction %>
-    </p>
-  <% end %>
+<div class="mb-6 flex items-center justify-between">
+  <div>
+    <h3 class="text-lg font-medium text-primary">Transaction History</h3>
+    <p class="text-sm text-gray-500">Record of user stamps earned and redeemed.</p>
+  </div>
 </div>
 
-<%= link_to "New stamp transaction", new_stamp_transaction_path %>
+<div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+  <div class="overflow-x-auto">
+    <table class="w-full text-left text-sm text-gray-600">
+      <thead class="bg-gray-50 border-b border-gray-100 text-xs uppercase text-gray-500 font-semibold tracking-wider">
+        <tr>
+          <th class="px-6 py-4">Transaction Details</th>
+          <th class="px-6 py-4">Stamp Program</th>
+          <th class="px-6 py-4">Type</th>
+          <th class="px-6 py-4">Amount</th>
+          <th class="px-6 py-4">Status</th>
+          <th class="px-6 py-4 text-right">Date</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        <% if @stamp_transactions.any? %>
+          <% @stamp_transactions.each do |transaction| %>
+            <tr class="hover:bg-gray-50/50 transition-colors group">
+              <td class="px-6 py-4 font-medium text-primary">
+                <%= transaction.user ? [transaction.user.firstname, transaction.user.lastname].join(" ") : "Unknown User" %>
+                <div class="text-xs text-gray-400 font-normal"><%= transaction.id.first(8) %></div>
+              </td>
+              <td class="px-6 py-4"><%= transaction.stamp&.name || "—" %></td>
+              <td class="px-6 py-4">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                  <%= transaction.transaction_type&.capitalize || "Earn" %>
+                </span>
+              </td>
+              <td class="px-6 py-4 font-semibold text-secondary">
+                <%= transaction.transaction_type == 'redeem' ? '-' : '+' %><%= transaction.stamps_awarded %>
+              </td>
+              <td class="px-6 py-4">
+                <% case transaction.status %>
+                <% when "pending" %>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-warning/10 text-warning">Pending</span>
+                <% when "verified" %>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success/10 text-success">Verified</span>
+                <% when "cancelled", "rejected" %>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-error/10 text-error">Cancelled</span>
+                <% else %>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600"><%= transaction.status %></span>
+                <% end %>
+              </td>
+              <td class="px-6 py-4 text-right text-gray-400">
+                <%= transaction.created_at.strftime("%b %d, %Y %H:%M") %>
+              </td>
+            </tr>
+          <% end %>
+        <% else %>
+          <tr>
+            <td colspan="6" class="px-6 py-12 text-center text-gray-500">
+              <svg class="w-12 h-12 text-gray-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+              <p class="text-base font-medium text-gray-900 mb-1">No stamp transactions found</p>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
