@@ -28,11 +28,17 @@ Rails.application.routes.draw do
   resources :earn_transactions
   resources :redeem_transactions
   resources :receipts
-  resources :offers
+  resources :offers do
+    member do
+      patch :request_reactivation
+      patch :approve_reactivation
+      patch :deny_reactivation
+    end
+  end
   resources :stamps
   resources :stamp_transactions, only: [:index, :show]
   resources :offer_redemptions, only: [:index, :show]
-  resources :user_stamp_cards, only: [:index, :show]
+  resources :user_stamp_cards, only: [:index, :show, :new, :create]
   resources :qrs
   resources :shop_admins, only: [:index, :show, :edit, :update, :new, :create] do
     member do

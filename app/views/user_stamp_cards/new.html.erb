@@ -1,11 +1,15 @@
-<% content_for :title, "New user stamp card" %>
+<% content_for(:page_title) { "Assign Stamps" } %>
+<% content_for(:page_subtitle) { "Manually assign stamps to a user" } %>
 
-<h1>New user stamp card</h1>
+<div class="mb-6 flex items-center justify-between">
+  <div>
+    <h3 class="text-lg font-medium text-primary">Assign Stamps</h3>
+    <p class="text-sm text-gray-500">Add stamps to a user's stamp card.</p>
+  </div>
+</div>
 
-<%= render "form", user_stamp_card: @user_stamp_card %>
-
-<br>
-
-<div>
-  <%= link_to "Back to user stamp cards", user_stamp_cards_path %>
+<div class="bg-white border border-gray-200 rounded-xl shadow-sm max-w-2xl">
+  <div class="p-6">
+    <%= render "form", user_stamp_card: @user_stamp_card %>
+  </div>
 </div>

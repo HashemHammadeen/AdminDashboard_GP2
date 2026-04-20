@@ -9,15 +9,24 @@ class QrsController < ApplicationController
   end
 
   def show; end
-  def new; end
+  def new
+    @users = User.all
+  end
+
   def edit; end
 
   def create
     @qr.shop_id = current_shop.id if current_shop
+    
+    # Auto-generate QR data and set expiry
+    @qr.qr_code_data = "QR-#{@qr.shop_id}-#{SecureRandom.hex(6)}"
+    @qr.expires_at = 1.year.from_now
+
     respond_to do |format|
       if @qr.save
         format.html { redirect_to @qr, notice: "QR code was successfully generated." }
       else
+        @users = User.all
         format.html { render :new, status: :unprocessable_entity }
       end
     end
@@ -41,6 +50,6 @@ class QrsController < ApplicationController
   private
 
   def qr_params
-    params.expect(qr: [:user_id, :shop_id, :qr_token, :purpose, :expires_at])
+    params.expect(qr: [:user_id, :shop_id])
   end
 end

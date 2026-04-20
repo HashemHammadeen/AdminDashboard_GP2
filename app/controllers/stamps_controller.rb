@@ -41,6 +41,6 @@ class StampsController < ApplicationController
   private
 
   def stamp_params
-    params.expect(stamp: [:name, :description, :stamps_required, :reward, :image_url, :is_active, :start_date, :end_date])
+    params.expect(stamp: [:name, :description, :stamps_required, :reward_type, :image_url, :active, :start_date, :end_date])
   end
 end

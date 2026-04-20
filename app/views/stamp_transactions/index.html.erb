@@ -17,7 +17,6 @@
           <th class="px-6 py-4">Stamp Program</th>
           <th class="px-6 py-4">Type</th>
           <th class="px-6 py-4">Amount</th>
-          <th class="px-6 py-4">Status</th>
           <th class="px-6 py-4 text-right">Date</th>
         </tr>
       </thead>
@@ -36,19 +35,7 @@
                 </span>
               </td>
               <td class="px-6 py-4 font-semibold text-secondary">
-                <%= transaction.transaction_type == 'redeem' ? '-' : '+' %><%= transaction.stamps_awarded %>
-              </td>
-              <td class="px-6 py-4">
-                <% case transaction.status %>
-                <% when "pending" %>
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-warning/10 text-warning">Pending</span>
-                <% when "verified" %>
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success/10 text-success">Verified</span>
-                <% when "cancelled", "rejected" %>
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-error/10 text-error">Cancelled</span>
-                <% else %>
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600"><%= transaction.status %></span>
-                <% end %>
+                <%= transaction.transaction_type == 'redeem' ? '-' : '+' %><%= transaction.stamps_count %>
               </td>
               <td class="px-6 py-4 text-right text-gray-400">
                 <%= transaction.created_at.strftime("%b %d, %Y %H:%M") %>

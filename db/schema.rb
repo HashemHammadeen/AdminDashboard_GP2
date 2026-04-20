@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_26_221031) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_20_191735) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -100,7 +100,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_26_221031) do
     t.text "description"
     t.datetime "end_date"
     t.string "image_url"
+    t.boolean "inactive_by_mall_admin", default: false
     t.string "name"
+    t.boolean "reactivation_requested", default: false
     t.string "reward_type"
     t.jsonb "reward_value"
     t.uuid "shop_id", null: false

@@ -1,10 +1,26 @@
 <% content_for(:page_title) { "User Stamp Cards" } %>
 <% content_for(:page_subtitle) { "View active and completed stamp cards" } %>
 
-<div class="mb-6 flex items-center justify-between">
-  <div>
+<div class="mb-6 flex justify-between items-center flex-wrap gap-4">
+  <div style="flex: 1; min-width: 250px;">
     <h3 class="text-lg font-medium text-primary">Stamp Cards Directory</h3>
     <p class="text-sm text-gray-500">Track user progress on loyalty programs.</p>
+  </div>
+
+  <div class="flex items-center gap-3" style="flex-wrap: wrap;">
+    <%= form_with(url: user_stamp_cards_path, method: :get, style: "position: relative; width: 250px; max-width: 100%;") do |form| %>
+      <div style="position: absolute; top: 0; bottom: 0; left: 0; padding-left: 0.75rem; display: flex; align-items: center; pointer-events: none;">
+        <svg style="height: 1.25rem; width: 1.25rem; color: #9ca3af;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </div>
+      <%= form.text_field :search, value: params[:search], placeholder: "Search...", class: "block w-full border border-gray-200 rounded-lg text-sm placeholder-gray-400 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary", style: "padding: 0.5rem 0.75rem 0.5rem 2.5rem;" %>
+    <% end %>
+
+    <%= link_to new_user_stamp_card_path, class: "inline-flex items-center justify-center gap-2 px-4 py-2 bg-secondary text-white text-sm font-medium rounded-lg shadow-sm whitespace-nowrap transition-opacity hover:opacity-90" do %>
+      <svg style="width: 1.25rem; height: 1.25rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+      Assign Stamps
+    <% end %>
   </div>
 </div>
 

@@ -40,12 +40,6 @@ class ShopAdminsController < ApplicationController
   def edit; end
 
   def update
-    # If the user is passing password fields but they are blank, strip them out so Devise doesn't try to change the password
-    if params[:shop_admin][:password].blank? && params[:shop_admin][:password_confirmation].blank?
-      params[:shop_admin].delete(:password)
-      params[:shop_admin].delete(:password_confirmation)
-    end
-
     respond_to do |format|
       if @shop_admin.update(shop_admin_params)
         format.html { redirect_to (current_mall_admin ? shop_path(@shop_admin.shop_id) : shop_admins_path), notice: "Shop admin was successfully updated.", status: :see_other }
@@ -66,8 +60,14 @@ class ShopAdminsController < ApplicationController
 
   def shop_admin_params
     # We only permit shop_id if the current_user is a MallAdmin creating staff for a shop.
-    permitted = [:name, :email, :phone, :password, :password_confirmation]
-    permitted << :shop_id if current_mall_admin
-    params.expect(shop_admin: permitted)
+    permitted_fields = [:name, :email, :phone, :password, :password_confirmation]
+    permitted_fields << :shop_id if current_mall_admin
+    p = params.expect(shop_admin: permitted_fields)
+    
+    if p[:password].blank?
+      p.delete(:password)
+      p.delete(:password_confirmation)
+    end
+    p
   end
 end

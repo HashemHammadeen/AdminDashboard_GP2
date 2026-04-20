@@ -40,6 +40,11 @@ class MallAdminsController < ApplicationController
   private
 
   def mall_admin_params
-    params.expect(mall_admin: [:name, :email, :phone, :password, :password_confirmation, :mall_id])
+    permitted = params.expect(mall_admin: [:name, :email, :phone, :password, :password_confirmation, :mall_id])
+    if permitted[:password].blank?
+      permitted.delete(:password)
+      permitted.delete(:password_confirmation)
+    end
+    permitted
   end
 end

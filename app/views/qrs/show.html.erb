@@ -13,11 +13,22 @@
 
   <div class="px-6 py-5 border-t border-gray-100 flex flex-col items-center justify-center p-10 bg-gray-50">
     <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-      <!-- In a real app, this would use a QR code generator gem like rqrcode -->
-      <!-- For now, we simulate a scan area -->
-      <div class="w-64 h-64 border-4 border-dashed border-gray-300 rounded-lg flex items-center justify-center text-gray-400 font-mono text-sm break-all text-center p-4">
-        <%= @qr.qr_code_data || "No QR data found." %>
-      </div>
+      <% if @qr.qr_code_data.present? %>
+        <% qrcode = RQRCode::QRCode.new(@qr.qr_code_data) %>
+        <div class="p-4 bg-white rounded-lg">
+          <%= raw qrcode.as_svg(
+            color: "000",
+            shape_rendering: "crispEdges",
+            module_size: 6,
+            standalone: true,
+            use_path: true
+          ) %>
+        </div>
+      <% else %>
+        <div class="w-64 h-64 border-4 border-dashed border-gray-300 rounded-lg flex items-center justify-center text-gray-400 font-mono text-sm break-all text-center p-4">
+          No QR data found.
+        </div>
+      <% end %>
     </div>
     <p class="mt-4 text-sm font-medium text-gray-700">Scan to process transaction</p>
   </div>

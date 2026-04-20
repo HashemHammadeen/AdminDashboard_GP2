@@ -83,3 +83,5 @@ gem "tailwindcss-rails", "~> 4.4"
 
 gem "chartkick", "~> 5.2"
 gem "groupdate", "~> 6.7"
+
+gem "rqrcode", "~> 3.2"

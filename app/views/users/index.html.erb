@@ -1,9 +1,32 @@
 <% content_for(:page_title) { "Users" } %>
 
-<div class="flex items-center justify-between mb-6">
+<div class="flex flex-wrap items-center justify-between mb-6 gap-4">
   <div>
     <h1 class="text-2xl font-bold text-primary">Users</h1>
     <p class="text-sm text-gray-500 mt-1">Manage all registered users</p>
+  </div>
+
+  <div>
+    <%= form_tag users_path, method: :get, class: "flex items-center gap-2" do %>
+      <div class="relative flex items-center w-64 md:w-80">
+        <svg class="absolute left-3 w-4 h-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <%= text_field_tag :search, params[:search], placeholder: "Search users by name, email...", class: "w-full pl-10 pr-3 py-2 bg-white border border-gray-200 rounded-lg text-sm text-primary focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-colors placeholder-gray-400 shadow-sm" %>
+      </div>
+      
+      <div class="w-32 md:w-48">
+        <%= select_tag :tier_id, options_from_collection_for_select(Tier.all, :id, :tier_name, params[:tier_id]), include_blank: "All Tiers", class: "w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm text-primary focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-colors shadow-sm" %>
+      </div>
+      
+      <button type="submit" class="p-2 bg-secondary hover:bg-secondary-light text-white rounded-lg transition-colors shadow-sm flex items-center justify-center" title="Apply filters">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+      </button>
+
+      <% if params[:search].present? || params[:tier_id].present? %>
+        <%= link_to users_path, class: "p-2 bg-gray-100 hover:bg-gray-200 text-gray-500 rounded-lg transition-colors shadow-sm flex items-center justify-center", title: "Clear filters" do %>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        <% end %>
+      <% end %>
+    <% end %>
   </div>
 </div>
 

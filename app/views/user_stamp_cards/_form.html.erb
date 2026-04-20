@@ -1,9 +1,7 @@
-<%= form_with(model: user_stamp_card) do |form| %>
+<%= form_with(model: user_stamp_card, class: "space-y-6") do |form| %>
   <% if user_stamp_card.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(user_stamp_card.errors.count, "error") %> prohibited this user_stamp_card from being saved:</h2>
-
-      <ul>
+    <div class="bg-error/10 border border-error/20 rounded-lg p-4">
+      <ul class="list-disc list-inside text-sm text-error/80 space-y-1">
         <% user_stamp_card.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
@@ -11,32 +9,31 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :user_id, style: "display: block" %>
-    <%= form.text_field :user_id %>
+  <div data-controller="select-filter" class="space-y-2">
+    <%= form.label :user_id, "Select User", class: "block text-sm font-medium text-gray-700 mb-1" %>
+    
+    <div class="relative">
+      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+        <svg class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+      </div>
+      <input type="text" data-select-filter-target="input" data-action="input->select-filter#filter" placeholder="Search users by name or email..." class="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-colors bg-white">
+    </div>
+
+    <%= form.collection_select :user_id, @users, :id, ->(u) { "#{u.firstname} #{u.lastname} (#{u.email})" }, { prompt: "Choose a user..." }, class: "w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-primary focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-colors bg-white", data: { select_filter_target: "select" }, size: 5 %>
   </div>
 
   <div>
-    <%= form.label :stamp_id, style: "display: block" %>
-    <%= form.text_field :stamp_id %>
+    <%= form.label :stamp_id, "Select Stamp Program", class: "block text-sm font-medium text-gray-700 mb-1" %>
+    <%= form.collection_select :stamp_id, @stamps, :id, :name, { prompt: "Choose a program..." }, class: "w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm text-primary focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-colors bg-white" %>
   </div>
 
   <div>
-    <%= form.label :stamps_counter, style: "display: block" %>
-    <%= form.number_field :stamps_counter %>
+    <%= form.label :stamps_collected, "Number of Stamps to Assign", class: "block text-sm font-medium text-gray-700 mb-1" %>
+    <%= form.number_field :stamps_collected, min: 1, value: 1, class: "w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm text-primary focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-colors bg-white" %>
   </div>
 
-  <div>
-    <%= form.label :is_completed, style: "display: block" %>
-    <%= form.checkbox :is_completed %>
-  </div>
-
-  <div>
-    <%= form.label :last_transaction, style: "display: block" %>
-    <%= form.datetime_field :last_transaction %>
-  </div>
-
-  <div>
-    <%= form.submit %>
+  <div class="flex items-center gap-3 pt-2">
+    <%= form.submit "Assign Stamps", class: "px-5 py-2.5 bg-primary hover:bg-primary-light text-white text-sm font-medium rounded-lg transition-colors cursor-pointer" %>
+    <%= link_to "Cancel", user_stamp_cards_path, class: "px-5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium rounded-lg transition-colors" %>
   </div>
 <% end %>

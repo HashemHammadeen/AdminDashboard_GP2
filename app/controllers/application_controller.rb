@@ -66,9 +66,8 @@ class ApplicationController < ActionController::Base
     
     if subdomain.present? && subdomain != "www" && subdomain != "localhost"
       @current_tenant_mall = Mall.find_by(subdomain: subdomain)
-      
       unless @current_tenant_mall
-        redirect_to root_url(host: "localhost"), alert: "Mall not found."
+        redirect_to root_url(host: "localhost"), alert: "Mall not found.", allow_other_host: true
       end
     end
   end

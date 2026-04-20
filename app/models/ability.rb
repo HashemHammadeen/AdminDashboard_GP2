@@ -80,7 +80,7 @@ class Ability
     # Redemption Processing
     can :read, OfferRedemption, shop_id: shop_id
     can :read, StampTransaction, shop_id: shop_id
-    can :read, UserStampCard, stamp: { shop_id: shop_id }
+    can [:read, :create, :update], UserStampCard, stamp: { shop_id: shop_id }
 
     # Shop admin profile — view and edit own, and view local staff directory
     can :read, ShopAdmin, shop_id: shop_id

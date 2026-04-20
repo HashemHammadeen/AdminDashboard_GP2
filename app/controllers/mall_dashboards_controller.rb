@@ -26,6 +26,7 @@ class MallDashboardsController < ApplicationController
     @recent_shops = mall ? Shop.where(mall_id: mall.id).order(created_at: :desc).limit(5) : Shop.none
     @recent_transactions = EarnTransaction.where(shop_id: mall_shop_ids).includes(:user, :shop).order(created_at: :desc).limit(5)
     @recent_receipts = Receipt.where(shop_id: mall_shop_ids).includes(:user, :shop).order(created_at: :desc).limit(5)
+    @reactivation_requests = Offer.where(shop_id: mall_shop_ids, reactivation_requested: true).includes(:shop)
 
     # System config
     @system_config = SystemConfig.first
