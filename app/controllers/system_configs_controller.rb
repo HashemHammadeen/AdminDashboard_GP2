@@ -4,7 +4,7 @@ class SystemConfigsController < ApplicationController
   layout "dashboard"
 
   def index
-    @system_configs = @system_configs.all
+    @system_configs = current_mall ? @system_configs.where(mall_id: current_mall.id) : @system_configs.none
   end
 
   def show; end

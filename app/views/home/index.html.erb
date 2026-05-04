@@ -16,7 +16,7 @@
     <!-- Login Cards -->
     <div class="grid md:grid-cols-2 gap-6">
       <!-- Mall Admin Card -->
-      <%= link_to new_mall_admin_session_path, class: "group block" do %>
+      <%= link_to mall_admin_login_path, class: "group block" do %>
         <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8 text-center hover:bg-white/20 hover:border-white/30 hover:scale-[1.02] transition-all duration-300 cursor-pointer">
           <div class="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-quaternary/20 mb-5 group-hover:bg-quaternary/30 transition-colors">
             <svg class="w-7 h-7 text-quaternary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -33,7 +33,7 @@
       <% end %>
 
       <!-- Shop Admin Card -->
-      <%= link_to new_shop_admin_session_path, class: "group block" do %>
+      <%= link_to shop_admin_login_path, class: "group block" do %>
         <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8 text-center hover:bg-white/20 hover:border-white/30 hover:scale-[1.02] transition-all duration-300 cursor-pointer">
           <div class="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-info/20 mb-5 group-hover:bg-info/30 transition-colors">
             <svg class="w-7 h-7 text-info" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -25,17 +25,17 @@
           <% @stamp_transactions.each do |transaction| %>
             <tr class="hover:bg-gray-50/50 transition-colors group">
               <td class="px-6 py-4 font-medium text-primary">
-                <%= transaction.user ? [transaction.user.firstname, transaction.user.lastname].join(" ") : "Unknown User" %>
+                <%= transaction.user ? [transaction.user.first_name, transaction.user.last_name].join(" ") : "Unknown User" %>
                 <div class="text-xs text-gray-400 font-normal"><%= transaction.id.first(8) %></div>
               </td>
               <td class="px-6 py-4"><%= transaction.stamp&.name || "—" %></td>
               <td class="px-6 py-4">
                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                  <%= transaction.transaction_type&.capitalize || "Earn" %>
+                  <%= transaction.type&.capitalize || "Collect" %>
                 </span>
               </td>
               <td class="px-6 py-4 font-semibold text-secondary">
-                <%= transaction.transaction_type == 'redeem' ? '-' : '+' %><%= transaction.stamps_count %>
+                <%= transaction.type == 'redeem' ? '-' : '+' %><%= transaction.stamps_count %>
               </td>
               <td class="px-6 py-4 text-right text-gray-400">
                 <%= transaction.created_at.strftime("%b %d, %Y %H:%M") %>

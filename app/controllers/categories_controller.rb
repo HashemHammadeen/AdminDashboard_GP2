@@ -4,7 +4,7 @@ class CategoriesController < ApplicationController
   layout "dashboard"
 
   def index
-    @categories = @categories.order(:display_order)
+    @categories = @categories.where(mall_id: current_mall.id).order(:display_order) if current_mall
   end
 
   def show; end
@@ -12,6 +12,7 @@ class CategoriesController < ApplicationController
   def edit; end
 
   def create
+    @category.mall_id = current_mall.id if current_mall
     respond_to do |format|
       if @category.save
         format.html { redirect_to @category, notice: "Category was successfully created." }
@@ -39,6 +40,6 @@ class CategoriesController < ApplicationController
   private
 
   def category_params
-    params.expect(category: [:category_name, :description, :display_order, :icon_url])
+    params.expect(category: [:name, :description, :display_order, :icon_url])
   end
 end

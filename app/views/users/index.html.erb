@@ -14,7 +14,7 @@
       </div>
       
       <div class="w-32 md:w-48">
-        <%= select_tag :tier_id, options_from_collection_for_select(Tier.all, :id, :tier_name, params[:tier_id]), include_blank: "All Tiers", class: "w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm text-primary focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-colors shadow-sm" %>
+        <%= select_tag :tier_id, options_from_collection_for_select(Tier.all, :id, :name, params[:tier_id]), include_blank: "All Tiers", class: "w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm text-primary focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-colors shadow-sm" %>
       </div>
       
       <button type="submit" class="p-2 bg-secondary hover:bg-secondary-light text-white rounded-lg transition-colors shadow-sm flex items-center justify-center" title="Apply filters">
@@ -49,15 +49,15 @@
             <td class="px-6 py-4">
               <div class="flex items-center gap-3">
                 <div class="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center text-secondary text-xs font-bold">
-                  <%= user.firstname.first.upcase %><%= user.lastname.first.upcase %>
+                  <%= user.first_name.first.upcase %><%= user.last_name.first.upcase %>
                 </div>
-                <span class="font-medium text-sm text-primary"><%= user.firstname %> <%= user.lastname %></span>
+                <span class="font-medium text-sm text-primary"><%= user.first_name %> <%= user.last_name %></span>
               </div>
             </td>
             <td class="px-6 py-4 text-sm text-gray-600"><%= user.email %></td>
             <td class="px-6 py-4 text-sm text-gray-600"><%= user.phone %></td>
             <td class="px-6 py-4">
-              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-info/10 text-info"><%= user.tier&.tier_name %></span>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-info/10 text-info"><%= user.tier&.name %></span>
             </td>
             <td class="px-6 py-4 text-sm text-gray-500"><%= user.created_at.strftime("%b %d, %Y") %></td>
             <td class="px-6 py-4 text-right">

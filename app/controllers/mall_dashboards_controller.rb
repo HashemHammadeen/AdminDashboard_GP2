@@ -11,7 +11,7 @@ class MallDashboardsController < ApplicationController
     @active_shops = mall ? Shop.where(mall_id: mall.id, is_active: true).count : 0
     @pending_shops = mall ? Shop.where(mall_id: mall.id, is_active: false).count : 0
     @total_users = User.count
-    @total_categories = Category.count
+    @total_categories = Category.where(mall_id: mall.id).count
 
     # Transaction stats for shops in this mall
     mall_shop_ids = mall ? Shop.where(mall_id: mall.id).pluck(:id) : []
@@ -20,16 +20,15 @@ class MallDashboardsController < ApplicationController
     @total_receipts = Receipt.where(shop_id: mall_shop_ids).count
     @pending_receipts = Receipt.where(shop_id: mall_shop_ids, status: :pending).count
     @total_offers = Offer.where(shop_id: mall_shop_ids).count
-    @active_offers = Offer.where(shop_id: mall_shop_ids, active: true).count
+    @active_offers = Offer.where(shop_id: mall_shop_ids, is_active: true).count
 
     # Recent data
     @recent_shops = mall ? Shop.where(mall_id: mall.id).order(created_at: :desc).limit(5) : Shop.none
     @recent_transactions = EarnTransaction.where(shop_id: mall_shop_ids).includes(:user, :shop).order(created_at: :desc).limit(5)
     @recent_receipts = Receipt.where(shop_id: mall_shop_ids).includes(:user, :shop).order(created_at: :desc).limit(5)
-    @reactivation_requests = Offer.where(shop_id: mall_shop_ids, reactivation_requested: true).includes(:shop)
 
-    # System config
-    @system_config = SystemConfig.first
+    # System config (mall-scoped)
+    @system_config = SystemConfig.find_by(mall_id: mall.id)
 
     # Audit logs
     @recent_audit_logs = AuditLog.order(created_at: :desc).limit(5)

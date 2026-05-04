@@ -1,5 +1,5 @@
 <% content_for(:page_title) { "Adjust User Points" } %>
-<% content_for(:page_subtitle) { "Modify the points balance for #{@user_points_balance.user&.firstname} #{@user_points_balance.user&.lastname}" } %>
+<% content_for(:page_subtitle) { "Modify the points balance for #{@user_points_balance.user&.first_name} #{@user_points_balance.user&.last_name}" } %>
 
 <div class="max-w-xl bg-white border border-gray-200 rounded-xl shadow-sm p-6">
   <%= render "form", user_points_balance: @user_points_balance %>

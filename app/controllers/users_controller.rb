@@ -5,12 +5,12 @@ class UsersController < ApplicationController
 
   def index
     @users = @users.includes(:tier).order(created_at: :desc)
-    
+
     if params[:search].present?
       search_term = "%#{params[:search]}%"
-      @users = @users.where("firstname ILIKE ? OR lastname ILIKE ? OR email ILIKE ? OR phone ILIKE ?", search_term, search_term, search_term, search_term)
+      @users = @users.where("first_name ILIKE ? OR last_name ILIKE ? OR email ILIKE ? OR phone ILIKE ?", search_term, search_term, search_term, search_term)
     end
-    
+
     if params[:tier_id].present?
       @users = @users.where(tier_id: params[:tier_id])
     end
@@ -37,6 +37,6 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    params.expect(user: [:firstname, :lastname, :email, :phone, :gender, :tier_id, :profile_image_url])
+    params.expect(user: [:first_name, :last_name, :email, :phone, :gender, :tier_id, :profile_image_url])
   end
 end

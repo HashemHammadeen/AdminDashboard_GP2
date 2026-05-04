@@ -16,7 +16,7 @@ class UserStampCardsController < ApplicationController
     if params[:search].present?
       search_term = "%#{params[:search]}%"
       @user_stamp_cards = @user_stamp_cards.left_outer_joins(:user, :stamp).where(
-        "users.firstname ILIKE :search OR users.lastname ILIKE :search OR users.email ILIKE :search OR stamps.name ILIKE :search",
+        "users.first_name ILIKE :search OR users.last_name ILIKE :search OR users.email ILIKE :search OR stamps.name ILIKE :search",
         search: search_term
       )
     end
@@ -28,7 +28,7 @@ class UserStampCardsController < ApplicationController
 
   def new
     @user_stamp_card = UserStampCard.new
-    @stamps = current_shop ? current_shop.stamps.where(active: true) : Stamp.none
+    @stamps = current_shop ? current_shop.stamps.where(is_active: true) : Stamp.none
     @users = User.all
   end
 
@@ -37,7 +37,7 @@ class UserStampCardsController < ApplicationController
     user = User.find_by(id: permitted[:user_id])
     stamp = Stamp.find_by(id: permitted[:stamp_id])
     stamps_to_add = permitted[:stamps_collected].to_i
-    
+
     if user && stamp && current_shop && stamp.shop_id == current_shop.id
       @user_stamp_card = UserStampCard.find_or_initialize_by(user: user, stamp: stamp)
 
@@ -50,20 +50,20 @@ class UserStampCardsController < ApplicationController
         StampTransaction.create!(
           user: user,
           shop: current_shop,
-          stamp: stamp,
+          stamp_program_id: stamp.id,
           stamps_count: stamps_to_add,
-          transaction_type: 'collect'
+          type: "collect"
         )
-        redirect_to user_stamp_cards_path, notice: "Successfully assigned #{stamps_to_add} stamps to #{user.firstname}."
+        redirect_to user_stamp_cards_path, notice: "Successfully assigned #{stamps_to_add} stamps to #{user.first_name}."
       else
-        @stamps = current_shop.stamps.where(active: true)
+        @stamps = current_shop.stamps.where(is_active: true)
         @users = User.all
         render :new, status: :unprocessable_entity
       end
     else
       @user_stamp_card = UserStampCard.new
       @user_stamp_card.errors.add(:base, "Invalid user or stamp program selected")
-      @stamps = current_shop ? current_shop.stamps.where(active: true) : Stamp.none
+      @stamps = current_shop ? current_shop.stamps.where(is_active: true) : Stamp.none
       @users = User.all
       render :new, status: :unprocessable_entity
     end

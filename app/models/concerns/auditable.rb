@@ -14,7 +14,7 @@ module Auditable
   end
 
   def log_update_action
-    # Don't log if the only changes were Devise tracking/timestamp columns
+    # Don't log if the only changes were timestamp columns
     return if saved_changes.keys.all? { |k| ignored_audit_columns.include?(k) }
     create_audit_log("update")
   end
@@ -26,17 +26,21 @@ module Auditable
   def create_audit_log(action)
     return unless Current.admin
 
-    # Safely extract relations if they exist on the model
     opts = {
       action_type: "#{self.class.name.underscore}_#{action}",
-      admin_id: Current.admin.id,
-      admin_type: Current.admin.class.name.underscore,
       metadata: {
         model_name: self.class.name,
         record_id: id,
         changes: action == "destroy" ? attributes : filtered_changes
       }
     }
+
+    # Set the correct admin column based on admin type
+    if Current.admin.is_a?(MallAdmin)
+      opts[:mall_admin_id] = Current.admin.id
+    elsif Current.admin.is_a?(ShopAdmin)
+      opts[:shop_admin_id] = Current.admin.id
+    end
 
     # Extract associated shop/user if model has them directly
     opts[:shop_id] = shop_id if respond_to?(:shop_id)
@@ -64,9 +68,7 @@ module Auditable
   def ignored_audit_columns
     %w[
       updated_at created_at
-      encrypted_password reset_password_token reset_password_sent_at
-      remember_created_at sign_in_count current_sign_in_at last_sign_in_at
-      current_sign_in_ip last_sign_in_ip
+      password_hash
     ]
   end
 end

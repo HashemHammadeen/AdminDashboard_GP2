@@ -11,43 +11,7 @@
   <% end %>
 </div>
 
-<% if current_mall && @reactivation_requests&.any? %>
-<!-- Reactivation Requests -->
-<div class="bg-white rounded-xl border border-warning/30 overflow-hidden mb-8 shadow-sm">
-  <div class="flex items-center justify-between px-6 py-4 border-b border-warning/10 bg-warning/5">
-    <h3 class="text-lg font-semibold text-warning">Offer Reactivation Requests</h3>
-  </div>
-  <div class="overflow-x-auto">
-    <table class="w-full">
-      <thead>
-        <tr class="bg-gray-50">
-          <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Shop</th>
-          <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Offer</th>
-          <th class="text-right text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Actions</th>
-        </tr>
-      </thead>
-      <tbody class="divide-y divide-gray-100">
-        <% @reactivation_requests.each do |offer| %>
-          <tr class="hover:bg-warning/5 transition-colors">
-            <td class="px-6 py-4 text-sm font-medium text-primary"><%= offer.shop.name %></td>
-            <td class="px-6 py-4 text-sm text-gray-600"><%= offer.name %></td>
-            <td class="px-6 py-4 text-right">
-              <div class="flex items-center justify-end gap-2">
-                <%= button_to approve_reactivation_offer_path(offer), method: :patch, class: "px-3 py-1.5 bg-success/10 text-success hover:bg-success/20 text-xs font-medium rounded-lg transition-all transform hover:-translate-y-0.5 shadow-sm hover:shadow" do %>
-                  Approve
-                <% end %>
-                <%= button_to deny_reactivation_offer_path(offer), method: :patch, class: "px-3 py-1.5 bg-error/10 text-error hover:bg-error/20 text-xs font-medium rounded-lg transition-all transform hover:-translate-y-0.5 shadow-sm hover:shadow" do %>
-                  Deny
-                <% end %>
-              </div>
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
-</div>
-<% end %>
+
 
 <div class="bg-white rounded-xl border border-gray-100 overflow-hidden">
   <div class="overflow-x-auto">
@@ -77,18 +41,10 @@
             </td>
             <td class="px-6 py-4 text-sm text-gray-600"><%= offer.reward_type %></td>
             <td class="px-6 py-4">
-              <% if offer.active %>
+              <% if offer.is_active %>
                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success/10 text-success">Active</span>
               <% else %>
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-500 mb-1">Inactive</span>
-                <% if current_shop && offer.inactive_by_mall_admin %>
-                  <% if offer.reactivation_requested %>
-                    <br><span class="inline-flex items-center text-[10px] font-medium text-warning mt-1">Pending Approval</span>
-                  <% else %>
-                    <br>
-                    <%= button_to "Request Reactivation", request_reactivation_offer_path(offer), method: :patch, class: "mt-1 text-xs font-medium text-secondary hover:text-primary transition-colors bg-secondary/10 hover:bg-secondary/20 px-2 py-1 rounded" %>
-                  <% end %>
-                <% end %>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-500">Inactive</span>
               <% end %>
             </td>
             <td class="px-6 py-4 text-sm text-gray-500">

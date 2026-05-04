@@ -13,7 +13,7 @@ class ShopDashboardsController < ApplicationController
     @total_receipts = shop ? Receipt.where(shop_id: shop.id).count : 0
     @pending_receipts = shop ? Receipt.where(shop_id: shop.id, status: :pending).count : 0
     @total_offers = shop ? Offer.where(shop_id: shop.id).count : 0
-    @active_offers = shop ? Offer.where(shop_id: shop.id, active: true).count : 0
+    @active_offers = shop ? Offer.where(shop_id: shop.id, is_active: true).count : 0
     @total_stamps = shop ? Stamp.where(shop_id: shop.id).count : 0
     @total_qrs = shop ? Qr.where(shop_id: shop.id).count : 0
 

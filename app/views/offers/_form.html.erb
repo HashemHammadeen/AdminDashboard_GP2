@@ -5,8 +5,12 @@
     </div>
   <% end %>
   <div class="mb-5">
-    <p class="block text-sm font-medium text-gray-700 mb-1">Shop</p>
-    <p class="w-full px-3 py-2.5 border border-gray-100 bg-gray-50 rounded-lg text-sm text-gray-500"><%= offer.shop&.name || (defined?(current_shop) && current_shop ? current_shop.name : "—") %></p>
+    <%= form.label :shop_id, "Shop", class: "block text-sm font-medium text-gray-700 mb-1" %>
+    <% if current_mall_admin %>
+      <%= form.collection_select :shop_id, Shop.where(mall_id: current_mall_admin.mall_id), :id, :name, { prompt: "Select a shop..." }, class: "w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm text-primary focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-colors bg-white" %>
+    <% else %>
+      <p class="w-full px-3 py-2.5 border border-gray-100 bg-gray-50 rounded-lg text-sm text-gray-500"><%= offer.shop&.name || current_shop.name %></p>
+    <% end %>
   </div>
   <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
     <div>
@@ -34,19 +38,10 @@
     <%= form.label :image_url, "Image URL", class: "block text-sm font-medium text-gray-700 mb-1" %>
     <%= form.text_field :image_url, class: "w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm text-primary focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-colors" %>
   </div>
-  <div class="flex items-center gap-3">
-    <% if current_shop && offer.inactive_by_mall_admin %>
-      <div class="text-sm font-medium text-gray-700">
-        Status: <span class="text-warning">Inactive (Disabled by Mall Admin)</span>
-        <p class="text-xs text-gray-500 mt-1">You must request reactivation from the offers list.</p>
-      </div>
-    <% else %>
-      <%= form.label :active, class: "flex items-center gap-2 cursor-pointer" do %>
-        <%= form.check_box :active, class: "w-4 h-4 rounded border-gray-300 text-secondary focus:ring-secondary" %>
-        <span class="text-sm font-medium text-gray-700">Active</span>
-      <% end %>
+    <%= form.label :is_active, class: "flex items-center gap-2 cursor-pointer" do %>
+      <%= form.check_box :is_active, class: "w-4 h-4 rounded border-gray-300 text-secondary focus:ring-secondary" %>
+      <span class="text-sm font-medium text-gray-700">Active</span>
     <% end %>
-  </div>
   <div class="flex items-center gap-3 pt-2">
     <%= form.submit class: "px-5 py-2.5 bg-primary hover:bg-primary-light text-white text-sm font-medium rounded-lg transition-colors cursor-pointer" %>
     <%= link_to "Cancel", offers_path, class: "px-5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium rounded-lg transition-colors" %>

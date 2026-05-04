@@ -6,7 +6,7 @@ class DataAnalysisController < ApplicationController
     # 1. SCOPING: Isolate data depending on Admin Type
     if current_mall_admin
       @shops = current_mall.shops
-      @users = User.joins(user_points_balances: :user).distinct # simplified for system oversight
+      @users = User.joins(:user_points_balance).distinct
     elsif current_shop_admin
       @shops = Shop.where(id: current_shop.id)
     end
@@ -39,16 +39,16 @@ class DataAnalysisController < ApplicationController
 
     # 4. Tier Distribution (Pie Chart) - Global for Mall Admin, Localized for Shop Admin
     if current_mall_admin
-      @tier_distribution = User.joins(:tier).group("tiers.tier_name").count
+      @tier_distribution = User.joins(:tier).group("tiers.name").count
     else
       # For shop admins, we look at users who have interacted with this specific shop
       local_user_ids = EarnTransaction.where(shop_id: shop_ids).select(:user_id)
-      @tier_distribution = User.where(id: local_user_ids).joins(:tier).group("tiers.tier_name").count
+      @tier_distribution = User.where(id: local_user_ids).joins(:tier).group("tiers.name").count
     end
 
     # 5. Engagement/Activity (Area Chart: Active vs Inactive over last week)
     t_7_days_ago = 7.days.ago.beginning_of_day
-    
+
     if current_mall_admin
       total_users = User.count
       active_users = EarnTransaction.where(created_at: t_7_days_ago..Time.current).distinct.count(:user_id)
@@ -56,7 +56,7 @@ class DataAnalysisController < ApplicationController
       total_users = EarnTransaction.where(shop_id: shop_ids).distinct.count(:user_id) # total ever seen
       active_users = EarnTransaction.where(shop_id: shop_ids, created_at: t_7_days_ago..Time.current).distinct.count(:user_id)
     end
-    
+
     inactive_users = [total_users - active_users, 0].max
     @user_activity_data = {
       "Active (Last 7 Days)" => active_users,
@@ -69,7 +69,7 @@ class DataAnalysisController < ApplicationController
       @top_customers = User.joins(:user_points_balance)
                            .order("user_points_balances.total_points DESC")
                            .limit(5)
-      
+
       @top_customer_metric_name = "Point Balance"
       @top_customer_metric_method = ->(u) { u.user_points_balance&.total_points || 0 }
     else
@@ -80,7 +80,7 @@ class DataAnalysisController < ApplicationController
                                .order("sum_points_used DESC")
                                .limit(5)
                                .sum(:points_used)
-      
+
       # eager load users to avoid N+1 and keep sort order
       users_map = User.where(id: top_user_ids_with_sums.keys).index_by(&:id)
       @top_customers = top_user_ids_with_sums.keys.map { |id| users_map[id] }.compact

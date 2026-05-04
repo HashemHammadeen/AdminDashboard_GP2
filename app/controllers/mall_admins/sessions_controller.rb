@@ -1,25 +1,28 @@
-class MallAdmins::SessionsController < Devise::SessionsController
-  # GET /resource/sign_in
-  # def new
-  #   super
-  # end
+module MallAdmins
+  class SessionsController < ApplicationController
+    skip_before_action :verify_authenticity_token, only: []
+    layout "application"
 
-  # POST /resource/sign_in
-  def create
-    user = MallAdmin.find_by(email: params[:mall_admin][:email])
-    
-    # Block login entirely if the admin's mall does not match the subdomain's mall
-    if user && @current_tenant_mall && user.mall != @current_tenant_mall
-      flash.now[:alert] = "This admin account does not belong to #{@current_tenant_mall.mall_name}."
-      self.resource = MallAdmin.new(email: params[:mall_admin][:email])
-      return render :new, status: :unprocessable_entity
+    def new
+      redirect_to mall_admin_root_path if mall_admin_signed_in?
     end
-    
-    super
-  end
 
-  # DELETE /resource/sign_out
-  # def destroy
-  #   super
-  # end
+    def create
+      admin = MallAdmin.find_by(email: params[:email]&.downcase&.strip)
+
+      if admin&.authenticate(params[:password])
+        session[:mall_admin_id] = admin.id
+        session.delete(:shop_admin_id)
+        redirect_to mall_admin_root_path, notice: "Signed in successfully."
+      else
+        flash.now[:alert] = "Invalid email or password."
+        render :new, status: :unprocessable_entity
+      end
+    end
+
+    def destroy
+      session.delete(:mall_admin_id)
+      redirect_to root_path, notice: "Signed out successfully."
+    end
+  end
 end

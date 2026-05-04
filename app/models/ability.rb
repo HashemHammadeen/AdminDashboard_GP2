@@ -48,6 +48,7 @@ class Ability
     can :read, RedeemTransaction, shop: { mall_id: mall_id }
     can :read, Receipt, shop: { mall_id: mall_id }
     can :manage, Offer, shop: { mall_id: mall_id }
+    can :create, Offer, shop_id: nil
     can :read, Stamp, shop: { mall_id: mall_id }
     can :read, OfferRedemption, shop: { mall_id: mall_id }
     can :read, StampTransaction, shop: { mall_id: mall_id }
@@ -63,24 +64,20 @@ class Ability
 
     # Offer management (Offer Creation + Offer Management)
     can :manage, Offer, shop_id: shop_id
-
-    # Stamp Programs & Stamp Management
     can :manage, Stamp, shop_id: shop_id
-
-    # Receipt management
     can :manage, Receipt, shop_id: shop_id
-
-    # Transaction History (Earn + Redeem)
     can :manage, EarnTransaction, shop_id: shop_id
     can :manage, RedeemTransaction, shop_id: shop_id
-
-    # QR Generation & QR Code Scanning
     can :manage, Qr, shop_id: shop_id
+
+    # Allow CanCanCan to initialize models during `new` action before shop_id is assigned
+    can :create, [Offer, Stamp, Receipt, EarnTransaction, RedeemTransaction, Qr], shop_id: nil
 
     # Redemption Processing
     can :read, OfferRedemption, shop_id: shop_id
     can :read, StampTransaction, shop_id: shop_id
     can [:read, :create, :update], UserStampCard, stamp: { shop_id: shop_id }
+    can :create, UserStampCard, stamp_id: nil
 
     # Shop admin profile — view and edit own, and view local staff directory
     can :read, ShopAdmin, shop_id: shop_id

@@ -24,8 +24,10 @@
               <div class="text-xs text-gray-400 mt-1"><%= log.metadata&.dig('model_name') || "Unknown Record" %> | <%= log.metadata&.dig('record_id').to_s.first(8) %></div>
             </td>
             <td class="px-6 py-4">
-              <span class="text-sm font-medium text-primary block"><%= log.admin_type&.titleize || "System" %></span>
-              <span class="text-xs text-gray-500 font-mono"><%= log.admin_id.to_s.first(8) %></span>
+              <% admin_id = log.mall_admin_id || log.shop_admin_id %>
+              <% admin_type = log.mall_admin_id ? "Mall Admin" : (log.shop_admin_id ? "Shop Admin" : nil) %>
+              <span class="text-sm font-medium text-primary block"><%= admin_type || "System" %></span>
+              <span class="text-xs text-gray-500 font-mono"><%= admin_id.to_s.first(8) %></span>
             </td>
             <td class="px-6 py-4 text-sm font-medium">
               <% if log.points && log.points > 0 %>

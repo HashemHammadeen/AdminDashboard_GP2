@@ -4,8 +4,8 @@ class StampTransactionsController < ApplicationController
   layout "dashboard"
 
   def index
-    @stamp_transactions = @stamp_transactions.where(shop_id: current_shop.id).includes(:user, :stamp).order(created_at: :desc) if current_shop
-    @stamp_transactions = @stamp_transactions.includes(:user, :stamp, :shop).order(created_at: :desc) if current_mall
+    @stamp_transactions = @stamp_transactions.where(shop_id: current_shop.id).includes(:user, :stamp_program).order(created_at: :desc) if current_shop
+    @stamp_transactions = @stamp_transactions.includes(:user, :stamp_program, :shop).order(created_at: :desc) if current_mall
   end
 
   def show; end

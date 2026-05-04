@@ -41,7 +41,7 @@
           <% @user_stamp_cards.each do |card| %>
             <tr class="hover:bg-gray-50/50 transition-colors group">
               <td class="px-6 py-4 font-medium text-primary">
-                <%= card.user ? [card.user.firstname, card.user.lastname].join(" ") : "Unknown User" %>
+                <%= card.user ? [card.user.first_name, card.user.last_name].join(" ") : "Unknown User" %>
                 <div class="text-xs text-gray-400 font-normal"><%= card.id.first(8) %></div>
               </td>
               <td class="px-6 py-4"><%= card.stamp&.name || "—" %></td>

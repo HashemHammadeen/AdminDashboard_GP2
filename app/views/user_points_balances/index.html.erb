@@ -24,7 +24,7 @@
           <% @user_points_balances.each do |balance| %>
             <tr class="hover:bg-gray-50/50 transition-colors group">
               <td class="px-6 py-4 font-medium text-primary">
-                <%= balance.user ? [balance.user.firstname, balance.user.lastname].join(" ") : "Unknown User" %>
+                <%= balance.user ? [balance.user.first_name, balance.user.last_name].join(" ") : "Unknown User" %>
                 <div class="text-xs text-gray-400 font-normal"><%= balance.user&.email %></div>
               </td>
               <td class="px-6 py-4 font-semibold text-secondary"><%= number_with_delimiter(balance.total_points) %></td>

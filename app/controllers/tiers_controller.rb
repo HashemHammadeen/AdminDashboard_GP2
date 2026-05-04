@@ -39,6 +39,6 @@ class TiersController < ApplicationController
   private
 
   def tier_params
-    params.expect(tier: [:tier_name, :points_required, :color_hex, :icon_url, :benefits])
+    params.expect(tier: [:name, :points_required, :tier_order, :color_hex, :icon_url, :benefits])
   end
 end

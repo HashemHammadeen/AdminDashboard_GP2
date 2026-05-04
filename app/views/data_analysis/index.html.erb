@@ -84,14 +84,14 @@
             <tr class="bg-white hover:bg-ternary/5 transition-colors">
               <td class="px-6 py-4">
                 <div class="flex items-center gap-3">
-                  <div class="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center text-secondary font-bold text-xs"><%= user.firstname[0] %><%= user.lastname[0] %></div>
-                  <span class="text-sm font-medium text-primary"><%= user.firstname %> <%= user.lastname %></span>
+                  <div class="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center text-secondary font-bold text-xs"><%= user.first_name[0] %><%= user.last_name[0] %></div>
+                  <span class="text-sm font-medium text-primary"><%= user.first_name %> <%= user.last_name %></span>
                 </div>
               </td>
               <td class="px-6 py-4 text-sm text-gray-500"><%= user.email %></td>
               <td class="px-6 py-4">
                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" style="background-color: <%= user.tier.color_hex %>20; color: <%= user.tier.color_hex %>;">
-                  <%= user.tier.tier_name %>
+                  <%= user.tier.name %>
                 </span>
               </td>
               <td class="px-6 py-4 text-sm font-bold text-secondary text-right"><%= number_with_delimiter(@top_customer_metric_method.call(user)) %> pts</td>

@@ -15,7 +15,6 @@
           <th class="px-6 py-4">Transaction ID</th>
           <th class="px-6 py-4">User</th>
           <th class="px-6 py-4">Offer Redeemed</th>
-          <th class="px-6 py-4">Status</th>
           <th class="px-6 py-4 text-right">Date</th>
         </tr>
       </thead>
@@ -25,22 +24,10 @@
             <tr class="hover:bg-gray-50/50 transition-colors group">
               <td class="px-6 py-4 font-mono text-xs text-secondary"><%= redemption.id.first(12) %></td>
               <td class="px-6 py-4 font-medium text-primary">
-                <%= redemption.user ? [redemption.user.firstname, redemption.user.lastname].join(" ") : "Unknown User" %>
+                <%= redemption.user ? [redemption.user.first_name, redemption.user.last_name].join(" ") : "Unknown User" %>
                 <div class="text-xs text-gray-400 font-normal"><%= redemption.user&.email %></div>
               </td>
-              <td class="px-6 py-4"><%= redemption.offer&.title || "—" %></td>
-              <td class="px-6 py-4">
-                <% case redemption.status %>
-                <% when "pending" %>
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-warning/10 text-warning">Pending</span>
-                <% when "completed" %>
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success/10 text-success">Completed</span>
-                <% when "cancelled" %>
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-error/10 text-error">Cancelled</span>
-                <% else %>
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600"><%= redemption.status %></span>
-                <% end %>
-              </td>
+              <td class="px-6 py-4"><%= redemption.offer&.name || "—" %></td>
               <td class="px-6 py-4 text-right text-gray-400">
                 <%= redemption.created_at.strftime("%b %d, %Y %H:%M") %>
               </td>
