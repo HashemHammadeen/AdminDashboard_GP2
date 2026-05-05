@@ -1,5 +1,5 @@
 <% content_for(:page_title) { "Add Mall Admin" } %>
-<% content_for(:page_subtitle) { "Create a new administrative account for #{current_mall&.mall_name}" } %>
+<% content_for(:page_subtitle) { "Create a new administrative account for #{current_mall&.name}" } %>
 
 <div class="max-w-2xl bg-white border border-gray-200 rounded-xl shadow-sm p-6">
   <%= render "form", mall_admin: @mall_admin %>

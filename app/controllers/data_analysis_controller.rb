@@ -8,11 +8,11 @@ class DataAnalysisController < ApplicationController
       @shops = current_mall.shops
       @users = User.joins(:user_points_balance).distinct
     elsif current_shop_admin
-      @shops = Shop.where(id: current_shop.id)
+      @shops = Shop.where(shop_id: current_shop.shop_id)
     end
 
     # Common localized scopes
-    shop_ids = @shops.pluck(:id)
+    shop_ids = @shops.pluck(:shop_id)
     t_30_days_ago = 30.days.ago.beginning_of_day
 
     # 2. Points Velocity (Line Chart: Earned vs Redeemed by Day)
@@ -39,11 +39,11 @@ class DataAnalysisController < ApplicationController
 
     # 4. Tier Distribution (Pie Chart) - Global for Mall Admin, Localized for Shop Admin
     if current_mall_admin
-      @tier_distribution = User.joins(:tier).group("tiers.name").count
+      @tier_distribution = User.joins(:tier).group("tier.name").count
     else
       # For shop admins, we look at users who have interacted with this specific shop
       local_user_ids = EarnTransaction.where(shop_id: shop_ids).select(:user_id)
-      @tier_distribution = User.where(id: local_user_ids).joins(:tier).group("tiers.name").count
+      @tier_distribution = User.where(user_id: local_user_ids).joins(:tier).group("tier.name").count
     end
 
     # 5. Engagement/Activity (Area Chart: Active vs Inactive over last week)
@@ -67,7 +67,7 @@ class DataAnalysisController < ApplicationController
     if current_mall_admin
       # Mall Admins care about highest overall point balances
       @top_customers = User.joins(:user_points_balance)
-                           .order("user_points_balances.total_points DESC")
+                           .order("user_points_balance.total_points DESC")
                            .limit(5)
 
       @top_customer_metric_name = "Point Balance"
@@ -82,11 +82,11 @@ class DataAnalysisController < ApplicationController
                                .sum(:points_used)
 
       # eager load users to avoid N+1 and keep sort order
-      users_map = User.where(id: top_user_ids_with_sums.keys).index_by(&:id)
-      @top_customers = top_user_ids_with_sums.keys.map { |id| users_map[id] }.compact
+      users_map = User.where(user_id: top_user_ids_with_sums.keys).index_by(&:user_id)
+      @top_customers = top_user_ids_with_sums.keys.map { |uid| users_map[uid] }.compact
 
       @top_customer_metric_name = "Points Spent Here"
-      @top_customer_metric_method = ->(u) { top_user_ids_with_sums[u.id] || 0 }
+      @top_customer_metric_method = ->(u) { top_user_ids_with_sums[u.user_id] || 0 }
     end
   end
 end

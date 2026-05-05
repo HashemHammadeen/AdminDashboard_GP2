@@ -4,8 +4,8 @@ class QrsController < ApplicationController
   layout "dashboard"
 
   def index
-    @qrs = @qrs.where(shop_id: current_shop.id).includes(:user).order(created_at: :desc) if current_shop
-    @qrs = @qrs.includes(:user, :shop).order(created_at: :desc) if current_mall
+    @qrs = @qrs.where(shop_id: current_shop.shop_id).includes(:user) if current_shop
+    @qrs = @qrs.includes(:user, :shop) if current_mall
   end
 
   def show; end

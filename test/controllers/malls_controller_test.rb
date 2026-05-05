@@ -17,7 +17,7 @@ class MallsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create mall" do
     assert_difference("Mall.count") do
-      post malls_url, params: { mall: { cover_image_url: @mall.cover_image_url, location: @mall.location, logo_url: @mall.logo_url, mall_name: @mall.mall_name } }
+      post malls_url, params: { mall: { cover_image_url: @mall.cover_image_url, location: @mall.location, logo_url: @mall.logo_url, name: @mall.name } }
     end
 
     assert_redirected_to mall_url(Mall.last)
@@ -34,7 +34,7 @@ class MallsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update mall" do
-    patch mall_url(@mall), params: { mall: { cover_image_url: @mall.cover_image_url, location: @mall.location, logo_url: @mall.logo_url, mall_name: @mall.mall_name } }
+    patch mall_url(@mall), params: { mall: { cover_image_url: @mall.cover_image_url, location: @mall.location, logo_url: @mall.logo_url, name: @mall.name } }
     assert_redirected_to mall_url(@mall)
   end
 

@@ -1,6 +1,10 @@
 class Mall < ApplicationRecord
-  validates :mall_name, presence: true
-  validates :subdomain, presence: true, uniqueness: { case_sensitive: false }, format: { with: /\A[a-z0-9][a-z0-9-]*[a-z0-9]\z/, message: "only allows lowercase letters, numbers, and dashes" }
+  self.primary_key = "mall_id"
+  self.record_timestamps = true
+  def self.timestamp_attributes_for_update
+    []
+  end
+  validates :name, presence: true
   validates :location, presence: true
   has_many :shops
   has_many :mall_admins

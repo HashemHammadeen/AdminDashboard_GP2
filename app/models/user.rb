@@ -1,4 +1,9 @@
 class User < ApplicationRecord
+  self.primary_key = "user_id"
+  self.record_timestamps = true
+  def self.timestamp_attributes_for_update
+    []
+  end
   alias_attribute :password_digest, :password_hash
   has_secure_password # Uses password_hash column via alias
   belongs_to :tier

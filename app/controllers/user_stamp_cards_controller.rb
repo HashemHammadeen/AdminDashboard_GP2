@@ -5,10 +5,10 @@ class UserStampCardsController < ApplicationController
 
   def index
     if current_shop
-      stamp_ids = current_shop.stamps.pluck(:id)
+      stamp_ids = current_shop.stamps.pluck(:stamp_id)
       @user_stamp_cards = UserStampCard.where(stamp_id: stamp_ids)
     elsif current_mall_admin
-      stamp_ids = Stamp.joins(:shop).where(shops: { mall_id: current_mall_admin.mall_id }).pluck(:id)
+      stamp_ids = Stamp.joins(:shop).where(shop: { mall_id: current_mall_admin.mall_id }).pluck(:stamp_id)
       @user_stamp_cards = UserStampCard.where(stamp_id: stamp_ids)
     else
       @user_stamp_cards = UserStampCard.none
@@ -16,12 +16,12 @@ class UserStampCardsController < ApplicationController
     if params[:search].present?
       search_term = "%#{params[:search]}%"
       @user_stamp_cards = @user_stamp_cards.left_outer_joins(:user, :stamp).where(
-        "users.first_name ILIKE :search OR users.last_name ILIKE :search OR users.email ILIKE :search OR stamps.name ILIKE :search",
+        "user.first_name ILIKE :search OR user.last_name ILIKE :search OR user.email ILIKE :search OR stamp.name ILIKE :search",
         search: search_term
       )
     end
 
-    @user_stamp_cards = @user_stamp_cards.includes(:user, :stamp).order(updated_at: :desc)
+    @user_stamp_cards = @user_stamp_cards.includes(:user, :stamp).order(created_at: :desc)
   end
 
   def show; end
@@ -34,8 +34,8 @@ class UserStampCardsController < ApplicationController
 
   def create
     permitted = user_stamp_card_params
-    user = User.find_by(id: permitted[:user_id])
-    stamp = Stamp.find_by(id: permitted[:stamp_id])
+    user = User.find_by(user_id: permitted[:user_id])
+    stamp = Stamp.find_by(stamp_id: permitted[:stamp_id])
     stamps_to_add = permitted[:stamps_collected].to_i
 
     if user && stamp && current_shop && stamp.shop_id == current_shop.id

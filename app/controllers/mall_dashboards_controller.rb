@@ -14,7 +14,7 @@ class MallDashboardsController < ApplicationController
     @total_categories = Category.where(mall_id: mall.id).count
 
     # Transaction stats for shops in this mall
-    mall_shop_ids = mall ? Shop.where(mall_id: mall.id).pluck(:id) : []
+    mall_shop_ids = mall ? Shop.where(mall_id: mall.id).pluck(:shop_id) : []
     @total_earn_transactions = EarnTransaction.where(shop_id: mall_shop_ids).count
     @total_points_earned = EarnTransaction.where(shop_id: mall_shop_ids).sum(:points_earned)
     @total_receipts = Receipt.where(shop_id: mall_shop_ids).count

@@ -14,6 +14,7 @@ class OffersController < ApplicationController
 
   def create
     @offer.shop_id = current_shop.id if current_shop
+    @offer.reward_value = {} if @offer.reward_value.blank?
     respond_to do |format|
       if @offer.save
         format.html { redirect_to @offer, notice: "Offer was successfully created." }

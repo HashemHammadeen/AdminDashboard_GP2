@@ -14,6 +14,7 @@ class RedeemTransactionsController < ApplicationController
 
   def create
     @redeem_transaction.shop_id = current_shop.id if current_shop
+    @redeem_transaction.verification_code = SecureRandom.hex(3) if @redeem_transaction.verification_code.blank?
     respond_to do |format|
       if @redeem_transaction.save
         format.html { redirect_to @redeem_transaction, notice: "Redeem transaction created." }
@@ -41,6 +42,6 @@ class RedeemTransactionsController < ApplicationController
   private
 
   def redeem_transaction_params
-    params.expect(redeem_transaction: [:user_id, :shop_id, :points_redeemed, :reward_description, :status])
+    params.expect(redeem_transaction: [:user_id, :shop_id, :points_used, :DiscountAmount, :verification_code, :status, :completed_at])
   end
 end

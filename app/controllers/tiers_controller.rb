@@ -12,6 +12,9 @@ class TiersController < ApplicationController
   def edit; end
 
   def create
+    @tier.assign_attributes(tier_order: @tier.class.maximum(:tier_order).to_i + 1) if @tier.tier_order.blank?
+    @tier.assign_attributes(icon_url: "") if @tier.icon_url.blank?
+    @tier.assign_attributes(benefits: {}) if @tier.benefits.blank?
     respond_to do |format|
       if @tier.save
         format.html { redirect_to @tier, notice: "Tier was successfully created." }

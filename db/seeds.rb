@@ -31,14 +31,14 @@ end
 # ==============================================================
 puts "Creating Malls..."
 malls_data = [
-  { mall_name: "Mecca Mall", subdomain: "meccamall", location: "Zahran Street, Amman", cover_image_url: "https://example.com/mecca_cover.png", logo_url: "https://example.com/mecca_logo.png" },
-  { mall_name: "Zara Mall", subdomain: "zaramall", location: "7th Circle, Amman", cover_image_url: "https://example.com/zara_cover.png", logo_url: "https://example.com/zara_logo.png" },
-  { mall_name: "Taj Mall", subdomain: "tajmall", location: "Abdoun, Amman", cover_image_url: "https://example.com/taj_cover.png", logo_url: "https://example.com/taj_logo.png" }
+  { name: "Mecca Mall", location: "Zahran Street, Amman", cover_image_url: "https://example.com/mecca_cover.png", logo_url: "https://example.com/mecca_logo.png" },
+  { name: "Zara Mall", location: "7th Circle, Amman", cover_image_url: "https://example.com/zara_cover.png", logo_url: "https://example.com/zara_logo.png" },
+  { name: "Taj Mall", location: "Abdoun, Amman", cover_image_url: "https://example.com/taj_cover.png", logo_url: "https://example.com/taj_logo.png" }
 ]
 
 malls = malls_data.map do |md|
-  Mall.find_or_create_by!(subdomain: md[:subdomain]) do |m|
-    m.assign_attributes(md.except(:subdomain))
+  Mall.find_or_create_by!(name: md[:name]) do |m|
+    m.assign_attributes(md.except(:name))
   end
 end
 
@@ -48,7 +48,7 @@ end
 puts "Creating Mall Admins..."
 mall_admins = malls.map.with_index do |mall, idx|
   MallAdmin.find_or_create_by!(email: "malladmin#{idx + 1}@example.com") do |a|
-    a.name = "Admin of #{mall.mall_name}"
+    a.name = "Admin of #{mall.name}"
     a.phone = "+96261000#{idx + 10}"
     a.mall = mall
     a.password_hash = default_password
@@ -65,6 +65,7 @@ malls.each_with_index do |mall, idx|
     sc.min_redemption_threshold = 100
     sc.points_to_currency_ratio = 0.05
     sc.updated_by_admin_id = mall_admins[idx].id
+    sc.updated_at = Time.current
   end
 end
 
@@ -77,7 +78,7 @@ categories_by_mall = {}
 malls.each do |mall|
   categories_by_mall[mall.id] = category_names.map.with_index do |cname, idx|
     Category.find_or_create_by!(name: cname, mall: mall) do |c|
-      c.description = "#{cname} shops in #{mall.mall_name}"
+      c.description = "#{cname} shops in #{mall.name}"
       c.display_order = idx + 1
       c.icon_url = "https://example.com/icon_#{cname.downcase.gsub(' & ', '_')}.png"
     end
@@ -94,7 +95,7 @@ malls.each do |mall|
   cats = categories_by_mall[mall.id]
   15.times do |i|
     cat = cats.sample
-    shop_name = "#{Faker::Company.name} #{mall.mall_name.split.first}"
+    shop_name = "#{Faker::Company.name} #{mall.name.split.first}"
     
     shop = Shop.find_or_create_by!(name: "#{shop_name} #{i}", mall: mall) do |s|
       s.bio = Faker::Company.catch_phrase
@@ -305,7 +306,7 @@ offers.sample(80).each do |offer|
     offer: offer,
     user: user,
     shop: offer.shop,
-    receipt: receipt,
+    redemption_ref: qrs.sample.qr_id,
     created_at: Faker::Time.backward(days: 30)
   )
 end
@@ -318,7 +319,7 @@ user_stamp_cards = []
 stamps.sample(100).each do |stamp|
   user = users.sample
   # Avoid duplicate unique keys (user_id, stamp_id)
-  next if UserStampCard.exists?(user_id: user.id, stamp_id: stamp.id)
+  next if UserStampCard.exists?(user_id: user.user_id, stamp_id: stamp.stamp_id)
   
   user_stamp_cards << UserStampCard.create!(
     user: user,
@@ -336,7 +337,7 @@ puts "Creating Stamp Transactions..."
 stamps.sample(100).each do |stamp|
   user = users.sample
   StampTransaction.create!(
-    stamp_program_id: stamp.id,
+    stamp_program_id: stamp.stamp_id,
     user: user,
     shop: stamp.shop,
     type: ["collect", "redeem"].sample,
@@ -354,10 +355,10 @@ qrs.select { |q| q.user_id && q.shop_id }.take(30).each do |qr|
   stamp = stamps.select { |s| s.shop_id == qr.shop_id }.sample
   next unless stamp
   # Avoid uniqueness conflicts
-  next if StampRedemption.exists?(qr_id: qr.id)
+  next if StampRedemption.exists?(redemption_ref: qr.qr_id)
   
   StampRedemption.create!(
-    qr_id: qr.id,
+    redemption_ref: qr.qr_id,
     shop_id: qr.shop_id,
     stamp_id: stamp.id,
     user_id: qr.user_id

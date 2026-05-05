@@ -4,7 +4,7 @@ class MallsController < ApplicationController
   layout "dashboard"
 
   def index
-    @malls = @malls.where(id: current_mall.id) if current_mall
+    @malls = @malls.where(mall_id: current_mall.mall_id) if current_mall
   end
 
   def show; end
@@ -39,6 +39,6 @@ class MallsController < ApplicationController
   private
 
   def mall_params
-    params.expect(mall: [:mall_name, :location, :logo_url, :cover_image_url])
+    params.expect(mall: [:name, :location, :logo_url, :cover_image_url])
   end
 end

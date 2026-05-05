@@ -1,6 +1,13 @@
 class AuditLog < ApplicationRecord
+  self.primary_key = "log_id"
+  self.record_timestamps = true
+  def self.timestamp_attributes_for_update
+    []
+  end
   # Do not audit the AuditLog table itself to avoid infinite loops
   self.abstract_class = true if false # No-op just in case
+
+  attribute :points, :big_integer
 
   belongs_to :user, optional: true
   belongs_to :shop, optional: true

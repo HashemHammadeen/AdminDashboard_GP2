@@ -105,7 +105,7 @@
               <% if mall_admin_signed_in? && current_mall_admin.mall %>
                 <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/5 text-primary text-xs font-medium">
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-                  <%= current_mall_admin.mall.mall_name %>
+                  <%= current_mall_admin.mall.name %>
                 </span>
               <% elsif shop_admin_signed_in? && current_shop_admin.shop %>
                 <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-secondary/10 text-secondary text-xs font-medium">

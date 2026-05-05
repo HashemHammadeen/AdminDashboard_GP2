@@ -20,7 +20,7 @@
           <th class="px-6 py-4">Reference</th>
           <th class="px-6 py-4">Status</th>
           <th class="px-6 py-4">Usage Count</th>
-          <th class="px-6 py-4">Created</th>
+          <th class="px-6 py-4">Expires</th>
           <th class="px-6 py-4 text-right">Actions</th>
         </tr>
       </thead>
@@ -37,7 +37,7 @@
                 </span>
               </td>
               <td class="px-6 py-4">0</td>
-              <td class="px-6 py-4 whitespace-nowrap"><%= qr.created_at.strftime("%b %d, %Y") %></td>
+              <td class="px-6 py-4 whitespace-nowrap"><%= qr.expires_at.strftime("%b %d, %Y") %></td>
               <td class="px-6 py-4 text-right">
                 <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                   <%= link_to qr_path(qr), class: "p-1.5 text-secondary hover:text-primary hover:bg-gray-100 rounded-lg transition-colors", title: "View" do %>

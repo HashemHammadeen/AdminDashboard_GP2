@@ -14,7 +14,8 @@
   <div class="px-6 py-5 border-t border-gray-100 flex flex-col items-center justify-center p-10 bg-gray-50">
     <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
       <% if @qr.qr_code_data.present? %>
-        <% qrcode = RQRCode::QRCode.new(@qr.qr_code_data) %>
+        <% qr_data = @qr.qr_code_data.is_a?(String) ? @qr.qr_code_data : JSON.generate(@qr.qr_code_data) %>
+        <% qrcode = RQRCode::QRCode.new(qr_data) %>
         <div class="p-4 bg-white rounded-lg">
           <%= raw qrcode.as_svg(
             color: "000",

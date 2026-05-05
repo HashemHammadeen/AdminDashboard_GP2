@@ -15,17 +15,17 @@ class ApplicationController < ActionController::Base
                 :current_admin, :current_mall, :current_shop,
                 :current_mall_admin, :current_shop_admin
 
-  before_action :set_tenant_by_subdomain
+  before_action :set_tenant_context
 
   # Returns the currently signed-in admin (either type)
   def current_mall_admin
     return @current_mall_admin if defined?(@current_mall_admin)
-    @current_mall_admin = MallAdmin.find_by(id: session[:mall_admin_id]) if session[:mall_admin_id]
+    @current_mall_admin = MallAdmin.find_by(mall_admin_id: session[:mall_admin_id]) if session[:mall_admin_id]
   end
 
   def current_shop_admin
     return @current_shop_admin if defined?(@current_shop_admin)
-    @current_shop_admin = ShopAdmin.find_by(id: session[:shop_admin_id]) if session[:shop_admin_id]
+    @current_shop_admin = ShopAdmin.find_by(shop_admin_id: session[:shop_admin_id]) if session[:shop_admin_id]
   end
 
   def mall_admin_signed_in?
@@ -66,7 +66,7 @@ class ApplicationController < ActionController::Base
     # Set context for Auditable hooks
     Current.admin = current_admin
 
-    # Enforce Subdomain Tenant Isolation
+    # Enforce tenant isolation
     if @current_tenant_mall && current_admin
       admin_mall = current_mall_admin&.mall || current_shop_admin&.shop&.mall
       unless admin_mall == @current_tenant_mall
@@ -99,16 +99,8 @@ class ApplicationController < ActionController::Base
     @current_shop_admin = nil
   end
 
-  def set_tenant_by_subdomain
-    # In development, request.subdomain might be empty for 'mall1.localhost' due to TLD length defaults.
-    # We fallback to parsing the host directly.
-    subdomain = request.subdomain.presence || request.host.split('.').first
-
-    if subdomain.present? && subdomain != "www" && subdomain != "localhost"
-      @current_tenant_mall = Mall.find_by(subdomain: subdomain)
-      unless @current_tenant_mall
-        redirect_to root_url(host: "localhost"), alert: "Mall not found.", allow_other_host: true
-      end
-    end
+  def set_tenant_context
+    # No subdomain-based routing — tenant is determined solely by logged-in admin
+    @current_tenant_mall = nil
   end
 end
