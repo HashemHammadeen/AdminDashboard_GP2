@@ -12,4 +12,12 @@ class Stamp < ApplicationRecord
 
   validates :name, :description, :image_url, :stamp_icon_url, :reward_type, :stamps_required, presence: true
   validates :stamps_required, numericality: { greater_than: 0 }
+
+  before_create :set_stamp_id
+
+  private
+
+  def set_stamp_id
+    self.stamp_id ||= SecureRandom.uuid
+  end
 end
