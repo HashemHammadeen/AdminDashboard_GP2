@@ -14,4 +14,6 @@ class Shop < ApplicationRecord
   has_many :redeem_transactions
 
   validates :name, presence: true, uniqueness: true
+
+  store_accessor :social_links, :facebook, :instagram, :x
 end

@@ -57,6 +57,6 @@ class ShopsController < ApplicationController
   private
 
   def shop_params
-    params.expect(shop: [:mall_id, :name, :category_id, :logo_url, :cover_image_url, :bio, :website_url, :social_links, :is_active])
+    params.expect(shop: [:mall_id, :name, :category_id, :logo_url, :cover_image_url, :bio, :website_url, :facebook, :instagram, :x, :is_active])
   end
 end
