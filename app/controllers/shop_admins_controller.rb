@@ -40,9 +40,13 @@ class ShopAdminsController < ApplicationController
   def edit; end
 
   def update
+    if current_shop_admin
+      upload_shop_images_for(@shop_admin)
+      params[:shop_admin].extract!(:logo_file, :cover_image_file)
+    end
+
     respond_to do |format|
       if @shop_admin.update(shop_admin_params)
-        upload_shop_images_for(@shop_admin) if current_shop_admin
         format.html { redirect_to (current_mall_admin ? shop_path(@shop_admin.shop_id) : shop_admins_path), notice: "Shop admin was successfully updated.", status: :see_other }
       else
         format.html { render :edit, status: :unprocessable_entity }
