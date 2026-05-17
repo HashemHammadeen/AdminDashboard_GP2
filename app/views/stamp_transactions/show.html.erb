@@ -3,8 +3,12 @@
 <%= render @stamp_transaction %>
 
 <div>
-  <%= link_to "Edit this stamp transaction", edit_stamp_transaction_path(@stamp_transaction) %> |
+  <% if can? :update, @stamp_transaction %>
+    <%= link_to "Edit this stamp transaction", edit_stamp_transaction_path(@stamp_transaction) %> |
+  <% end %>
   <%= link_to "Back to stamp transactions", stamp_transactions_path %>
 
-  <%= button_to "Destroy this stamp transaction", @stamp_transaction, method: :delete %>
+  <% if can? :destroy, @stamp_transaction %>
+    <%= button_to "Destroy this stamp transaction", @stamp_transaction, method: :delete %>
+  <% end %>
 </div>

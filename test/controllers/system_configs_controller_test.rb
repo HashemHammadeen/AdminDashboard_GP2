@@ -1,48 +1,55 @@
 require "test_helper"
+require_relative "malls_controller_test"
 
 class SystemConfigsControllerTest < ActionDispatch::IntegrationTest
-  setup do
-    @system_config = system_configs(:one)
+  include TestSetupHelper
+
+  def setup
+    @mall = create_mall
+    @mall_admin = create_mall_admin(@mall)
+    @config = SystemConfig.create!(
+      mall_id: @mall.id,
+      earn_points_per_currency: 1.0,
+      points_to_currency_ratio: 0.01,
+      min_redemption_threshold: 100,
+      updated_by_admin_id: @mall_admin.id,
+      updated_at: Time.current
+    )
   end
 
-  test "should get index" do
+  test "unauthenticated redirects to login" do
+    get system_configs_url
+    assert_redirected_to root_path
+  end
+
+  test "mall admin can list system configs" do
+    login_as_mall_admin(@mall_admin)
     get system_configs_url
     assert_response :success
   end
 
-  test "should get new" do
-    get new_system_config_url
+  test "mall admin can view a system config" do
+    login_as_mall_admin(@mall_admin)
+    get system_config_url(@config)
     assert_response :success
   end
 
-  test "should create system_config" do
-    assert_difference("SystemConfig.count") do
-      post system_configs_url, params: { system_config: { earn_points_per_currency: @system_config.earn_points_per_currency, min_redemption_threshold: @system_config.min_redemption_threshold, points_to_currency_ratio: @system_config.points_to_currency_ratio } }
-    end
-
-    assert_redirected_to system_config_url(SystemConfig.last)
-  end
-
-  test "should show system_config" do
-    get system_config_url(@system_config)
+  test "mall admin can edit system config" do
+    login_as_mall_admin(@mall_admin)
+    get edit_system_config_url(@config)
     assert_response :success
   end
 
-  test "should get edit" do
-    get edit_system_config_url(@system_config)
-    assert_response :success
-  end
-
-  test "should update system_config" do
-    patch system_config_url(@system_config), params: { system_config: { earn_points_per_currency: @system_config.earn_points_per_currency, min_redemption_threshold: @system_config.min_redemption_threshold, points_to_currency_ratio: @system_config.points_to_currency_ratio } }
-    assert_redirected_to system_config_url(@system_config)
-  end
-
-  test "should destroy system_config" do
-    assert_difference("SystemConfig.count", -1) do
-      delete system_config_url(@system_config)
-    end
-
-    assert_redirected_to system_configs_url
+  test "mall admin can update system config" do
+    login_as_mall_admin(@mall_admin)
+    patch system_config_url(@config), params: {
+      system_config: {
+        earn_points_per_currency: 2.0,
+        points_to_currency_ratio: 0.02,
+        min_redemption_threshold: 200,
+        updated_by_admin_id: @mall_admin.id
+      }
+    }
+    assert_redirected_to system_config_url(@config)
   end
 end

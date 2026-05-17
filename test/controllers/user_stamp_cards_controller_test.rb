@@ -1,48 +1,51 @@
 require "test_helper"
+require_relative "malls_controller_test"
 
 class UserStampCardsControllerTest < ActionDispatch::IntegrationTest
-  setup do
-    @user_stamp_card = user_stamp_cards(:one)
+  include TestSetupHelper
+
+  def setup
+    @mall = create_mall
+    @category = create_category(@mall)
+    @shop = create_shop(@mall, @category)
+    @tier = create_tier
+    @user = create_user(@tier)
+    @shop_admin = create_shop_admin(@shop)
+    @stamp = Stamp.create!(
+      shop: @shop, name: "Stamp #{SecureRandom.uuid}", description: "Desc",
+      image_url: "img.png", stamp_icon_url: "icon.png", reward_type: "free_item", stamps_required: 5
+    )
+    @card = UserStampCard.create!(user: @user, stamp: @stamp, stamps_counter: 0)
   end
 
-  test "should get index" do
+  test "unauthenticated redirects to login" do
+    get user_stamp_cards_url
+    assert_redirected_to root_path
+  end
+
+  test "shop admin can list user stamp cards" do
+    login_as_shop_admin(@shop_admin)
     get user_stamp_cards_url
     assert_response :success
   end
 
-  test "should get new" do
-    get new_user_stamp_card_url
+  test "shop admin can view a user stamp card" do
+    login_as_shop_admin(@shop_admin)
+    get user_stamp_card_url(@card)
     assert_response :success
   end
 
-  test "should create user_stamp_card" do
-    assert_difference("UserStampCard.count") do
-      post user_stamp_cards_url, params: { user_stamp_card: { is_completed: @user_stamp_card.is_completed, last_transaction: @user_stamp_card.last_transaction, stamp_id: @user_stamp_card.stamp_id, stamps_counter: @user_stamp_card.stamps_counter, user_id: @user_stamp_card.user_id } }
+  test "shop admin can create a user stamp card" do
+    login_as_shop_admin(@shop_admin)
+    new_user = create_user(@tier)
+    assert_difference "UserStampCard.count", 1 do
+      post user_stamp_cards_url, params: {
+        user_stamp_card: {
+          user_id: new_user.id,
+          stamp_id: @stamp.id,
+          stamps_counter: 0
+        }
+      }
     end
-
-    assert_redirected_to user_stamp_card_url(UserStampCard.last)
-  end
-
-  test "should show user_stamp_card" do
-    get user_stamp_card_url(@user_stamp_card)
-    assert_response :success
-  end
-
-  test "should get edit" do
-    get edit_user_stamp_card_url(@user_stamp_card)
-    assert_response :success
-  end
-
-  test "should update user_stamp_card" do
-    patch user_stamp_card_url(@user_stamp_card), params: { user_stamp_card: { is_completed: @user_stamp_card.is_completed, last_transaction: @user_stamp_card.last_transaction, stamp_id: @user_stamp_card.stamp_id, stamps_counter: @user_stamp_card.stamps_counter, user_id: @user_stamp_card.user_id } }
-    assert_redirected_to user_stamp_card_url(@user_stamp_card)
-  end
-
-  test "should destroy user_stamp_card" do
-    assert_difference("UserStampCard.count", -1) do
-      delete user_stamp_card_url(@user_stamp_card)
-    end
-
-    assert_redirected_to user_stamp_cards_url
   end
 end

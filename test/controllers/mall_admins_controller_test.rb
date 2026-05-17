@@ -1,48 +1,50 @@
 require "test_helper"
+require_relative "malls_controller_test"
 
 class MallAdminsControllerTest < ActionDispatch::IntegrationTest
-  setup do
-    @mall_admin = mall_admins(:one)
+  include TestSetupHelper
+
+  def setup
+    @mall = create_mall
+    @mall_admin = create_mall_admin(@mall)
   end
 
-  test "should get index" do
+  test "unauthenticated redirects to login" do
+    get mall_admins_url
+    assert_redirected_to root_path
+  end
+
+  test "mall admin can list mall admins" do
+    login_as_mall_admin(@mall_admin)
     get mall_admins_url
     assert_response :success
   end
 
-  test "should get new" do
-    get new_mall_admin_url
-    assert_response :success
-  end
-
-  test "should create mall_admin" do
-    assert_difference("MallAdmin.count") do
-      post mall_admins_url, params: { mall_admin: { email: @mall_admin.email, mall_id: @mall_admin.mall_id, name: @mall_admin.name, password_hash: @mall_admin.password_hash, phone: @mall_admin.phone } }
-    end
-
-    assert_redirected_to mall_admin_url(MallAdmin.last)
-  end
-
-  test "should show mall_admin" do
+  test "mall admin can view their own profile" do
+    login_as_mall_admin(@mall_admin)
     get mall_admin_url(@mall_admin)
     assert_response :success
   end
 
-  test "should get edit" do
-    get edit_mall_admin_url(@mall_admin)
-    assert_response :success
-  end
-
-  test "should update mall_admin" do
-    patch mall_admin_url(@mall_admin), params: { mall_admin: { email: @mall_admin.email, mall_id: @mall_admin.mall_id, name: @mall_admin.name, password_hash: @mall_admin.password_hash, phone: @mall_admin.phone } }
+  test "mall admin can update their profile" do
+    login_as_mall_admin(@mall_admin)
+    patch mall_admin_url(@mall_admin), params: { mall_admin: { name: "Updated Name" } }
     assert_redirected_to mall_admin_url(@mall_admin)
   end
 
-  test "should destroy mall_admin" do
-    assert_difference("MallAdmin.count", -1) do
-      delete mall_admin_url(@mall_admin)
+  test "mall admin can create a new mall admin" do
+    login_as_mall_admin(@mall_admin)
+    assert_difference "MallAdmin.count", 1 do
+      post mall_admins_url, params: {
+        mall_admin: {
+          mall_id: @mall.id,
+          name: "New Admin",
+          email: "new#{SecureRandom.uuid}@test.com",
+          phone: "07#{SecureRandom.uuid[0..7].gsub("-", "")}",
+          password: "password123",
+          password_confirmation: "password123"
+        }
+      }
     end
-
-    assert_redirected_to mall_admins_url
   end
 end

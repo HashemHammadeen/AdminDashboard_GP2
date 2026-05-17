@@ -8,14 +8,28 @@
 </div>
 
 <div class="bg-white rounded-xl border border-gray-100 overflow-hidden">
+  <% if @shop.cover_image_url.present? %>
+    <div class="w-full h-48 bg-gray-100 border-b border-gray-100">
+      <img src="<%= @shop.cover_image_url %>" alt="Cover Image" class="w-full h-full object-cover">
+    </div>
+  <% end %>
+
   <div class="flex items-center justify-between px-6 py-5 border-b border-gray-100">
-    <div class="flex items-center gap-3">
-      <h2 class="text-xl font-bold text-primary"><%= @shop.name %></h2>
-      <% if @shop.is_active %>
-        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success/10 text-success">Active</span>
-      <% else %>
-        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-error/10 text-error">Inactive</span>
+    <div class="flex items-center gap-4">
+      <% if @shop.logo_url.present? %>
+        <img src="<%= @shop.logo_url %>" alt="Logo" class="w-16 h-16 rounded-xl object-cover border border-gray-200 shadow-sm bg-white">
       <% end %>
+      <div>
+        <div class="flex items-center gap-3 mb-1">
+          <h2 class="text-xl font-bold text-primary"><%= @shop.name %></h2>
+          <% if @shop.is_active %>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success/10 text-success">Active</span>
+          <% else %>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-error/10 text-error">Inactive</span>
+          <% end %>
+        </div>
+        <p class="text-sm text-gray-500"><%= @shop.category&.name %></p>
+      </div>
     </div>
     <%= link_to edit_shop_path(@shop), class: "inline-flex items-center gap-2 px-3 py-2 bg-warning/10 text-warning hover:bg-warning/20 text-sm font-medium rounded-lg transition-colors" do %>
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
@@ -42,6 +56,15 @@
     <div>
       <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Created At</p>
       <p class="text-sm text-gray-700"><%= @shop.created_at.strftime("%B %d, %Y at %H:%M") %></p>
+    </div>
+    <div>
+      <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Social Media</p>
+      <div class="flex gap-4 text-sm text-gray-700">
+        <% if @shop.facebook.present? %><a href="<%= @shop.facebook %>" target="_blank" class="text-secondary hover:text-primary transition-colors hover:underline">Facebook</a><% end %>
+        <% if @shop.instagram.present? %><a href="<%= @shop.instagram %>" target="_blank" class="text-secondary hover:text-primary transition-colors hover:underline">Instagram</a><% end %>
+        <% if @shop.x.present? %><a href="<%= @shop.x %>" target="_blank" class="text-secondary hover:text-primary transition-colors hover:underline">X (Twitter)</a><% end %>
+        <% if @shop.facebook.blank? && @shop.instagram.blank? && @shop.x.blank? %><span>—</span><% end %>
+      </div>
     </div>
   </div>
 </div>

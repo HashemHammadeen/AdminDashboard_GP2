@@ -1,10 +1,18 @@
 <p style="color: green"><%= notice %></p>
 
-<%= render @user_stamp_card %>
+<% if @user_stamp_card %>
+  <%= render @user_stamp_card %>
 
-<div>
-  <%= link_to "Edit this user stamp card", edit_user_stamp_card_path(@user_stamp_card) %> |
-  <%= link_to "Back to user stamp cards", user_stamp_cards_path %>
+  <div>
+    <% if can? :update, @user_stamp_card %>
+      <%= link_to "Edit this user stamp card", edit_user_stamp_card_path(@user_stamp_card) %> |
+    <% end %>
+    <%= link_to "Back to user stamp cards", user_stamp_cards_path %>
 
-  <%= button_to "Destroy this user stamp card", @user_stamp_card, method: :delete %>
-</div>
+    <% if can? :destroy, @user_stamp_card %>
+      <%= button_to "Destroy this user stamp card", @user_stamp_card, method: :delete %>
+    <% end %>
+  </div>
+<% else %>
+  <p>Stamp card not found.</p>
+<% end %>

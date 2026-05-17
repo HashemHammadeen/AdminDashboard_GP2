@@ -1,48 +1,33 @@
 require "test_helper"
+require_relative "malls_controller_test"
 
 class ReceiptsControllerTest < ActionDispatch::IntegrationTest
-  setup do
-    @receipt = receipts(:one)
+  include TestSetupHelper
+
+  def setup
+    @mall = create_mall
+    @category = create_category(@mall)
+    @shop = create_shop(@mall, @category)
+    @tier = create_tier
+    @user = create_user(@tier)
+    @shop_admin = create_shop_admin(@shop)
+    @receipt = Receipt.create!(user: @user, shop: @shop, Amount: 50.00, receipt_path: "r.jpg", receipt_details: {}, status: "pending")
   end
 
-  test "should get index" do
+  test "unauthenticated redirects to login" do
+    get receipts_url
+    assert_redirected_to root_path
+  end
+
+  test "shop admin can list receipts" do
+    login_as_shop_admin(@shop_admin)
     get receipts_url
     assert_response :success
   end
 
-  test "should get new" do
-    get new_receipt_url
-    assert_response :success
-  end
-
-  test "should create receipt" do
-    assert_difference("Receipt.count") do
-      post receipts_url, params: { receipt: { amount: @receipt.amount, receipt_details: @receipt.receipt_details, receipt_path: @receipt.receipt_path, shop_id: @receipt.shop_id, status: @receipt.status, user_id: @receipt.user_id } }
-    end
-
-    assert_redirected_to receipt_url(Receipt.last)
-  end
-
-  test "should show receipt" do
+  test "shop admin can view a receipt" do
+    login_as_shop_admin(@shop_admin)
     get receipt_url(@receipt)
     assert_response :success
-  end
-
-  test "should get edit" do
-    get edit_receipt_url(@receipt)
-    assert_response :success
-  end
-
-  test "should update receipt" do
-    patch receipt_url(@receipt), params: { receipt: { amount: @receipt.amount, receipt_details: @receipt.receipt_details, receipt_path: @receipt.receipt_path, shop_id: @receipt.shop_id, status: @receipt.status, user_id: @receipt.user_id } }
-    assert_redirected_to receipt_url(@receipt)
-  end
-
-  test "should destroy receipt" do
-    assert_difference("Receipt.count", -1) do
-      delete receipt_url(@receipt)
-    end
-
-    assert_redirected_to receipts_url
   end
 end

@@ -14,8 +14,13 @@ development:
   database: <%= ENV.fetch("DB_NAME", "admin_dashboard_development") %>
 
 test:
+  test:
   <<: *default
-  database: <%= ENV.fetch("DB_NAME", "test_db") %>
+  host: localhost           # override Supabase host
+  database: <%= ENV.fetch("DB_NAME_Local") %>
+  username: <%= ENV.fetch("DB_USERNAME_Local") %>
+  password: <%= ENV.fetch("DB_PASS_Local") %>
+  sslmode: disable          # no SSL for local
 
 production:
   primary: &primary_production

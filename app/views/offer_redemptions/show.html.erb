@@ -3,8 +3,12 @@
 <%= render @offer_redemption %>
 
 <div>
-  <%= link_to "Edit this offer redemption", edit_offer_redemption_path(@offer_redemption) %> |
+  <% if can? :update, @offer_redemption %>
+    <%= link_to "Edit this offer redemption", edit_offer_redemption_path(@offer_redemption) %> |
+  <% end %>
   <%= link_to "Back to offer redemptions", offer_redemptions_path %>
 
-  <%= button_to "Destroy this offer redemption", @offer_redemption, method: :delete %>
+  <% if can? :destroy, @offer_redemption %>
+    <%= button_to "Destroy this offer redemption", @offer_redemption, method: :delete %>
+  <% end %>
 </div>

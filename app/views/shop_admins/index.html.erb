@@ -3,7 +3,7 @@
 <div class="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
   <div>
     <h1 class="text-2xl font-bold text-primary">Staff Directory</h1>
-    <p class="text-sm text-gray-500 mt-1">Manage administrators for <%= current_shop.name %></p>
+    <p class="text-sm text-gray-500 mt-1">Manage administrators for <%= current_shop&.name || "your shop" %></p>
   </div>
   <% if can? :create, ShopAdmin %>
     <%= link_to new_shop_admin_path, class: "inline-flex items-center gap-2 px-4 py-2 bg-secondary text-white text-sm font-medium rounded-lg hover:bg-secondary/90 transition-colors shadow-sm" do %>

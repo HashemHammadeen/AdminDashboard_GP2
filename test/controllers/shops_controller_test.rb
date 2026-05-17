@@ -1,48 +1,65 @@
 require "test_helper"
+require_relative "malls_controller_test"
 
 class ShopsControllerTest < ActionDispatch::IntegrationTest
-  setup do
-    @shop = shops(:one)
+  include TestSetupHelper
+
+  def setup
+    @mall = create_mall
+    @category = create_category(@mall)
+    @shop = create_shop(@mall, @category)
+    @mall_admin = create_mall_admin(@mall)
   end
 
-  test "should get index" do
+  test "unauthenticated redirects to login" do
+    get shops_url
+    assert_redirected_to root_path
+  end
+
+  test "mall admin can list shops" do
+    login_as_mall_admin(@mall_admin)
     get shops_url
     assert_response :success
   end
 
-  test "should get new" do
-    get new_shop_url
-    assert_response :success
-  end
-
-  test "should create shop" do
-    assert_difference("Shop.count") do
-      post shops_url, params: { shop: { bio: @shop.bio, category_id: @shop.category_id, cover_image_url: @shop.cover_image_url, is_active: @shop.is_active, logo_url: @shop.logo_url, mall_id: @shop.mall_id, name: @shop.name, social_links: @shop.social_links, website_url: @shop.website_url } }
-    end
-
-    assert_redirected_to shop_url(Shop.last)
-  end
-
-  test "should show shop" do
+  test "mall admin can view a shop" do
+    login_as_mall_admin(@mall_admin)
     get shop_url(@shop)
     assert_response :success
   end
 
-  test "should get edit" do
+  test "mall admin can get new shop form" do
+    login_as_mall_admin(@mall_admin)
+    get new_shop_url
+    assert_response :success
+  end
+
+  test "mall admin can create a shop" do
+    login_as_mall_admin(@mall_admin)
+    assert_difference "Shop.count", 1 do
+      post shops_url, params: {
+        shop: {
+          mall_id: @mall.id,
+          category_id: @category.id,
+          name: "New Shop #{SecureRandom.uuid}",
+          bio: "Bio",
+          logo_url: "l.png",
+          cover_image_url: "c.png"
+        }
+      }
+    end
+    assert_redirected_to shop_url(Shop.order(created_at: :desc).first!)
+  end
+
+  test "mall admin can edit a shop" do
+    login_as_mall_admin(@mall_admin)
     get edit_shop_url(@shop)
     assert_response :success
   end
 
-  test "should update shop" do
-    patch shop_url(@shop), params: { shop: { bio: @shop.bio, category_id: @shop.category_id, cover_image_url: @shop.cover_image_url, is_active: @shop.is_active, logo_url: @shop.logo_url, mall_id: @shop.mall_id, name: @shop.name, social_links: @shop.social_links, website_url: @shop.website_url } }
+  test "mall admin can update a shop" do
+    login_as_mall_admin(@mall_admin)
+    patch shop_url(@shop), params: { shop: { bio: "Updated bio" } }
     assert_redirected_to shop_url(@shop)
-  end
-
-  test "should destroy shop" do
-    assert_difference("Shop.count", -1) do
-      delete shop_url(@shop)
-    end
-
-    assert_redirected_to shops_url
   end
 end

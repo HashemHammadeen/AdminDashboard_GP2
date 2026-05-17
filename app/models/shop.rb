@@ -16,4 +16,7 @@ class Shop < ApplicationRecord
   validates :name, presence: true, uniqueness: true
 
   store_accessor :social_links, :facebook, :instagram, :x
+
+  # Virtual attributes for file uploads (not stored in DB)
+  attr_accessor :logo_file, :cover_image_file
 end

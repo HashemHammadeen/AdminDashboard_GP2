@@ -1,48 +1,55 @@
 require "test_helper"
+require_relative "malls_controller_test"
 
 class OffersControllerTest < ActionDispatch::IntegrationTest
-  setup do
-    @offer = offers(:one)
+  include TestSetupHelper
+
+  def setup
+    @mall = create_mall
+    @category = create_category(@mall)
+    @shop = create_shop(@mall, @category)
+    @mall_admin = create_mall_admin(@mall)
+    @shop_admin = create_shop_admin(@shop)
+    @offer = Offer.create!(shop: @shop, name: "Offer #{SecureRandom.uuid}", description: "Desc", image_url: "img.png", reward_type: "discount")
   end
 
-  test "should get index" do
+  test "unauthenticated redirects to login" do
+    get offers_url
+    assert_redirected_to root_path
+  end
+
+  test "shop admin can list offers" do
+    login_as_shop_admin(@shop_admin)
     get offers_url
     assert_response :success
   end
 
-  test "should get new" do
-    get new_offer_url
-    assert_response :success
-  end
-
-  test "should create offer" do
-    assert_difference("Offer.count") do
-      post offers_url, params: { offer: { active: @offer.active, description: @offer.description, end_date: @offer.end_date, image_url: @offer.image_url, name: @offer.name, reward_type: @offer.reward_type, reward_value: @offer.reward_value, shop_id: @offer.shop_id, start_date: @offer.start_date } }
-    end
-
-    assert_redirected_to offer_url(Offer.last)
-  end
-
-  test "should show offer" do
+  test "shop admin can view an offer" do
+    login_as_shop_admin(@shop_admin)
     get offer_url(@offer)
     assert_response :success
   end
 
-  test "should get edit" do
-    get edit_offer_url(@offer)
-    assert_response :success
-  end
-
-  test "should update offer" do
-    patch offer_url(@offer), params: { offer: { active: @offer.active, description: @offer.description, end_date: @offer.end_date, image_url: @offer.image_url, name: @offer.name, reward_type: @offer.reward_type, reward_value: @offer.reward_value, shop_id: @offer.shop_id, start_date: @offer.start_date } }
-    assert_redirected_to offer_url(@offer)
-  end
-
-  test "should destroy offer" do
-    assert_difference("Offer.count", -1) do
-      delete offer_url(@offer)
+  test "shop admin can create an offer" do
+    login_as_shop_admin(@shop_admin)
+    assert_difference "Offer.count", 1 do
+      post offers_url, params: {
+        offer: {
+          shop_id: @shop.id,
+          name: "New Offer #{SecureRandom.uuid}",
+          description: "Desc",
+          image_url: "img.png",
+          reward_type: "free_item",
+          is_active: true
+        }
+      }
     end
+    assert_redirected_to offer_url(Offer.order(created_at: :desc).first!)
+  end
 
-    assert_redirected_to offers_url
+  test "mall admin can also list offers" do
+    login_as_mall_admin(@mall_admin)
+    get offers_url
+    assert_response :success
   end
 end

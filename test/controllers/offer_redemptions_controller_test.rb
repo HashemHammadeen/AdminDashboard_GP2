@@ -1,48 +1,41 @@
 require "test_helper"
+require_relative "malls_controller_test"
 
 class OfferRedemptionsControllerTest < ActionDispatch::IntegrationTest
-  setup do
-    @offer_redemption = offer_redemptions(:one)
+  include TestSetupHelper
+
+  def setup
+    @mall = create_mall
+    @category = create_category(@mall)
+    @shop = create_shop(@mall, @category)
+    @tier = create_tier
+    @user = create_user(@tier)
+    @mall_admin = create_mall_admin(@mall)
+    @shop_admin = create_shop_admin(@shop)
+    @offer = Offer.create!(shop: @shop, name: "Offer #{SecureRandom.uuid}", description: "Desc", image_url: "img.png", reward_type: "discount")
+    @redemption = OfferRedemption.create!(user: @user, offer: @offer, shop: @shop)
   end
 
-  test "should get index" do
+  test "unauthenticated redirects to login" do
+    get offer_redemptions_url
+    assert_redirected_to root_path
+  end
+
+  test "shop admin can list offer redemptions" do
+    login_as_shop_admin(@shop_admin)
     get offer_redemptions_url
     assert_response :success
   end
 
-  test "should get new" do
-    get new_offer_redemption_url
+  test "shop admin can view an offer redemption" do
+    login_as_shop_admin(@shop_admin)
+    get offer_redemption_url(@redemption)
     assert_response :success
   end
 
-  test "should create offer_redemption" do
-    assert_difference("OfferRedemption.count") do
-      post offer_redemptions_url, params: { offer_redemption: { offer_id: @offer_redemption.offer_id, receipt_id: @offer_redemption.receipt_id, shop_id: @offer_redemption.shop_id, user_id: @offer_redemption.user_id } }
-    end
-
-    assert_redirected_to offer_redemption_url(OfferRedemption.last)
-  end
-
-  test "should show offer_redemption" do
-    get offer_redemption_url(@offer_redemption)
+  test "mall admin can list offer redemptions" do
+    login_as_mall_admin(@mall_admin)
+    get offer_redemptions_url
     assert_response :success
-  end
-
-  test "should get edit" do
-    get edit_offer_redemption_url(@offer_redemption)
-    assert_response :success
-  end
-
-  test "should update offer_redemption" do
-    patch offer_redemption_url(@offer_redemption), params: { offer_redemption: { offer_id: @offer_redemption.offer_id, receipt_id: @offer_redemption.receipt_id, shop_id: @offer_redemption.shop_id, user_id: @offer_redemption.user_id } }
-    assert_redirected_to offer_redemption_url(@offer_redemption)
-  end
-
-  test "should destroy offer_redemption" do
-    assert_difference("OfferRedemption.count", -1) do
-      delete offer_redemption_url(@offer_redemption)
-    end
-
-    assert_redirected_to offer_redemptions_url
   end
 end

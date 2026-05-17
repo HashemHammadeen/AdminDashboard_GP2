@@ -17,7 +17,7 @@ class Ability
     mall_id = admin.mall_id
 
     # Mall management — only their own mall
-    can :manage, Mall, id: mall_id
+    can [:read, :update, :destroy], Mall, mall_id: mall_id
 
     # Store management — shops in their mall
     can :manage, Shop, mall_id: mall_id

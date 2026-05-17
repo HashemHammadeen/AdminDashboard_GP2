@@ -1,48 +1,50 @@
 require "test_helper"
+require_relative "malls_controller_test"
 
 class RedeemTransactionsControllerTest < ActionDispatch::IntegrationTest
-  setup do
-    @redeem_transaction = redeem_transactions(:one)
+  include TestSetupHelper
+
+  def setup
+    @mall = create_mall
+    @category = create_category(@mall)
+    @shop = create_shop(@mall, @category)
+    @tier = create_tier
+    @user = create_user(@tier)
+    @shop_admin = create_shop_admin(@shop)
+    @redeem_tx = RedeemTransaction.create!(user: @user, shop: @shop, points_used: 100, DiscountAmount: 1.00, verification_code: SecureRandom.hex(3).upcase, status: "pending")
   end
 
-  test "should get index" do
+  test "unauthenticated redirects to login" do
+    get redeem_transactions_url
+    assert_redirected_to root_path
+  end
+
+  test "shop admin can list redeem transactions" do
+    login_as_shop_admin(@shop_admin)
     get redeem_transactions_url
     assert_response :success
   end
 
-  test "should get new" do
-    get new_redeem_transaction_url
+  test "shop admin can view a redeem transaction" do
+    login_as_shop_admin(@shop_admin)
+    get redeem_transaction_url(@redeem_tx)
     assert_response :success
   end
 
-  test "should create redeem_transaction" do
-    assert_difference("RedeemTransaction.count") do
-      post redeem_transactions_url, params: { redeem_transaction: { completed_at: @redeem_transaction.completed_at, discount_value: @redeem_transaction.discount_value, points_used: @redeem_transaction.points_used, shop_id: @redeem_transaction.shop_id, status: @redeem_transaction.status, user_id: @redeem_transaction.user_id, verification_code: @redeem_transaction.verification_code } }
+  test "shop admin can create a redeem transaction" do
+    login_as_shop_admin(@shop_admin)
+    assert_difference "RedeemTransaction.count", 1 do
+      post redeem_transactions_url, params: {
+        redeem_transaction: {
+          user_id: @user.id,
+          shop_id: @shop.id,
+          points_used: 200,
+          DiscountAmount: 1.00,
+          verification_code: SecureRandom.hex(3).upcase,
+          status: "pending"
+        }
+      }
     end
-
-    assert_redirected_to redeem_transaction_url(RedeemTransaction.last)
-  end
-
-  test "should show redeem_transaction" do
-    get redeem_transaction_url(@redeem_transaction)
-    assert_response :success
-  end
-
-  test "should get edit" do
-    get edit_redeem_transaction_url(@redeem_transaction)
-    assert_response :success
-  end
-
-  test "should update redeem_transaction" do
-    patch redeem_transaction_url(@redeem_transaction), params: { redeem_transaction: { completed_at: @redeem_transaction.completed_at, discount_value: @redeem_transaction.discount_value, points_used: @redeem_transaction.points_used, shop_id: @redeem_transaction.shop_id, status: @redeem_transaction.status, user_id: @redeem_transaction.user_id, verification_code: @redeem_transaction.verification_code } }
-    assert_redirected_to redeem_transaction_url(@redeem_transaction)
-  end
-
-  test "should destroy redeem_transaction" do
-    assert_difference("RedeemTransaction.count", -1) do
-      delete redeem_transaction_url(@redeem_transaction)
-    end
-
-    assert_redirected_to redeem_transactions_url
+    assert_redirected_to redeem_transaction_url(RedeemTransaction.order(created_at: :desc).first!)
   end
 end

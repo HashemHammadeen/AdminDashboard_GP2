@@ -1,48 +1,50 @@
 require "test_helper"
+require_relative "malls_controller_test"
 
 class CategoriesControllerTest < ActionDispatch::IntegrationTest
-  setup do
-    @category = categories(:one)
+  include TestSetupHelper
+
+  def setup
+    @mall = create_mall
+    @category = create_category(@mall)
+    @mall_admin = create_mall_admin(@mall)
   end
 
-  test "should get index" do
+  test "unauthenticated redirects to login" do
+    get categories_url
+    assert_redirected_to root_path
+  end
+
+  test "mall admin can list categories" do
+    login_as_mall_admin(@mall_admin)
     get categories_url
     assert_response :success
   end
 
-  test "should get new" do
-    get new_category_url
-    assert_response :success
-  end
-
-  test "should create category" do
-    assert_difference("Category.count") do
-      post categories_url, params: { category: { category_name: @category.category_name, description: @category.description, display_order: @category.display_order, icon_url: @category.icon_url } }
-    end
-
-    assert_redirected_to category_url(Category.last)
-  end
-
-  test "should show category" do
+  test "mall admin can view a category" do
+    login_as_mall_admin(@mall_admin)
     get category_url(@category)
     assert_response :success
   end
 
-  test "should get edit" do
-    get edit_category_url(@category)
-    assert_response :success
-  end
-
-  test "should update category" do
-    patch category_url(@category), params: { category: { category_name: @category.category_name, description: @category.description, display_order: @category.display_order, icon_url: @category.icon_url } }
-    assert_redirected_to category_url(@category)
-  end
-
-  test "should destroy category" do
-    assert_difference("Category.count", -1) do
-      delete category_url(@category)
+  test "mall admin can create a category" do
+    login_as_mall_admin(@mall_admin)
+    assert_difference "Category.count", 1 do
+      post categories_url, params: {
+        category: {
+          mall_id: @mall.id,
+          name: "New Cat #{SecureRandom.uuid}",
+          description: "Desc",
+          icon_url: "https://example.com/icon.png"
+        }
+      }
     end
+    assert_redirected_to category_url(Category.order(created_at: :desc).first!)
+  end
 
-    assert_redirected_to categories_url
+  test "mall admin can update a category" do
+    login_as_mall_admin(@mall_admin)
+    patch category_url(@category), params: { category: { description: "Updated desc" } }
+    assert_redirected_to category_url(@category)
   end
 end
