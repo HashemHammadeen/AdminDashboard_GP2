@@ -42,6 +42,7 @@ class ShopAdminsController < ApplicationController
   def update
     respond_to do |format|
       if @shop_admin.update(shop_admin_params)
+        upload_shop_images_for(@shop_admin) if current_shop_admin
         format.html { redirect_to (current_mall_admin ? shop_path(@shop_admin.shop_id) : shop_admins_path), notice: "Shop admin was successfully updated.", status: :see_other }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -58,12 +59,34 @@ class ShopAdminsController < ApplicationController
 
   private
 
+  def upload_shop_images_for(shop_admin)
+    shop = shop_admin.shop
+    return unless shop
+
+    raw = params[:shop_admin]
+    return unless raw
+
+    if raw[:logo_file].present?
+      ext = File.extname(raw[:logo_file].original_filename)
+      path = "shops/#{shop.id}/logo#{ext}"
+      url = ::SupabaseStorageService.upload(raw[:logo_file], path)
+      shop.update_column(:logo_url, url) if url
+    end
+
+    if raw[:cover_image_file].present?
+      ext = File.extname(raw[:cover_image_file].original_filename)
+      path = "shops/#{shop.id}/cover#{ext}"
+      url = ::SupabaseStorageService.upload(raw[:cover_image_file], path)
+      shop.update_column(:cover_image_url, url) if url
+    end
+  end
+
   def shop_admin_params
     # We only permit shop_id if the current_user is a MallAdmin creating staff for a shop.
     permitted_fields = [:name, :email, :phone, :password, :password_confirmation]
     permitted_fields << :shop_id if current_mall_admin
     p = params.expect(shop_admin: permitted_fields)
-    
+
     if p[:password].blank?
       p.delete(:password)
       p.delete(:password_confirmation)
