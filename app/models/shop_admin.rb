@@ -5,6 +5,7 @@ class ShopAdmin < ApplicationRecord
     []
   end
   alias_attribute :password_digest, :password_hash
+  alias_attribute :email, :Email
   has_secure_password
 
   belongs_to :shop
