@@ -39,11 +39,6 @@
     <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/></svg>
     Offers
   <% end %>
-
-  <%= link_to offer_redemptions_path, class: "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors #{request.path.start_with?('/offer_redemptions') ? 'bg-white/15 text-white' : 'text-ternary hover:bg-white/10 hover:text-white'}" do %>
-    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-    Redemptions
-  <% end %>
 <% end %>
 
 <%# ── Transaction History ── %>

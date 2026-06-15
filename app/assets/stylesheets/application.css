@@ -9,11 +9,16 @@
  * Consider organizing styles into separate files for maintainability.
  */
 
+/* ============================================
+   Flutter Icon Picker — Dropdown
+   ============================================ */
 .flutter-icon-picker-dropdown {
-  max-height: 320px;
+  max-height: 420px;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: #e5e7eb transparent;
+  scrollbar-color: #d1d5db transparent;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 .flutter-icon-picker-dropdown::-webkit-scrollbar {
@@ -25,16 +30,95 @@
 }
 
 .flutter-icon-picker-dropdown::-webkit-scrollbar-thumb {
-  background-color: #e5e7eb;
+  background-color: #d1d5db;
   border-radius: 3px;
 }
 
-.flutter-icon-preview .material-icons {
-  font-size: 24px;
+.flutter-icon-picker-dropdown::-webkit-scrollbar-thumb:hover {
+  background-color: #9ca3af;
+}
+
+/* ============================================
+   Flutter Icon Picker — Grid Layout
+   ============================================ */
+.flutter-icon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 4px;
+  padding: 8px;
+}
+
+.flutter-icon-grid-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 10px 4px 8px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: center;
+  min-height: 76px;
+}
+
+.flutter-icon-grid-item:hover {
+  background-color: #f0f4ff;
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.1);
+}
+
+.flutter-icon-grid-item--focused {
+  background-color: #e0e7ff !important;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.3);
+}
+
+.flutter-icon-grid-icon {
+  font-size: 32px !important;
+  color: #374151;
+  transition: color 0.15s ease, transform 0.15s ease;
+  line-height: 1;
+}
+
+.flutter-icon-grid-item:hover .flutter-icon-grid-icon {
+  color: #4f46e5;
+  transform: scale(1.1);
+}
+
+.flutter-icon-grid-item--focused .flutter-icon-grid-icon {
   color: #4f46e5;
 }
 
-.flutter-icon-option .material-icons {
-  font-size: 20px;
-  color: #6b7280;
+.flutter-icon-grid-label {
+  font-size: 9px;
+  color: #9ca3af;
+  line-height: 1.2;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+.flutter-icon-grid-item:hover .flutter-icon-grid-label {
+  color: #4f46e5;
+}
+
+/* ============================================
+   Flutter Icon Picker — Preview
+   ============================================ */
+.flutter-icon-preview {
+  background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
+  border: 1px solid #e0e7ff;
+  border-radius: 12px;
+  padding: 12px 16px;
+}
+
+.flutter-icon-preview .material-icons {
+  font-size: 36px;
+  color: #4f46e5;
+  background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+  padding: 10px;
+  border-radius: 12px;
+  line-height: 1;
 }

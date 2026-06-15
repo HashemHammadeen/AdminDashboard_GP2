@@ -44,6 +44,10 @@
         <dd class="text-sm font-medium text-gray-900"><%= @shop_admin.phone %></dd>
       </div>
       <div>
+        <dt class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Role</dt>
+        <dd class="text-sm font-medium text-gray-900"><%= @shop_admin.role.titleize %></dd>
+      </div>
+      <div>
         <dt class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Created At</dt>
         <dd class="text-sm text-gray-700"><%= @shop_admin.created_at.strftime("%B %d, %Y") %></dd>
       </div>

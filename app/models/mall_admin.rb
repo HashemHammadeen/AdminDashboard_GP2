@@ -6,6 +6,7 @@ class MallAdmin < ApplicationRecord
   end
   alias_attribute :password_digest, :password_hash
   has_secure_password
+  prepend LegacyPasswordAuthenticatable
 
   belongs_to :mall
 

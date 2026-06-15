@@ -101,6 +101,124 @@
           <tr><td colspan="4" class="px-6 py-12 text-center text-gray-400 text-sm">No customer data available yet.</td></tr>
         <% end %>
       </tbody>
-    </table>
+  </table>
   </div>
 </div>
+
+<%# ═══════════════════════════════════════════════════════════════
+    SHOP PERFORMANCE ANALYTICS  (Mall Admin only)
+════════════════════════════════════════════════════════════════ %>
+<% if current_mall_admin %>
+
+  <%# Section heading %>
+  <div class="mt-10 mb-5 flex items-center gap-3">
+    <div class="h-6 w-1 rounded-full bg-secondary"></div>
+    <h2 class="text-xl font-bold text-primary">Shop Performance Analytics</h2>
+    <span class="text-xs text-gray-400 font-normal mt-0.5">All-time data · <%= @shops.size %> shops</span>
+  </div>
+
+  <%# ── Row 1: Revenue · Volume · Points Efficiency ── %>
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+
+    <%# Revenue by Shop %>
+    <div class="bg-white rounded-xl border border-gray-100 p-6 shadow-sm">
+      <div class="mb-4">
+        <h3 class="text-base font-bold text-primary">Revenue by Shop</h3>
+        <p class="text-xs text-gray-400 mt-0.5">Total purchase amount (all time)</p>
+      </div>
+      <div class="w-full h-64">
+        <%= bar_chart @revenue_by_shop,
+            colors: ["#213448"],
+            suffix: " JD",
+            library: { borderRadius: 4, indexAxis: "y" } %>
+      </div>
+    </div>
+
+    <%# Transaction Volume by Shop %>
+    <div class="bg-white rounded-xl border border-gray-100 p-6 shadow-sm">
+      <div class="mb-4">
+        <h3 class="text-base font-bold text-primary">Transaction Volume</h3>
+        <p class="text-xs text-gray-400 mt-0.5">Earn transactions per shop</p>
+      </div>
+      <div class="w-full h-64">
+        <%= bar_chart @volume_by_shop,
+            colors: ["#547792"],
+            library: { borderRadius: 4, indexAxis: "y" } %>
+      </div>
+    </div>
+
+    <%# Points Efficiency by Shop %>
+    <div class="bg-white rounded-xl border border-gray-100 p-6 shadow-sm">
+      <div class="mb-4">
+        <h3 class="text-base font-bold text-primary">Points Efficiency</h3>
+        <p class="text-xs text-gray-400 mt-0.5">Issued vs redeemed per shop</p>
+      </div>
+      <div class="w-full h-64">
+        <%= bar_chart @points_efficiency_data,
+            colors: ["#547792", "#94B4C1"],
+            suffix: " pts",
+            library: { borderRadius: 4 } %>
+      </div>
+    </div>
+
+  </div>
+
+  <%# ── Row 2: Shop Performance Summary Table ── %>
+  <div class="bg-white rounded-xl border border-gray-100 overflow-hidden shadow-sm mb-8">
+    <div class="px-6 py-5 border-b border-gray-100 bg-gray-50/50 flex items-center justify-between">
+      <h3 class="text-lg font-bold text-primary">
+        Shop Performance Summary
+        <span class="text-xs font-normal text-gray-400 ml-2">Sorted by revenue ↓</span>
+      </h3>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="bg-white border-b border-gray-100">
+            <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-4">Shop</th>
+            <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-4">Category</th>
+            <th class="text-right text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-4">Revenue (JD)</th>
+            <th class="text-right text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-4">Earn Txns</th>
+            <th class="text-right text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-4">Pts Issued</th>
+            <th class="text-right text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-4">Pts Redeemed</th>
+            <th class="text-right text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-4">Redeem Txns</th>
+            <th class="text-right text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-4">Receipts</th>
+            <th class="text-center text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-4">Status</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          <% if @shop_performance.any? %>
+            <% @shop_performance.each do |row| %>
+              <tr class="bg-white hover:bg-ternary/5 transition-colors">
+                <td class="px-6 py-4 font-medium text-primary whitespace-nowrap">
+                  <%= link_to row[:shop].name, shop_path(row[:shop]), class: "hover:text-secondary transition-colors" %>
+                </td>
+                <td class="px-6 py-4 text-gray-500 whitespace-nowrap"><%= row[:category] %></td>
+                <td class="px-6 py-4 text-right font-semibold text-secondary"><%= number_with_delimiter(row[:revenue], delimiter: ",") %></td>
+                <td class="px-6 py-4 text-right text-gray-600"><%= number_with_delimiter(row[:earn_count]) %></td>
+                <td class="px-6 py-4 text-right text-gray-600"><%= number_with_delimiter(row[:points_issued]) %></td>
+                <td class="px-6 py-4 text-right text-gray-600"><%= number_with_delimiter(row[:points_redeemed]) %></td>
+                <td class="px-6 py-4 text-right text-gray-600"><%= number_with_delimiter(row[:redeem_count]) %></td>
+                <td class="px-6 py-4 text-right text-gray-600"><%= number_with_delimiter(row[:receipt_count]) %></td>
+                <td class="px-6 py-4 text-center">
+                  <% if row[:active] %>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
+                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></span>Active
+                    </span>
+                  <% else %>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700">
+                      <span class="w-1.5 h-1.5 rounded-full bg-red-500 mr-1.5"></span>Inactive
+                    </span>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr><td colspan="9" class="px-6 py-12 text-center text-gray-400">No shop data available yet.</td></tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+<% end %>

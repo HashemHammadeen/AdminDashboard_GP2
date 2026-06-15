@@ -12,17 +12,17 @@ class ShopAdminsController < ApplicationController
 
   def new
     @shop_admin = ShopAdmin.new
-    # If a mall admin creates one, they will pass shop_id in params
     @shop_admin.shop_id = params[:shop_id] if params[:shop_id].present? && current_mall_admin
+    @shop_admin.shop_id ||= current_shop.id if current_shop
     authorize! :new, @shop_admin
   end
 
   def create
     @shop_admin = ShopAdmin.new(shop_admin_params)
     
-    # Securely override the shop_id depending on who is creating the staff member
     if current_shop
       @shop_admin.shop_id = current_shop.id
+      @shop_admin.role = "Staff"
     end
     
     # Must authorize the newly built record securely (stops MallAdmin A from adding staff to Mall B's Shop)
@@ -51,6 +51,20 @@ class ShopAdminsController < ApplicationController
       else
         format.html { render :edit, status: :unprocessable_entity }
       end
+    end
+  end
+
+  def destroy
+    if current_shop_admin && @shop_admin.id == current_shop_admin.id
+      redirect_to shop_admins_path, alert: "You cannot delete your own account."
+      return
+    end
+
+    shop_id = @shop_admin.shop_id
+    @shop_admin.destroy
+
+    respond_to do |format|
+      format.html { redirect_to (current_mall_admin ? shop_path(shop_id) : shop_admins_path), notice: "Staff member was successfully removed.", status: :see_other }
     end
   end
 
@@ -89,6 +103,7 @@ class ShopAdminsController < ApplicationController
     # We only permit shop_id if the current_user is a MallAdmin creating staff for a shop.
     permitted_fields = [:name, :email, :phone, :password, :password_confirmation]
     permitted_fields << :shop_id if current_mall_admin
+    permitted_fields << :role if current_mall_admin
     p = params.expect(shop_admin: permitted_fields)
 
     if p[:password].blank?

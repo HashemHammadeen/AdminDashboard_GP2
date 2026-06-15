@@ -7,6 +7,9 @@ class ShopAdmin < ApplicationRecord
   alias_attribute :password_digest, :password_hash
   alias_attribute :email, :Email
   has_secure_password
+  prepend LegacyPasswordAuthenticatable
+
+  enum :role, { staff: "Staff", admin: "Admin" }, default: :staff
 
   belongs_to :shop
 
@@ -15,4 +18,5 @@ class ShopAdmin < ApplicationRecord
 
   validates :email, :phone, :name, presence: true
   validates :email, :phone, uniqueness: true
+  validates :role, presence: true, inclusion: { in: roles.keys }
 end

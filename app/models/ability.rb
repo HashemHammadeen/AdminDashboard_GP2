@@ -47,8 +47,7 @@ class Ability
     can :read, EarnTransaction, shop: { mall_id: mall_id }
     can :read, RedeemTransaction, shop: { mall_id: mall_id }
     can :read, Receipt, shop: { mall_id: mall_id }
-    can :manage, Offer, shop: { mall_id: mall_id }
-    can :create, Offer, shop_id: nil
+    can :read, Offer, shop: { mall_id: mall_id }
     can :read, Stamp, shop: { mall_id: mall_id }
     can :read, OfferRedemption, shop: { mall_id: mall_id }
     can :read, StampTransaction, shop: { mall_id: mall_id }
@@ -79,8 +78,13 @@ class Ability
     can [:read, :create, :update], UserStampCard, stamp: { shop_id: shop_id }
     can :create, UserStampCard, stamp_id: nil
 
-    # Shop admin profile — view and edit own, and view local staff directory
-    can :read, ShopAdmin, shop_id: shop_id
-    can :update, ShopAdmin, id: admin.id
+    if admin.admin?
+      # ShopAdmin with admin role — full staff management within their shop
+      can :manage, ShopAdmin, shop_id: shop_id
+    else
+      # ShopAdmin with staff role (default) — read-only directory + own profile only
+      can :read, ShopAdmin, shop_id: shop_id
+      can :update, ShopAdmin, id: admin.id
+    end
   end
 end

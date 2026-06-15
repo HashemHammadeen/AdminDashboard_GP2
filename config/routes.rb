@@ -44,7 +44,7 @@ Rails.application.routes.draw do
   resources :offer_redemptions, only: [:index, :show]
   resources :user_stamp_cards, only: [:index, :show, :new, :create]
   resources :qrs
-  resources :shop_admins, only: [:index, :show, :edit, :update, :new, :create] do
+  resources :shop_admins, only: [:index, :show, :edit, :update, :new, :create, :destroy] do
     member do
       patch :toggle_active
     end

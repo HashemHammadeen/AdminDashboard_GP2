@@ -72,6 +72,49 @@ class DataAnalysisController < ApplicationController
 
       @top_customer_metric_name = "Point Balance"
       @top_customer_metric_method = ->(u) { u.user_points_balance&.total_points || 0 }
+
+      # ── Shop Performance Analytics (Mall Admin only) ─────────────────────
+
+      # Build a shop_id → name lookup once
+      shop_name_map = @shops.each_with_object({}) { |s, h| h[s.shop_id] = s.name }
+
+      # 1. Revenue by Shop (total PurchaseAmount per shop)
+      raw_revenue = EarnTransaction.where(shop_id: shop_ids).group(:shop_id).sum(:PurchaseAmount)
+      @revenue_by_shop = raw_revenue.transform_keys { |id| shop_name_map[id] || id }
+
+      # 2. Transaction Volume by Shop (count of earn_transactions per shop)
+      raw_volume = EarnTransaction.where(shop_id: shop_ids).group(:shop_id).count
+      @volume_by_shop = raw_volume.transform_keys { |id| shop_name_map[id] || id }
+
+      # 3. Points Efficiency by Shop (earned vs used per shop)
+      raw_earned  = EarnTransaction.where(shop_id: shop_ids).group(:shop_id).sum(:points_earned)
+      raw_used    = RedeemTransaction.where(shop_id: shop_ids).group(:shop_id).sum(:points_used)
+      all_shop_ids_in_set = (raw_earned.keys | raw_used.keys)
+      @points_efficiency_data = [
+        { name: "Points Issued",   data: all_shop_ids_in_set.index_with { |id| raw_earned[id].to_i }.transform_keys { |id| shop_name_map[id] || id } },
+        { name: "Points Redeemed", data: all_shop_ids_in_set.index_with { |id| raw_used[id].to_i }.transform_keys   { |id| shop_name_map[id] || id } }
+      ]
+
+      # 4. Shop Performance Summary Table
+      raw_earn_count  = EarnTransaction.where(shop_id: shop_ids).group(:shop_id).count
+      raw_redeem_count = RedeemTransaction.where(shop_id: shop_ids).group(:shop_id).count
+      raw_receipt_count = Receipt.where(shop_id: shop_ids).group(:shop_id).count
+
+      @shop_performance = @shops.includes(:category)
+                                .sort_by { |s| -(raw_revenue[s.shop_id]&.to_f || 0) }
+                                .map do |s|
+        {
+          shop:            s,
+          category:        s.category&.name || "—",
+          revenue:         raw_revenue[s.shop_id]&.to_f&.round(2) || 0,
+          earn_count:      raw_earn_count[s.shop_id] || 0,
+          points_issued:   raw_earned[s.shop_id].to_i,
+          points_redeemed: raw_used[s.shop_id].to_i,
+          redeem_count:    raw_redeem_count[s.shop_id] || 0,
+          receipt_count:   raw_receipt_count[s.shop_id] || 0,
+          active:          s.is_active
+        }
+      end
     else
       # Shop Admins care about who spends the most points in *their* shop
       top_user_ids_with_sums = RedeemTransaction

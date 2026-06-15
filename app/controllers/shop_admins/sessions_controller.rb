@@ -11,6 +11,11 @@ module ShopAdmins
       admin = ShopAdmin.find_by(email: params[:email]&.downcase&.strip)
 
       if admin&.authenticate(params[:password])
+        unless admin.admin?
+          flash.now[:alert] = "Your account does not have access. Contact your mall admin."
+          render :new, status: :unauthorized
+          return
+        end
         session[:shop_admin_id] = admin.id
         session.delete(:mall_admin_id)
         redirect_to shop_admin_root_path, notice: "Signed in successfully."
